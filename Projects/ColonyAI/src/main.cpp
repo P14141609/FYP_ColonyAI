@@ -12,6 +12,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include "environment.h"
 
 //!< Entry point for the application
 int main()
@@ -23,6 +24,9 @@ int main()
 	sf::Clock clock;
 	// Declares var to track elapsed time
 	sf::Time elapsedTime;
+
+	// Instantiates new Environment
+	Environment environment = Environment(); // TEMPORARY
 
 	// While the window is open
 	while (window.isOpen())
@@ -59,12 +63,12 @@ int main()
 			// Restarts the clock
 			clock.restart();
 
-			// Update objects
-			// TODO
+			// Updates environment with elapsed time
+			environment.update(elapsedTime.asSeconds());
 		}
 
-		// Draw objects
-		// TODO
+		// Draws environment
+		window.draw(environment);
 
 		// Displays the current frame
 		window.display();
