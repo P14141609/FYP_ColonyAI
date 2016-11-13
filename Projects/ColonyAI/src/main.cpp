@@ -26,7 +26,7 @@ int main()
 	sf::Time elapsedTime;
 
 	// Instantiates new Environment
-	Environment environment = Environment(); // TEMPORARY
+	Environment environment = Environment(""); // TEMPORARY
 
 	// While the window is open
 	while (window.isOpen())
@@ -66,6 +66,9 @@ int main()
 			// Updates environment with elapsed time
 			environment.update(elapsedTime.asSeconds());
 		}
+
+		// Clears window making it entirely black
+		window.clear(sf::Color(0, 0, 0, 255));
 
 		// Draws environment
 		window.draw(environment);

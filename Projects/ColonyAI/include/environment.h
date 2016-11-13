@@ -4,6 +4,8 @@
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include "entity.h"
+#include "object.h"
 
 /////////////////////////////////////////////////
 ///
@@ -13,7 +15,12 @@
 class Environment: public sf::Drawable
 {
 private:
-	
+
+	sf::Color m_bgColour; //!< Color for the Environment background
+
+	std::vector<Entity> m_Entities; //!< Vector of Entities in the Environment
+	std::vector<Object> m_Objects; //!< Vector of Objects in the Environment
+
 	/////////////////////////////////////////////////
 	///
 	/// \brief Draws the Environment to the RenderTarget
@@ -32,14 +39,16 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Default constructor
+	/// \brief Constructor
+	///
+	/// \param ksFilename The filename of an Environment file
 	///
 	///////////////////////////////////////////////// 
-	Environment() {};
+	Environment(const std::string ksFilename);
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Updates the Environment with elapsed time
+	/// \brief Updates the Environment and its contents with elapsed time
 	///
 	/// \param kfElapsedTime The time passed since last update in seconds
 	///
