@@ -5,8 +5,11 @@
 // Imports
 #include "object.h"
 
-// Void: Called to draw the Object
-void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const
+// Constructor
+Object::Object(const sf::Vector2i kPosition)
 {
-	// TODO
+	m_position = kPosition;
 }
+
+// Void: Called to draw the Object
+void Object::draw(sf::RenderTarget& target, sf::RenderStates states) const {}

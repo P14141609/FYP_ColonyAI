@@ -19,15 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\bush.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\environment.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\object.cpp" />
+    <ClCompile Include="src\rock.cpp" />
+    <ClCompile Include="src\tree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\bush.h" />
     <ClInclude Include="include\entity.h" />
     <ClInclude Include="include\environment.h" />
     <ClInclude Include="include\object.h" />
+    <ClInclude Include="include\rock.h" />
+    <ClInclude Include="include\tree.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4662F040-7E1C-466F-8946-FF7A47F88949}</ProjectGuid>

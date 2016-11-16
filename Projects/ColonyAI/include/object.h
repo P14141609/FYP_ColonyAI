@@ -7,7 +7,7 @@
 
 /////////////////////////////////////////////////
 ///
-/// \brief Base class for objects for sharing utilities
+/// \brief Base class for objects
 /// 
 /////////////////////////////////////////////////
 class Object : public sf::Drawable
@@ -28,14 +28,18 @@ private:
 
 protected:
 
+	sf::Vector2i m_position; //!< Holds the Object position
+
 public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Default constructor
+	/// \brief Constructor
+	///
+	/// \param position A vector with x&y for position
 	///
 	///////////////////////////////////////////////// 
-	Object() {};
+	Object(const sf::Vector2i kPosition);
 };
 
 #endif
