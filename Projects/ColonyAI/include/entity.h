@@ -16,7 +16,7 @@ private:
 	
 protected:
 	
-	sf::Vector2i m_position; //!< Holds the Entity position
+	sf::Vector2f m_position; //!< Holds the Entity position
 	float m_fHeading; //!< Holds the Entity heading in degrees
 
 public:
