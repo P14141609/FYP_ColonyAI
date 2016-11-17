@@ -4,6 +4,10 @@
 
 // Imports
 #include "environment.h"
+// TEMPORARY
+#include "bush.h"
+#include "rock.h"
+#include "tree.h"
 
 // Constructor
 Environment::Environment(const std::string ksFilename)
@@ -12,16 +16,20 @@ Environment::Environment(const std::string ksFilename)
 
 	// TEMPORARY
 	m_bgColour = sf::Color(0, 150, 0, 255);
+
+	m_Objects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(300, 150))));
+	m_Objects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(300, 300))));
+	m_Objects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(300, 450))));
 }
 
 // Void: Called to update the environment
 void Environment::update(const float kfElapsedTime)
 {
 	// For every Entity in the Environment
-	for (Entity entity : m_Entities)
+	for (std::shared_ptr<Entity> entity : m_Entities)
 	{
 		// Updates the Entity
-		entity.update(kfElapsedTime);
+		entity->update(kfElapsedTime);
 	}
 }
 
@@ -32,16 +40,16 @@ void Environment::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.clear(m_bgColour);
 
 	// For every Entity in the Environment
-	for (Entity entity:m_Entities)
+	for (std::shared_ptr<Entity> entity : m_Entities)
 	{
 		// Draws Entity to RenderTarget
-		target.draw(entity);
+		entity->draw(target, states);
 	}
 
 	// For every Object in the Environment
-	for (Object object : m_Objects)
+	for (std::shared_ptr<Object> object : m_Objects)
 	{
 		// Draws Object to RenderTarget
-		target.draw(object);
+		object->draw(target, states);
 	}
 }
