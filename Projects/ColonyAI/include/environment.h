@@ -4,6 +4,7 @@
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <memory>
 #include "entity.h"
 #include "object.h"
 
@@ -18,8 +19,8 @@ private:
 
 	sf::Color m_bgColour; //!< Color for the Environment background
 
-	std::vector<Entity> m_Entities; //!< Vector of Entities in the Environment
-	std::vector<Object> m_Objects; //!< Vector of Objects in the Environment
+	std::vector<std::shared_ptr<Entity>> m_Entities; //!< Vector of Entity pointers to associated Entities in the Environment
+	std::vector<std::shared_ptr<Object>> m_Objects; //!< Vector of Object pointers to associated Objects in the Environment
 
 	/////////////////////////////////////////////////
 	///

@@ -7,16 +7,23 @@
 
 /////////////////////////////////////////////////
 ///
-/// \brief Base class for entities with sharing utilities
+/// \brief Abstract base class for entities
 /// 
 /////////////////////////////////////////////////
-class Entity: public sf::Drawable
+class Entity
 {
 private:
 	
+protected:
+	
+	sf::Vector2i m_position; //!< Holds the Entity position
+	float m_fHeading; //!< Holds the Entity heading in degrees
+
+public:
+
 	/////////////////////////////////////////////////
 	///
-	/// \brief Draws the Entity to the RenderTarget
+	/// \brief Purely virtual: Draws the Entity to the RenderTarget
 	///
 	/// \param target The RenderTarget to draw on
 	/// \param states The corresponding RenderStates
@@ -24,29 +31,18 @@ private:
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
-
-protected:
-	
-public:
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Default constructor
-	///
-	///////////////////////////////////////////////// 
-	Entity() {};
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Updates the Entity with elapsed time
+	/// \brief Purely virtual: Updates the Entity with elapsed time
 	///
 	/// \param kfElapsedTime The time passed since last update in seconds
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void update(const float kfElapsedTime);
+	virtual void update(const float kfElapsedTime) = 0;
 };
 
 #endif

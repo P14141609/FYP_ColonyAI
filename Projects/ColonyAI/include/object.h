@@ -7,16 +7,22 @@
 
 /////////////////////////////////////////////////
 ///
-/// \brief Base class for objects for sharing utilities
+/// \brief Base class for objects
 /// 
 /////////////////////////////////////////////////
-class Object : public sf::Drawable
+class Object
 {
 private:
 
+protected:
+
+	sf::Vector2f m_position; //!< Holds the Object position
+
+public:
+
 	/////////////////////////////////////////////////
 	///
-	/// \brief Draws the Object to the RenderTarget
+	/// \brief Purely virtual: Draws the Object to the RenderTarget
 	///
 	/// \param target The RenderTarget to draw on
 	/// \param states The corresponding RenderStates
@@ -24,18 +30,8 @@ private:
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 
-protected:
-
-public:
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Default constructor
-	///
-	///////////////////////////////////////////////// 
-	Object() {};
 };
 
 #endif

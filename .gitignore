@@ -36,3 +36,5 @@ bin/Debug/ColonyAI.ilk
 bin/Debug/ColonyAI.pdb
 *.idb
 Projects/ColonyAI/temp/Debug/vc140.pdb
+*.idb
+*.pdb

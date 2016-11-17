@@ -51,6 +51,15 @@
     <ClCompile Include="src\object.cpp">
       <Filter>Source Files\Environment</Filter>
     </ClCompile>
+    <ClCompile Include="src\tree.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bush.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rock.cpp">
+      <Filter>Source Files\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\environment.h">
@@ -61,6 +70,15 @@
     </ClInclude>
     <ClInclude Include="include\object.h">
       <Filter>Header Files\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="include\tree.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\rock.h">
+      <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\bush.h">
+      <Filter>Header Files\Object</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
