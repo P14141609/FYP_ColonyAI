@@ -11,7 +11,7 @@
 /// \brief Subclass for Rock Objects
 /// 
 /////////////////////////////////////////////////
-class Rock : public Object, public sf::Drawable
+class Rock : public Object
 {
 private:
 
@@ -38,7 +38,7 @@ public:
 	/// \param position A vector with x&y for position
 	///
 	///////////////////////////////////////////////// 
-	Rock(const sf::Vector2i kPosition);
+	Rock(const sf::Vector2f kPosition);
 };
 
 #endif

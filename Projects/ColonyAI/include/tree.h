@@ -11,7 +11,7 @@
 /// \brief Subclass for Tree Objects
 /// 
 /////////////////////////////////////////////////
-class Tree : public Object, public sf::Drawable
+class Tree : public Object
 {
 private:
 
@@ -38,7 +38,7 @@ public:
 	/// \param position A vector with x&y for position
 	///
 	///////////////////////////////////////////////// 
-	Tree(const sf::Vector2i kPosition);
+	Tree(const sf::Vector2f kPosition);
 };
 
 #endif

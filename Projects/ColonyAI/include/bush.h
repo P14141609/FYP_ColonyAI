@@ -11,7 +11,7 @@
 /// \brief Subclass for Bush Objects
 /// 
 /////////////////////////////////////////////////
-class Bush : public Object, public sf::Drawable
+class Bush : public Object
 {
 private:
 
@@ -38,7 +38,7 @@ public:
 	/// \param position A vector with x&y for position
 	///
 	///////////////////////////////////////////////// 
-	Bush(const sf::Vector2i kPosition);
+	Bush(const sf::Vector2f kPosition);
 };
 
 #endif
