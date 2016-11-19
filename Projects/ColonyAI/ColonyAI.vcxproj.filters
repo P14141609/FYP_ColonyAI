@@ -37,6 +37,9 @@
     <Filter Include="Source Files\System">
       <UniqueIdentifier>{4e430ac5-5075-4c24-8c4e-2c60ac70a335}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Environments">
+      <UniqueIdentifier>{15378d5d-3517-49b3-b8b4-dab3bc98ca63}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\environment.cpp">
@@ -80,5 +83,10 @@
     <ClInclude Include="include\bush.h">
       <Filter>Header Files\Object</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="environments\env01.cfg">
+      <Filter>Resource Files\Environments</Filter>
+    </None>
   </ItemGroup>
 </Project>

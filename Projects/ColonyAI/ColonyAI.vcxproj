@@ -35,6 +35,9 @@
     <ClInclude Include="include\rock.h" />
     <ClInclude Include="include\tree.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="environments\env01.cfg" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4662F040-7E1C-466F-8946-FF7A47F88949}</ProjectGuid>
     <RootNamespace>ColonyAI</RootNamespace>
