@@ -26,7 +26,9 @@ int main()
 	sf::Time elapsedTime;
 
 	// Instantiates new Environment
-	Environment environment = Environment(""); // TEMPORARY
+	Environment environment = Environment();
+	// Loads an Evironment from file
+	environment.loadFromFile("environments\\env01.cfg");
 
 	// While the window is open
 	while (window.isOpen())
