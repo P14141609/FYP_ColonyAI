@@ -76,7 +76,7 @@ void Environment::loadFromFile(const std::string ksFilePath)
 void Environment::update(const float kfElapsedTime)
 {
 	// For every Entity in the Environment
-	for (std::shared_ptr<Entity> entity : m_Entities)
+	for (std::shared_ptr<Entity> entity : m_pEntities)
 	{
 		// Updates the Entity
 		entity->update(kfElapsedTime);
@@ -90,14 +90,14 @@ void Environment::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.clear(m_colour);
 
 	// For every Entity in the Environment
-	for (std::shared_ptr<Entity> entity : m_Entities)
+	for (std::shared_ptr<Entity> entity : m_pEntities)
 	{
 		// Draws Entity to RenderTarget
 		entity->draw(target, states);
 	}
 
 	// For every Object in the Environment
-	for (std::shared_ptr<Object> object : m_Objects)
+	for (std::shared_ptr<Object> object : m_pObjects)
 	{
 		// Draws Object to RenderTarget
 		object->draw(target, states);
@@ -219,10 +219,10 @@ void Environment::readObjectLine(std::istringstream& iss)
 
 	sf::err() << "[FILE] Object data read from file: type" << objectType << " x" << fX << " y" << fY << " r" << fR << std::endl;
 
-	// With objectType creates a new Object subclass and stores a reference in the m_Objects member
-	if (objectType == BUSH) m_Objects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY))));
-	else if (objectType == ROCK) m_Objects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY))));
-	else if (objectType == TREE) m_Objects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY))));
+	// With objectType creates a new Object subclass and stores a reference in the m_pObjects member
+	if (objectType == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY))));
+	else if (objectType == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY))));
+	else if (objectType == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY))));
 }
 
 // Void: Reads an Entity file line
@@ -260,6 +260,6 @@ void Environment::readEntityLine(std::istringstream& iss)
 
 	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << std::endl;
 
-	// With entityType creates a new Entity subclass and stores a reference in the m_Entities member
-	//if (entityType == COLONIST) m_Entities.push_back(std::shared_ptr<Entity>(new Colonist(sf::Vector2f(fX, fY)))); // TODO - Need to add Colonist Entity
+	// With entityType creates a new Entity subclass and stores a reference in the m_pEntities member
+	//if (entityType == COLONIST) m_pEntities.push_back(std::shared_ptr<Entity>(new Colonist(sf::Vector2f(fX, fY)))); // TODO - Need to add Colonist Entity
 }
