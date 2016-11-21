@@ -35,10 +35,11 @@ public:
 	///
 	/// \brief Constructor
 	///
-	/// \param position A vector with x&y for position
+	/// \param kPosition A vector with x&y for position
+	/// \param kfRadius A float for the radius
 	///
 	///////////////////////////////////////////////// 
-	Tree(const sf::Vector2f kPosition);
+	Tree(const sf::Vector2f kPosition, const float kfRadius);
 };
 
 #endif

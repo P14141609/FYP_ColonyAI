@@ -35,10 +35,11 @@ public:
 	///
 	/// \brief Constructor
 	///
-	/// \param position A vector with x&y for position
+	/// \param kPosition A vector with x&y for position
+	/// \param kfRadius A float for the radius
 	///
 	///////////////////////////////////////////////// 
-	Rock(const sf::Vector2f kPosition);
+	Rock(const sf::Vector2f kPosition, const float kfRadius);
 };
 
 #endif
