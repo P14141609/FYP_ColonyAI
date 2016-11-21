@@ -220,9 +220,9 @@ void Environment::readObjectLine(std::istringstream& iss)
 	sf::err() << "[FILE] Object data read from file: type" << objectType << " x" << fX << " y" << fY << " r" << fR << std::endl;
 
 	// With objectType creates a new Object subclass and stores a reference in the m_pObjects member
-	if (objectType == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY))));
-	else if (objectType == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY))));
-	else if (objectType == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY))));
+	if (objectType == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY), fR)));
+	else if (objectType == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY), fR)));
+	else if (objectType == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY), fR)));
 }
 
 // Void: Reads an Entity file line

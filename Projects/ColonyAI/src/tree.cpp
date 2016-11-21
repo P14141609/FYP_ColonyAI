@@ -6,32 +6,45 @@
 #include "tree.h"
 
 // Constructor
-Tree::Tree(const sf::Vector2f kPosition)
+Tree::Tree(const sf::Vector2f kPosition, const float kfRadius)
 {
 	m_position = kPosition;
+	m_fRadius = kfRadius;
 }
 
 // Void: Called to draw the Tree
 void Tree::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	// TODO
+	// Declares new CircleShape to draw
+	sf::CircleShape circle;
 
-	// TEMPORARY
-	sf::CircleShape shape;
-	shape.setFillColor(sf::Color(99, 64, 14, 255));
-	shape.setRadius(15.0f);
+	// Sets the origin to the center of the circle
+	circle.setOrigin(sf::Vector2f(m_fRadius, m_fRadius));
 
-	shape.setOrigin(sf::Vector2f(shape.getRadius(), shape.getRadius()));
-	shape.setPosition(sf::Vector2f(m_position));
+	// Sets the circle pos to position member
+	circle.setPosition(sf::Vector2f(m_position));
 
-	target.draw(shape);
+	// Sets the circle radius to radius member
+	circle.setRadius(m_fRadius);
 
-	sf::CircleShape shape2;
-	shape2.setFillColor(sf::Color(26, 77, 6, 140));
-	shape2.setRadius(65.0f);
+	// Sets circle colour: Brown RGB for trunk
+	circle.setFillColor(sf::Color(99, 64, 14, 255));
 
-	shape2.setOrigin(sf::Vector2f(shape2.getRadius(), shape2.getRadius()));
-	shape2.setPosition(m_position);
+	// Draws circle to target
+	target.draw(circle);
 
-	target.draw(shape2);
+	// Sets circle colour: Green RGB for leaves
+	circle.setFillColor(sf::Color(26, 77, 6, 140));
+
+	// Defines a new radius for the leaves with an arbitrary muliplier
+	float leafRadius = m_fRadius*4.5f;
+
+	// Sets the circle radius to new radius
+	circle.setRadius(leafRadius);
+
+	// Sets the origin to the center of the newly expanded circle
+	circle.setOrigin(sf::Vector2f(leafRadius, leafRadius));
+
+	// Draws circle to target
+	target.draw(circle);
 }
