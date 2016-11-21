@@ -261,5 +261,5 @@ void Environment::readEntityLine(std::istringstream& iss)
 	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << std::endl;
 
 	// With entityType creates a new Entity subclass and stores a reference in the m_pEntities member
-	//if (entityType == COLONIST) m_pEntities.push_back(std::shared_ptr<Entity>(new Colonist(sf::Vector2f(fX, fY)))); // TODO - Need to add Colonist Entity
+	if (entityType == COLONIST) m_pEntities.push_back(std::shared_ptr<Entity>(new Colonist(sf::Vector2f(fX, fY))));
 }

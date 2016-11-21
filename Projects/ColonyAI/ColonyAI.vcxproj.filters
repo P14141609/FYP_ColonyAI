@@ -63,6 +63,9 @@
     <ClCompile Include="src\rock.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="src\colonist.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\environment.h">
@@ -82,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="include\bush.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\colonist.h">
+      <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
