@@ -23,7 +23,7 @@ private:
 	float m_hunger; //!< Holds the hunger need level of the Colonist
 	float m_thirst; //!< Holds the thirst need level of the Colonist
 
-	//std::vector<std::shared_ptr<Memory>> m_memories; // TEMPORARY - 
+	//std::vector<std::shared_ptr<Memory>> m_memories; // TEMPORARY - Need to implement Memory at a later date
 
 	/////////////////////////////////////////////////
 	///
