@@ -28,8 +28,8 @@ private:
 	sf::Vector2u m_size; //!< Vector2u for Environment size
 	sf::Color m_colour; //!< Color for the Environment background
 
-	std::vector<std::shared_ptr<Entity>> m_Entities; //!< Vector of Entity pointers to associated Entities in the Environment
-	std::vector<std::shared_ptr<Object>> m_Objects; //!< Vector of Object pointers to associated Objects in the Environment
+	std::vector<std::shared_ptr<Entity>> m_pEntities; //!< Vector of Entity pointers to associated Entities in the Environment
+	std::vector<std::shared_ptr<Object>> m_pObjects; //!< Vector of Object pointers to associated Objects in the Environment
 
 	/////////////////////////////////////////////////
 	///
