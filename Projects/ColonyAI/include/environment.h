@@ -15,6 +15,7 @@
 #include "rock.h"
 #include "tree.h"
 #include "entity.h"
+#include "colonist.h"
 
 /////////////////////////////////////////////////
 ///

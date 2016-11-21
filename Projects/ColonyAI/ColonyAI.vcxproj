@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\bush.cpp" />
+    <ClCompile Include="src\colonist.cpp" />
     <ClCompile Include="src\entity.cpp" />
     <ClCompile Include="src\environment.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -29,6 +30,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\bush.h" />
+    <ClInclude Include="include\colonist.h" />
     <ClInclude Include="include\entity.h" />
     <ClInclude Include="include\environment.h" />
     <ClInclude Include="include\object.h" />
