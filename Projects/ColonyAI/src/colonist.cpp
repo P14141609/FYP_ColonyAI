@@ -8,13 +8,27 @@
 // Constructor
 Colonist::Colonist(const sf::Vector2f kPosition)
 {
-	m_position = kPosition;
+	m_position = kPosition; // Sets position with input
+	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 }
 
 // Void: Called to update the Colonist
 void Colonist::update(const float kfElapsedTime)
 {
-	// TODO
+	switch (m_state)
+	{
+		case IDLE: // TODO
+		{
+
+		} break;
+
+		case EXPLORE: // TODO
+		{
+
+		} break;
+		
+		default: m_state = IDLE; break; // No valid state found: set IDLE;
+	}
 }
 
 // Void: Called to draw the Colonist

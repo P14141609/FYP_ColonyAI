@@ -15,7 +15,7 @@ class Colonist : public Entity
 {
 private:
 
-	enum aiState { X, Y, Z }; //!< Enum for AI behavioural types // TEMPORARY
+	enum aiState { IDLE, EXPLORE }; //!< Enum for AI behavioural types
 	aiState m_state; //!< Stores the current AI state that the Colonist is in
 	
 	float m_fRadius = 7.5f; //!< Holds the radial size of the Colonist
