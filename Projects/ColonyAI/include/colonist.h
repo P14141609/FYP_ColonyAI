@@ -54,7 +54,16 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief 
+	/// \brief Processes IDLE state functionality
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void idle();
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Processes EXPLORE state functionality
 	///
 	/// \return void
 	///
@@ -65,13 +74,24 @@ private:
 	///
 	/// \brief Moves the Colonist toward a destination at an input speed
 	///
-	/// \param kDestination A position to head toward
-	/// \param fSpeed 
+	/// \param kDestination A position to move toward
+	/// \param fSpeed The speed it should move at
 	///
 	/// \return Whether Colonist is at the destination
 	///
 	///////////////////////////////////////////////// 
-	bool pathTo(const sf::Vector2f kDestination, const float fSpeed);
+	bool moveTo(const sf::Vector2f kDestination, const float fSpeed);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Determines a path to an input destination and queues it
+	///
+	/// \param kDestination A position to path toward
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void createPath(const sf::Vector2f kDestination);
 
 protected:
 
@@ -81,10 +101,13 @@ public:
 	///
 	/// \brief Constructor
 	///
-	/// \param position A vector with x&y for position
+	/// \param kPosition A vector with x&y for position
+	/// \param kfRadius A float for radial size
+	/// \param kfHeading A float for initial heading
+	/// \param kfSpeed A float for speed per second
 	///
 	///////////////////////////////////////////////// 
-	Colonist(const sf::Vector2f kPosition);
+	Colonist(const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed);
 };
 
 #endif

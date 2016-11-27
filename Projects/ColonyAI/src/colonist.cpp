@@ -7,13 +7,12 @@
 #include "utils.h"
 
 // Constructor
-Colonist::Colonist(const sf::Vector2f kPosition)
+Colonist::Colonist(const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed)
 {
-	m_position = kPosition; // Sets position with input
-	m_fHeading = 0.0f; // Sets heading to 0.0f
-
-	m_fSpeed = 75.0f;
-	m_fRadius = 7.5f;
+	m_position = kPosition;
+	m_fHeading = kfHeading;
+	m_fRadius = kfRadius;
+	m_fSpeed = kfSpeed;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 	m_path = {}; // Sets the current path queue to empty
@@ -24,31 +23,22 @@ void Colonist::update(const float kfElapsedTime)
 {
 	switch (m_state)
 	{
-		case IDLE: // TODO
-		{
-			m_state = EXPLORE; // TEMPORARY
-		} break;
+		case IDLE: idle(); break; // State: Idle - run method
 
-		case EXPLORE: // TODO
-		{
-			// If path queue is not empty
-			if (!m_path.empty())
-			{
-				// Paths the Colonist to the pos at the front of the queue
-				if (pathTo(m_path.front(), m_fSpeed*kfElapsedTime))
-				{
-					m_path.pop();
-				}
-			}
-			else
-			{
-				// Run explore method
-				explore();
-			}
-
-		} break;
+		case EXPLORE: explore(); break; // State: Explore - run method
 
 		default: m_state = IDLE; break; // No valid state found: set IDLE;
+	}
+
+	// If path queue is not empty
+	if (!m_path.empty())
+	{
+		// Paths the Colonist to the pos at the front of the queue
+		if (moveTo(m_path.front(), m_fSpeed*kfElapsedTime))
+		{
+			// Removes the location at the front of the queue
+			m_path.pop();
+		}
 	}
 }
 
@@ -74,25 +64,37 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(circle);
 }
 
-// Void: 
+// Void: Processes IDLE state functionality
+void Colonist::idle()
+{
+	m_state = EXPLORE; // TEMPORARY
+}
+
+// Void: Processes EXPLORE state functionality
 void Colonist::explore()
 {
-	float fCone = 75;
-	
-	// Defines random float
-	float fDeltaHeading = (rand() % (int)fCone) - (fCone*0.5f);
-	
-	// Defines position to path towards with random angle
-	sf::Vector2f randPos = Utils::unitVecFromAngle(fDeltaHeading);
-	
-	randPos *= 10.0f;
-	
-	// Adds random position to the Colonist's path
-	m_path.push(m_position + randPos);
+	// If path queue is empty
+	if (m_path.empty())
+	{
+		// Declares a cone that the randPos will sit within infront of the Colonist
+		float fCone = 90;
+
+		// Defines random float
+		float fDeltaHeading = (rand() % (int)fCone) - (fCone*0.5f);
+
+		// Defines position to path towards with the heading + random angle
+		sf::Vector2f randPos = Utils::unitVecFromAngle(m_fHeading + fDeltaHeading);
+
+		// With the randPos currently a Unit Vector it's now multiplied to be ahead of the Colonist instead of 1.0f distance away
+		randPos *= m_fSpeed;
+
+		// Creates a path to the position
+		createPath(m_position + randPos);
+	}
 }
 
 // Bool: Moves the Colonist toward a destination at an input speed - Returns whether Colonist is at the destination
-bool Colonist::pathTo(const sf::Vector2f kDestination, const float fSpeed)
+bool Colonist::moveTo(const sf::Vector2f kDestination, const float fSpeed)
 {
 	// Defines the distance between current and desired position
 	sf::Vector2f distance = kDestination - m_position;
@@ -119,3 +121,9 @@ bool Colonist::pathTo(const sf::Vector2f kDestination, const float fSpeed)
 	return false;
 }
 
+// Void: Determines a path to an input destination and queues it
+void Colonist::createPath(const sf::Vector2f kDestination)
+{
+	sf::err() << "kDestination.x " << kDestination.x << " kDestination.y " << kDestination.y << std::endl;
+	m_path.push(kDestination);
+}

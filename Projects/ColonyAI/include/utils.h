@@ -21,25 +21,25 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief 
+	/// \brief Calculates a unit vector from a given angle
 	///
-	/// \param 
+	/// \param kfAngle An angle to derive a unit vector
 	///
-	/// \return void
+	/// \return The unit vector of the angle
 	///
 	///////////////////////////////////////////////// 
 	static sf::Vector2f unitVecFromAngle(const float kfAngle) { return sf::Vector2f(cosf(kfAngle * g_kfDegToRad), sinf(kfAngle * g_kfDegToRad)); }
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief 
+	/// \brief Calculates an angle from a given unit vector
 	///
-	/// \param 
+	/// \param kVector A unit vector to derive an angle
 	///
-	/// \return void
+	/// \return The angle of the unit vector
 	///
 	///////////////////////////////////////////////// 
-	static float angleFromUnitVec(const sf::Vector2f kVector) { return (atan2(kVector.y, kVector.x) / g_kfPi) * 180; }
+	static float angleFromUnitVec(const sf::Vector2f kUnitVector) { return (atan2(kUnitVector.y, kUnitVector.x) / g_kfPi) * 180; }
 	
 	/////////////////////////////////////////////////
 	///
@@ -50,18 +50,12 @@ public:
 	/// \return Returns a normalised vector
 	///
 	///////////////////////////////////////////////// 
-	//static sf::Vector2f normaliseVec(const sf::Vector2f kVector) 
-	//{ 
-	//	return sf::Vector2f(-kVector.y / magnitude(kVector), kVector.x / magnitude(kVector)); 
-	//}
 	static sf::Vector2f normaliseVec(const sf::Vector2f kVector)
 	{
-		float fMag(magnitude(kVector));
-
-		if (fMag != 0)
-			return sf::Vector2f(kVector.x / fMag, kVector.y / fMag);
-		else
-			return sf::Vector2f(0.0f, 0.0f);
+		// If magnitude is not 0: returns the normalised vector
+		if (magnitude(kVector) != 0) return sf::Vector2f(kVector.x / magnitude(kVector), kVector.y / magnitude(kVector));
+		// Else: return a 0,0 vector
+		else return sf::Vector2f(0.0f, 0.0f);
 	}
 
 	/////////////////////////////////////////////////
