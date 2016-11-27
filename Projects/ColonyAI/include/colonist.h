@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "entity.h"
+#include <math.h>
+#include <queue>
 
 /////////////////////////////////////////////////
 ///
@@ -17,8 +19,10 @@ private:
 
 	enum aiState { IDLE, EXPLORE }; //!< Enum for AI behavioural types
 	aiState m_state; //!< Stores the current AI state that the Colonist is in
-	
-	float m_fRadius = 7.5f; //!< Holds the radial size of the Colonist
+	std::queue<sf::Vector2f> m_path; //!< Stores a queue of positions for path finding
+
+	float m_fSpeed; //!< Holds the speed the Colonist can move at per second
+	float m_fRadius; //!< Holds the radial size of the Colonist
 
 	float m_hunger; //!< Holds the hunger need level of the Colonist
 	float m_thirst; //!< Holds the thirst need level of the Colonist
@@ -47,6 +51,27 @@ private:
 	///
 	///////////////////////////////////////////////// 
 	void update(const float kfElapsedTime);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief 
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void explore();
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Moves the Colonist toward a destination at an input speed
+	///
+	/// \param kDestination A position to head toward
+	/// \param fSpeed 
+	///
+	/// \return Whether Colonist is at the destination
+	///
+	///////////////////////////////////////////////// 
+	bool pathTo(const sf::Vector2f kDestination, const float fSpeed);
 
 protected:
 
