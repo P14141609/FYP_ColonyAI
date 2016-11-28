@@ -68,6 +68,34 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	static float magnitude(const sf::Vector2f kVector) { return sqrt(pow(kVector.x, 2) + pow(kVector.y, 2)); }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Determines whether a point lies within a given area
+	///
+	/// \param kPoint A position vector for the point
+	/// \param kArea A size vector for the area
+	///
+	/// \return Returns whether the point is in the area
+	///
+	///////////////////////////////////////////////// 
+	static bool pointInArea(const sf::Vector2f kPoint, const sf::Vector2u kArea)
+	{
+		// If point.x is less than 0: Out of bounds
+		if (kPoint.x < 0) return false;
+
+		// If point.y is less than 0: Out of bounds
+		if (kPoint.y < 0) return false;
+
+		// If point.x is greater than the area.x: Out of bounds
+		if (kPoint.x > kArea.x) return false;
+
+		// If point.y is greater than the area.y: Out of bounds
+		if (kPoint.y > kArea.y) return false;
+
+		// No False returns called: call return True
+		return true;
+	}
 };
 
 #endif

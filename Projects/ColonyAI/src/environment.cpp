@@ -4,6 +4,7 @@
 
 // Imports
 #include "environment.h"
+#include <memory>
 
 // Void: Loads Env data from a file
 void Environment::loadFromFile(const std::string ksFilePath)
@@ -279,5 +280,11 @@ void Environment::readEntityLine(std::istringstream& iss)
 	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << " r" << fR << " h" << fH << " s" << fS << std::endl;
 
 	// With entityType creates a new Entity subclass and stores a reference in the m_pEntities member
-	if (entityType == COLONIST) m_pEntities.push_back(std::shared_ptr<Entity>(new Colonist(sf::Vector2f(fX, fY), fR, fH, fS)));
+	if (entityType == COLONIST) m_pEntities.push_back
+	(
+		std::shared_ptr<Entity>
+		(
+			new Colonist(this, sf::Vector2f(fX, fY), fR, fH, fS)
+		)
+	);
 }

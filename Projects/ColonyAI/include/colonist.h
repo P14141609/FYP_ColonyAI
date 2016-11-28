@@ -5,8 +5,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "entity.h"
+#include "environment.h"
+#include <memory>
 #include <math.h>
 #include <queue>
+
+class Environment;
 
 /////////////////////////////////////////////////
 ///
@@ -16,6 +20,8 @@
 class Colonist : public Entity
 {
 private:
+
+	std::shared_ptr<Environment> m_pEnvironment;
 
 	enum aiState { IDLE, EXPLORE }; //!< Enum for AI behavioural types
 	aiState m_state; //!< Stores the current AI state that the Colonist is in
@@ -101,13 +107,17 @@ public:
 	///
 	/// \brief Constructor
 	///
+	///	\param pEnv Pointer to the Environment the Colonist is within
 	/// \param kPosition A vector with x&y for position
 	/// \param kfRadius A float for radial size
 	/// \param kfHeading A float for initial heading
 	/// \param kfSpeed A float for speed per second
 	///
 	///////////////////////////////////////////////// 
-	Colonist(const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed);
+	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed);
+	~Colonist() {};
+
+	std::shared_ptr<Environment> getEnvironment() { return m_pEnvironment; };
 };
 
 #endif

@@ -7,8 +7,10 @@
 #include "utils.h"
 
 // Constructor
-Colonist::Colonist(const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed)
+Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed)
 {
+	m_pEnvironment = (std::shared_ptr<Environment>)pEnv;
+
 	m_position = kPosition;
 	m_fHeading = kfHeading;
 	m_fRadius = kfRadius;
@@ -40,6 +42,10 @@ void Colonist::update(const float kfElapsedTime)
 			m_path.pop();
 		}
 	}
+
+	// Binds heading to 360 degrees
+	if (m_fHeading >= 360) m_fHeading -= 360;
+	else if (m_fHeading < 0) m_fHeading += 360;
 }
 
 // Void: Called to draw the Colonist
@@ -124,6 +130,13 @@ bool Colonist::moveTo(const sf::Vector2f kDestination, const float fSpeed)
 // Void: Determines a path to an input destination and queues it
 void Colonist::createPath(const sf::Vector2f kDestination)
 {
-	sf::err() << "kDestination.x " << kDestination.x << " kDestination.y " << kDestination.y << std::endl;
-	m_path.push(kDestination);
+	if (Utils::pointInArea(kDestination, m_pEnvironment->getSize()))
+	{
+		sf::err() << "kDestination.x " << kDestination.x << " kDestination.y " << kDestination.y << std::endl;
+		m_path.push(kDestination);
+	}
+	else
+	{
+		m_fHeading += 180;
+	}
 }
