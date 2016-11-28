@@ -78,6 +78,9 @@ int main()
 		// Draws environment
 		window.draw(environment);
 
+		// Sets view to size of environment
+		window.setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)environment.getSize().x, (float)environment.getSize().y)));
+
 		// Displays the current frame
 		window.display();
 	}
