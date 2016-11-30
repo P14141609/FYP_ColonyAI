@@ -21,7 +21,7 @@ class Colonist : public Entity
 {
 private:
 
-	std::shared_ptr<Environment> m_pEnvironment;
+	std::shared_ptr<Environment> m_pEnvironment; //!< Pointer to the Environment the Colonist is within
 
 	enum aiState { IDLE, EXPLORE }; //!< Enum for AI behavioural types
 	aiState m_state; //!< Stores the current AI state that the Colonist is in
