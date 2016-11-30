@@ -115,8 +115,14 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed);
-	~Colonist() {};
 
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the Environment member
+	///
+	/// \return The Environment pointer
+	///
+	///////////////////////////////////////////////// 
 	std::shared_ptr<Environment> getEnvironment() { return m_pEnvironment; };
 };
 

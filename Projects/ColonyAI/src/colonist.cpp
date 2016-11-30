@@ -9,8 +9,10 @@
 // Constructor
 Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed)
 {
+	// Casts the incoming pointer to a shared_ptr and assigns it to the member
 	m_pEnvironment = (std::shared_ptr<Environment>)pEnv;
 
+	// Sets member values to corresponding input
 	m_position = kPosition;
 	m_fHeading = kfHeading;
 	m_fRadius = kfRadius;

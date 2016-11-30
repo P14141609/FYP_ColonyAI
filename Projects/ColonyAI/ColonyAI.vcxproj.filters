@@ -48,12 +48,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="src\entity.cpp">
-      <Filter>Source Files\Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="src\object.cpp">
-      <Filter>Source Files\Environment</Filter>
-    </ClCompile>
     <ClCompile Include="src\tree.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>

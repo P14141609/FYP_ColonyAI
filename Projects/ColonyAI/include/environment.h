@@ -129,6 +129,24 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	sf::Vector2u getSize() { return m_size; };
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the Environment Object member
+	///
+	/// \return The vector of Objects
+	///
+	///////////////////////////////////////////////// 
+	sf::Vector2u getObjects() { return m_size; };
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the Environment Entity member
+	///
+	/// \return The vector of Entities
+	///
+	///////////////////////////////////////////////// 
+	sf::Vector2u getEntities() { return m_size; };
 };
 
 #endif
