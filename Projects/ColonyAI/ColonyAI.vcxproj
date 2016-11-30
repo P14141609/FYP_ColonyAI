@@ -36,6 +36,7 @@
     <ClInclude Include="include\object.h" />
     <ClInclude Include="include\rock.h" />
     <ClInclude Include="include\tree.h" />
+    <ClInclude Include="include\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="environments\env01.cfg" />

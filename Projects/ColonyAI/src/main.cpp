@@ -17,6 +17,9 @@
 //!< Entry point for the application
 int main()
 {
+	// Intitialises a seed for rand()
+	srand((unsigned int)time(NULL));
+
 	// Instantiates window
 	sf::RenderWindow window(sf::VideoMode(1280, 720), "ColonyAI - P14141609", sf::Style::Default);
 

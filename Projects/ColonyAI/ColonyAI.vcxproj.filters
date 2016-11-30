@@ -89,6 +89,9 @@
     <ClInclude Include="include\colonist.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
+    <ClInclude Include="include\utils.h">
+      <Filter>Header Files\System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="environments\env01.cfg">
