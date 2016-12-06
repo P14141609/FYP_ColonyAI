@@ -17,6 +17,9 @@
 #include "entity.h"
 #include "colonist.h"
 
+class Entity;
+class Object;
+
 /////////////////////////////////////////////////
 ///
 /// \brief Class for level setup, interation and display
@@ -137,7 +140,7 @@ public:
 	/// \return The vector of Objects
 	///
 	///////////////////////////////////////////////// 
-	sf::Vector2u getObjects() { return m_size; };
+	std::vector<std::shared_ptr<Object>> getObjects() { return m_pObjects; };
 
 	/////////////////////////////////////////////////
 	///
@@ -146,7 +149,7 @@ public:
 	/// \return The vector of Entities
 	///
 	///////////////////////////////////////////////// 
-	sf::Vector2u getEntities() { return m_size; };
+	std::vector<std::shared_ptr<Entity>> getEntities() { return m_pEntities; };
 };
 
 #endif

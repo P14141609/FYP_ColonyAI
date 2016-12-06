@@ -31,6 +31,12 @@ void Colonist::update(const float kfElapsedTime)
 
 		case EXPLORE: explore(); break; // State: Explore - run method
 
+		case FORAGE: explore(); break; // State: Forage - run method
+
+		case TENDTONEEDS: explore(); break; // State: TendToNeeds - run method
+
+		case BREED: explore(); break; // State: Breed - run method
+
 		default: m_state = IDLE; break; // No valid state found: set IDLE;
 	}
 
@@ -99,6 +105,24 @@ void Colonist::explore()
 		// Creates a path to the position
 		createPath(m_position + randPos);
 	}
+}
+
+// Void: Processes FORAGE state functionality
+void Colonist::forage()
+{
+	m_state = IDLE; // TEMPORARY
+}
+
+// Void: Processes TENDTONEEDS state functionality
+void Colonist::tendToNeeds()
+{
+	m_state = IDLE; // TEMPORARY
+}
+
+// Void: Processes BREED state functionality
+void Colonist::breed()
+{
+	m_state = IDLE; // TEMPORARY
 }
 
 // Bool: Moves the Colonist toward a destination at an input speed - Returns whether Colonist is at the destination

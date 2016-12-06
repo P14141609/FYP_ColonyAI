@@ -5,12 +5,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "entity.h"
-#include "environment.h"
 #include <memory>
 #include <math.h>
 #include <queue>
-
-class Environment;
 
 /////////////////////////////////////////////////
 ///
@@ -21,19 +18,20 @@ class Colonist : public Entity
 {
 private:
 
-	std::shared_ptr<Environment> m_pEnvironment; //!< Pointer to the Environment the Colonist is within
-
-	enum aiState { IDLE, EXPLORE }; //!< Enum for AI behavioural types
-	aiState m_state; //!< Stores the current AI state that the Colonist is in
-	std::queue<sf::Vector2f> m_path; //!< Stores a queue of positions for path finding
-
 	float m_fSpeed; //!< Holds the speed the Colonist can move at per second
-	float m_fRadius; //!< Holds the radial size of the Colonist
+	float m_fHeading; //!< Holds the Colonist heading in degrees
 
 	float m_hunger; //!< Holds the hunger need level of the Colonist
 	float m_thirst; //!< Holds the thirst need level of the Colonist
 
-	//std::vector<std::shared_ptr<Memory>> m_memories; // TEMPORARY - Need to implement Memory at a later date
+	std::shared_ptr<Entity> m_pHeldEntity; //!< Holds a pointer to an Entity the Colonist is holding
+
+	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, BREED }; //!< Enum for AI behavioural types
+	aiState m_state; //!< Stores the current AI state that the Colonist is in
+
+	std::queue<sf::Vector2f> m_path; //!< Stores a queue of positions for path finding
+	
+	//std::vector<std::shared_ptr<Memory>> m_pMemories; // TEMPORARY - Need to implement Memory at a later date
 
 	/////////////////////////////////////////////////
 	///
@@ -78,6 +76,33 @@ private:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Processes FORAGE state functionality
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void forage();
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Processes TENDTONEEDS state functionality
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void tendToNeeds();
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Processes BREED state functionality
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void breed();
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Moves the Colonist toward a destination at an input speed
 	///
 	/// \param kDestination A position to move toward
@@ -115,15 +140,6 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed);
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Returns the Environment member
-	///
-	/// \return The Environment pointer
-	///
-	///////////////////////////////////////////////// 
-	std::shared_ptr<Environment> getEnvironment() { return m_pEnvironment; };
 };
 
 #endif
