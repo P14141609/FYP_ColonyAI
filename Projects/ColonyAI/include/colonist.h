@@ -21,8 +21,8 @@ private:
 	float m_fSpeed; //!< Holds the speed the Colonist can move at per second
 	float m_fHeading; //!< Holds the Colonist heading in degrees
 
-	float m_hunger; //!< Holds the hunger need level of the Colonist
-	float m_thirst; //!< Holds the thirst need level of the Colonist
+	float m_fHunger; //!< Holds the hunger need level of the Colonist
+	float m_fThirst; //!< Holds the thirst need level of the Colonist
 
 	std::shared_ptr<Entity> m_pHeldEntity; //!< Holds a pointer to an Entity the Colonist is holding
 
