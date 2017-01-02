@@ -76,6 +76,37 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	// Draws circle to target
 	target.draw(circle);
+
+	// DEBUG - Pathing
+	std::queue<sf::Vector2f> pathDupe = m_path;
+	// Declares line and colour
+	sf::Vertex line[2];
+	sf::Color colour = sf::Color(255, 0, 0, 255);
+
+	if (pathDupe.size() > 0)
+	{
+		// Sets first point of the line at the Colonist position
+		line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
+		// Sets the second point of the line to the position in the front of the queue
+		line[1] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
+
+		// Draws the line to target
+		target.draw(line, 2, sf::Lines);
+
+		// For every point in the path queue
+		for (int i = 0; i < pathDupe.size(); i++)
+		{
+			// Sets first point of the line at the position in front of the queue
+			line[0] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
+			pathDupe.pop(); // Removes the point from the queue
+
+			// Sets the second point of the line to the position in the front of the queue
+			line[1] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
+
+			// Draws the line to target
+			target.draw(line, 2, sf::Lines);
+		}
+	}
 }
 
 // Void: Processes IDLE state functionality
@@ -102,8 +133,9 @@ void Colonist::explore()
 		// With the randPos currently a Unit Vector it's now multiplied to be ahead of the Colonist instead of 1.0f distance away
 		randPos *= m_fSpeed;
 
-		// Creates a path to the position
-		createPath(m_position + randPos);
+		// Creates a path to the position if within Environment
+		if (Utils::pointInArea(m_position + randPos, m_pEnvironment->getSize())) createPath(m_position + randPos);
+		else m_fHeading += 180; // Reverses Colonist heading
 	}
 }
 
@@ -156,13 +188,6 @@ bool Colonist::moveTo(const sf::Vector2f kDestination, const float fSpeed)
 // Void: Determines a path to an input destination and queues it
 void Colonist::createPath(const sf::Vector2f kDestination)
 {
-	if (Utils::pointInArea(kDestination, m_pEnvironment->getSize()))
-	{
-		sf::err() << "kDestination.x " << kDestination.x << " kDestination.y " << kDestination.y << std::endl;
-		m_path.push(kDestination);
-	}
-	else
-	{
-		m_fHeading += 180;
-	}
+	sf::err() << "kDestination.x " << kDestination.x << " kDestination.y " << kDestination.y << std::endl;
+	m_path.push(kDestination);
 }
