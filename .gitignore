@@ -41,3 +41,5 @@
 *.VC.db
 *.db
 *.opendb
+/Projects/ColonyAI/temp
+/bin
