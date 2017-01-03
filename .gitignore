@@ -39,4 +39,5 @@
 *.idb
 *.suo
 *.VC.db
+*.db
 *.opendb
