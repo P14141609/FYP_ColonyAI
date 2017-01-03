@@ -82,7 +82,7 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// Declares line and colour
 	sf::Vertex line[2];
 	sf::Color colour = sf::Color(255, 0, 0, 255);
-
+	// If there is a queue
 	if (pathDupe.size() > 0)
 	{
 		// Sets first point of the line at the Colonist position
