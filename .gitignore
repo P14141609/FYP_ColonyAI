@@ -39,9 +39,4 @@
 *.idb
 *.suo
 *.VC.db
-*.db
 *.opendb
-/Projects/ColonyAI/temp
-/bin
-Solution.VC.db
-.vs/Solution/v14/.suo
