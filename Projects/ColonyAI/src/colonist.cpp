@@ -77,15 +77,26 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// Draws circle to target
 	target.draw(circle);
 
-	// DEBUG - Pathing
-	std::queue<sf::Vector2f> pathDupe = m_path;
 	// Declares line and colour
 	sf::Vertex line[2];
-	sf::Color colour = sf::Color(255, 0, 0, 255);
+	sf::Color colour = sf::Color(0, 0, 0, 255);
+
+	// Sets the first point of the line at the Colonist position
+	line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
+	// Sets the second point of the line infront of the Colonist based on heading
+	line[1] = sf::Vertex(sf::Vector2f(m_position + (Utils::unitVecFromAngle(m_fHeading) * (m_fRadius*2.0f))), colour);
+
+	// Draws the line to target
+	target.draw(line, 2, sf::Lines);
+
+	// DEBUG - Pathing
+	std::queue<sf::Vector2f> pathDupe = m_path;
+	// Sets line colour to red
+	colour = sf::Color(255, 0, 0, 255);
 	// If there is a queue
 	if (pathDupe.size() > 0)
 	{
-		// Sets first point of the line at the Colonist position
+		// Sets the first point of the line at the Colonist position
 		line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
 		// Sets the second point of the line to the position in the front of the queue
 		line[1] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
@@ -96,7 +107,7 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		// For every point in the path queue
 		for (int i = 0; i < pathDupe.size(); i++)
 		{
-			// Sets first point of the line at the position in front of the queue
+			// Sets the first point of the line at the position in front of the queue
 			line[0] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
 			pathDupe.pop(); // Removes the point from the queue
 
@@ -124,11 +135,13 @@ void Colonist::explore()
 		// Declares a cone that the randPos will sit within infront of the Colonist
 		float fCone = 90;
 
-		// Defines random float
+		// Defines random float for a delta heading
 		float fDeltaHeading = (rand() % (int)fCone) - (fCone*0.5f);
+		// Applies delta to the heading
+		m_fHeading += fDeltaHeading;
 
 		// Defines position to path towards with the heading + random angle
-		sf::Vector2f randPos = Utils::unitVecFromAngle(m_fHeading + fDeltaHeading);
+		sf::Vector2f randPos = Utils::unitVecFromAngle(m_fHeading);
 
 		// With the randPos currently a Unit Vector it's now multiplied to be ahead of the Colonist instead of 1.0f distance away
 		randPos *= m_fSpeed;
