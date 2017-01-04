@@ -40,3 +40,7 @@
 *.suo
 *.VC.db
 *.opendb
+
+# Directories
+/Projects/ColonyAI/temp
+/bin
