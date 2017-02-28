@@ -40,7 +40,7 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	static float angleFromUnitVec(const sf::Vector2f kUnitVector) { return (atan2(kUnitVector.y, kUnitVector.x) / g_kfPi) * 180; }
-	
+
 	/////////////////////////////////////////////////
 	///
 	/// \brief Calculates a normal vector
@@ -73,28 +73,86 @@ public:
 	///
 	/// \brief Determines whether a point lies within a given area
 	///
-	/// \param kPoint A position vector for the point
-	/// \param kArea A size vector for the area
+	/// \param kPoint Position vector for the point
+	/// \param kOrigin The origin of the area
+	/// \param kExtents The extents of the area
 	///
 	/// \return Returns whether the point is in the area
 	///
 	///////////////////////////////////////////////// 
-	static bool pointInArea(const sf::Vector2f kPoint, const sf::Vector2u kArea)
+	static bool pointInArea(const sf::Vector2f kPoint, const sf::Vector2f kOrigin, const sf::Vector2u kExtents)
 	{
 		// If point.x is less than 0: Out of bounds
-		if (kPoint.x < 0) return false;
+		if (kPoint.x < kOrigin.x) return false;
 
 		// If point.y is less than 0: Out of bounds
-		if (kPoint.y < 0) return false;
+		if (kPoint.y < kOrigin.y) return false;
 
 		// If point.x is greater than the area.x: Out of bounds
-		if (kPoint.x > kArea.x) return false;
+		if (kPoint.x > kOrigin.x + kExtents.x) return false;
 
 		// If point.y is greater than the area.y: Out of bounds
-		if (kPoint.y > kArea.y) return false;
+		if (kPoint.y > kOrigin.y + kExtents.y) return false;
 
 		// No False returns called: call return True
 		return true;
+	}
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Determines the float with the lowest value
+	///
+	/// \param kfA Float for comparison
+	/// \param kfB Float for comparison
+	///
+	/// \return Returns the lowest value
+	///
+	///////////////////////////////////////////////// 
+	static float min(const float kfA, const float kfB) { if (kfA <= kfB) { return kfA; } return kfB; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Determines the float with the highest value
+	///
+	/// \param kfA Float for comparison
+	/// \param kfB Float for comparison
+	///
+	/// \return Returns the highest value
+	///
+	///////////////////////////////////////////////// 
+	static float max(const float kfA, const float kfB) { if (kfA >= kfB) { return kfA; } return kfB; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Inverts a positive number to negative and vice versa
+	///
+	/// \param kfNumber Float to invert
+	///
+	/// \return Returns the inverted value
+	///
+	///////////////////////////////////////////////// 
+	static float invert(const float kfNumber) { return kfNumber * -1; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns a value bound to a given min and max
+	///
+	/// \param fNumber Value to bind
+	/// \param kfMin Lower binding
+	/// \param kfMax Upper binding
+	///
+	/// \return Returns the number now bound to the min and max
+	///
+	///////////////////////////////////////////////// 
+	static float bindNum(float fNumber, const float kfMin, const float kfMax)
+	{
+		// While the number is below the lower bound
+		while (fNumber < kfMin) fNumber += kfMax; // Add the upper bound to the number
+		// While the number is above the upper bound
+		while (fNumber > kfMax) fNumber -= kfMax; // Subtract the upper bound from the number
+
+		// Returns the newly bound number
+		return fNumber;
 	}
 };
 
