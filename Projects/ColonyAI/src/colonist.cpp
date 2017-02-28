@@ -4,13 +4,12 @@
 
 // Imports
 #include "colonist.h"
-#include "utils.h"
 
 // Constructor
 Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed)
 {
 	// Casts the incoming pointer to a shared_ptr and assigns it to the member
-	m_pEnvironment = (std::shared_ptr<Environment>)pEnv;
+	m_pEnvironment = std::shared_ptr<Environment>(pEnv);
 
 	// Sets member values to corresponding input
 	m_position = kPosition;
@@ -19,7 +18,8 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 	m_fSpeed = kfSpeed;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
-	m_path = {}; // Sets the current path queue to empty
+
+	m_pPathfinding = std::shared_ptr<Pathfinding>(new Pathfinding(this, m_pEnvironment));
 }
 
 // Void: Called to update the Colonist
@@ -41,13 +41,13 @@ void Colonist::update(const float kfElapsedTime)
 	}
 
 	// If path queue is not empty
-	if (!m_path.empty())
+	if (!m_pPathfinding->getPath().empty())
 	{
 		// Paths the Colonist to the pos at the front of the queue
-		if (moveTo(m_path.front(), m_fSpeed*kfElapsedTime))
+		if (moveTo(m_pPathfinding->getPath().front(), m_fSpeed*kfElapsedTime))
 		{
 			// Removes the location at the front of the queue
-			m_path.pop();
+			m_pPathfinding->popPath();
 		}
 	}
 
@@ -88,36 +88,6 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	// Draws the line to target
 	target.draw(line, 2, sf::Lines);
-
-	// DEBUG - Pathing
-	std::queue<sf::Vector2f> pathDupe = m_path;
-	// Sets line colour to red
-	colour = sf::Color(255, 0, 0, 255);
-	// If there is a queue
-	if (pathDupe.size() > 0)
-	{
-		// Sets the first point of the line at the Colonist position
-		line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
-		// Sets the second point of the line to the position in the front of the queue
-		line[1] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
-
-		// Draws the line to target
-		target.draw(line, 2, sf::Lines);
-
-		// For every point in the path queue
-		for (int i = 0; i < pathDupe.size(); i++)
-		{
-			// Sets the first point of the line at the position in front of the queue
-			line[0] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
-			pathDupe.pop(); // Removes the point from the queue
-
-			// Sets the second point of the line to the position in the front of the queue
-			line[1] = sf::Vertex(sf::Vector2f(pathDupe.front()), colour);
-
-			// Draws the line to target
-			target.draw(line, 2, sf::Lines);
-		}
-	}
 }
 
 // Void: Processes IDLE state functionality
@@ -130,8 +100,11 @@ void Colonist::idle()
 void Colonist::explore()
 {
 	// If path queue is empty
-	if (m_path.empty())
+	if (m_pPathfinding->getPath().empty())
 	{
+		// Calculates the accessibility of the Nodes
+		m_pPathfinding->calcAccess();
+
 		// Declares a cone that the randPos will sit within infront of the Colonist
 		float fCone = 90;
 
@@ -145,9 +118,13 @@ void Colonist::explore()
 
 		// With the randPos currently a Unit Vector it's now multiplied to be ahead of the Colonist instead of 1.0f distance away
 		randPos *= m_fSpeed;
+		randPos = sf::Vector2f(-25, -25);
 
 		// Creates a path to the position if within Environment
-		if (Utils::pointInArea(m_position + randPos, m_pEnvironment->getSize())) createPath(m_position + randPos);
+		if (Utils::pointInArea(m_position + randPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
+		{
+			m_pPathfinding->createPathTo(m_pPathfinding->closestNode(m_position + randPos));
+		}
 		else m_fHeading += 180; // Reverses Colonist heading
 	}
 }
@@ -183,7 +160,7 @@ bool Colonist::moveTo(const sf::Vector2f kDestination, const float fSpeed)
 	if (Utils::magnitude(displacement) >= Utils::magnitude(distance))
 	{
 		// Displacement is set to distance
-		displacement = distance;
+		m_position = kDestination;
 		// Return True (goal achieved)
 		return true;
 	}
@@ -196,11 +173,4 @@ bool Colonist::moveTo(const sf::Vector2f kDestination, const float fSpeed)
 	
 	// Return False (goal not achieved)
 	return false;
-}
-
-// Void: Determines a path to an input destination and queues it
-void Colonist::createPath(const sf::Vector2f kDestination)
-{
-	sf::err() << "kDestination.x " << kDestination.x << " kDestination.y " << kDestination.y << std::endl;
-	m_path.push(kDestination);
 }
