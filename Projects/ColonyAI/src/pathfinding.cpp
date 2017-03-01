@@ -566,7 +566,7 @@ void Pathfinding::draw(sf::RenderTarget& target)
 		// NODES
 		rectShape.setSize(sf::Vector2f(m_fNodeRadius*2, m_fNodeRadius*2)); // Size of Node
 		rectShape.setOutlineColor(sf::Color(150.0f, 150.0f, 150.0f, 255.0f)); // Grey Outline
-		rectShape.setOutlineThickness(8); // Outline Thickness
+		rectShape.setOutlineThickness(0.5); // Outline Thickness
 		rectShape.setOrigin(rectShape.getSize()*0.5f); // Origin center
 
 		// For every Node

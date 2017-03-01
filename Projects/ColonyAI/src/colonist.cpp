@@ -88,6 +88,9 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	// Draws the line to target
 	target.draw(line, 2, sf::Lines);
+
+	// Draws pathfinding info
+	m_pPathfinding->draw(target);
 }
 
 // Void: Processes IDLE state functionality
