@@ -77,20 +77,22 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// Draws circle to target
 	target.draw(circle);
 
-	// Declares line and colour
-	sf::Vertex line[2];
-	sf::Color colour = sf::Color(0, 0, 0, 255);
+	// DEBUG
 
-	// Sets the first point of the line at the Colonist position
-	line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
-	// Sets the second point of the line infront of the Colonist based on heading
-	line[1] = sf::Vertex(sf::Vector2f(m_position + (Utils::unitVecFromAngle(m_fHeading) * (m_fRadius*2.0f))), colour);
-
-	// Draws the line to target
-	target.draw(line, 2, sf::Lines);
-
-	// Draws pathfinding info
-	m_pPathfinding->draw(target);
+	//// Declares line and colour
+	//sf::Vertex line[2];
+	//sf::Color colour = sf::Color(0, 0, 0, 255);
+	//
+	//// Sets the first point of the line at the Colonist position
+	//line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
+	//// Sets the second point of the line infront of the Colonist based on heading
+	//line[1] = sf::Vertex(sf::Vector2f(m_position + (Utils::unitVecFromAngle(m_fHeading) * (m_fRadius*2.0f))), colour);
+	//
+	//// Draws the line to target
+	//target.draw(line, 2, sf::Lines);
+	//
+	//// Draws pathfinding info
+	//m_pPathfinding->draw(target);
 }
 
 // Void: Processes IDLE state functionality
@@ -121,7 +123,7 @@ void Colonist::explore()
 
 		// With the randPos currently a Unit Vector it's now multiplied to be ahead of the Colonist instead of 1.0f distance away
 		randPos *= m_fSpeed;
-		randPos = sf::Vector2f(-25, -25);
+		//randPos = sf::Vector2f(-25, -25);
 
 		// Creates a path to the position if within Environment
 		if (Utils::pointInArea(m_position + randPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))

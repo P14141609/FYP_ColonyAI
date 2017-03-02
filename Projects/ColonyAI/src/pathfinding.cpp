@@ -29,7 +29,7 @@ void Pathfinding::createNodes()
 		for (unsigned int y = 1; y <= dividedMapSize.y; y++)
 		{
 			// Pushes a new Node onto vector member of Nodes
-			m_pNodes.push_back(std::shared_ptr<Node>(new Node(sf::Vector2f((m_fNodeRadius * x) - m_fNodeRadius, (m_fNodeRadius * y) - m_fNodeRadius), m_pNodes.size())));
+			m_pNodes.push_back(std::shared_ptr<Node>(new Node(sf::Vector2f(((m_fNodeRadius*2) * x) - m_fNodeRadius, ((m_fNodeRadius*2) * y) - m_fNodeRadius), m_pNodes.size())));
 		}
 	}
 
@@ -62,6 +62,9 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 		// For every Node, set h as dist to target Node
 		for (std::shared_ptr<Node> node : m_pNodes)
 		{
+			// Resets the Node data
+			node->reset();
+
 			// Sets the Node's heuristic as the manhattan distance from the Node to the target
 			node->setH(distance(node, targetNode));
 		}
@@ -93,6 +96,14 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 		{
 			// Current Node being tested
 			std::shared_ptr<Node> currentNode = closedNodes.back();
+
+			// If Current Node is actually the Target Node
+			if (currentNode == targetNode)
+			{
+				sf::err() << "[PATHFINDING] Generating path... CurrentNode equal to TargetNode." << std::endl;
+				bPathFound = true;
+				return;
+			}
 
 			///////////////////// Calculating Open Adjacent Nodes /////////////////////
 

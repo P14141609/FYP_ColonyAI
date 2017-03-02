@@ -22,9 +22,9 @@ private:
 
 	std::shared_ptr<Node> m_pParent; //!< Previous Node in the path
 
-	float m_fG = 0; //!< Total Movement Cost from start Node to this Node
-	float m_fH = 0; //!< Distance to target Node
-	float m_fF = 0; //!< Combined Heuristic
+	float m_fG = 0.f; //!< Total Movement Cost from start Node to this Node
+	float m_fH = 0.f; //!< Distance to target Node
+	float m_fF = 0.f; //!< Combined Heuristic
 
 protected:
 
@@ -54,9 +54,29 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Resets the Node ready for a new path
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void reset() 
+	{ 
+		// Clears the existing parent Node
+		m_pParent = nullptr;
+
+		// Clears existing G/H/F values
+		m_fG = 0.f;
+		m_fH = 0.f;
+		m_fF = 0.f;
+	}
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Assigns a new value to the accessible member
 	///
 	/// \param kbValue New accessbility value
+	///
+	/// \return void
 	///
 	///////////////////////////////////////////////// 
 	void setAccessible(const bool kbValue) { m_bAccessible = kbValue; }
@@ -94,6 +114,8 @@ public:
 	///
 	/// \param kpParent New parent Node
 	///
+	/// \return void
+	///
 	///////////////////////////////////////////////// 
 	void setParent(const std::shared_ptr<Node> kpParent) { m_pParent = kpParent; }
 
@@ -111,6 +133,8 @@ public:
 	/// \brief Assigns a new value to the G member
 	///
 	/// \param kfG New G value
+	///
+	/// \return void
 	///
 	///////////////////////////////////////////////// 
 	void setG(const float kfG) { m_fG = kfG; }
@@ -130,6 +154,8 @@ public:
 	///
 	/// \param kfH New H value
 	///
+	/// \return void
+	///
 	///////////////////////////////////////////////// 
 	void setH(const float kfH) { m_fH = kfH; }
 
@@ -147,6 +173,8 @@ public:
 	/// \brief Assigns a new value to the F member
 	///
 	/// \param kfF New F value
+	///
+	/// \return void
 	///
 	///////////////////////////////////////////////// 
 	void setF(const float kfF) { m_fF = kfF; }
