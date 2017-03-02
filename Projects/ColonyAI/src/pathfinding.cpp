@@ -57,18 +57,6 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 	// If Nodes initialised
 	if (m_bNodesInit)
 	{
-		///////////////////// Calculating Node Heuristics /////////////////////
-
-		// For every Node, set h as dist to target Node
-		for (std::shared_ptr<Node> node : m_pNodes)
-		{
-			// Resets the Node data
-			node->reset();
-
-			// Sets the Node's heuristic as the manhattan distance from the Node to the target
-			node->setH(distance(node, targetNode));
-		}
-
 		///////////////////// Creating Open and Closed Lists /////////////////////
 
 		// Declares vectors to store nodes to check and checked nodes
@@ -88,14 +76,23 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 			return;
 		}
 
+		///////////////////// Calculating The Path /////////////////////
+
 		// Bool for whether a path was been found
 		bool bPathFound = false;
 
 		// While a path has not been found
 		while (!bPathFound)
 		{
+			///////////////////// Setting Up The Current Node /////////////////////
+
 			// Current Node being tested
 			std::shared_ptr<Node> currentNode = closedNodes.back();
+
+			// Resets the current Node
+			currentNode->reset();
+			// Sets the currentNode's heuristic as the manhattan distance from the Node to the target
+			currentNode->setH(distance(currentNode, targetNode));
 
 			// If Current Node is actually the Target Node
 			if (currentNode == targetNode)
@@ -113,13 +110,18 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 			// For all adjacent nodes
 			for (std::shared_ptr<Node> adjNode : adjNodes)
 			{
+				// Resets the adjacent Node
+				adjNode->reset();
+				// Calculates the adjNode heuristic
+				adjNode->setH(distance(adjNode, targetNode));
+
 				// If adjNode is inaccessible
 				if (!adjNode->isAccessible()) {}
 
 				// Else If adjNode is the target destination
 				else if (adjNode == targetNode)
 				{
-					// Sets adj parent to the closed node
+					// Sets adj parent to the current node
 					adjNode->setParent(currentNode);
 
 					// Create G and F value for the adj Node
