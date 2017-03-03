@@ -40,6 +40,12 @@
     <Filter Include="Resource Files\Environments">
       <UniqueIdentifier>{15378d5d-3517-49b3-b8b4-dab3bc98ca63}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Entity\Pathfinding">
+      <UniqueIdentifier>{52083b50-bb33-4a29-8961-c998e2f31e4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entity\Pathfinding">
+      <UniqueIdentifier>{b2650a39-d077-4e36-85e4-48e16cf8d3b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\environment.cpp">
@@ -59,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="src\colonist.cpp">
       <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pathfinding.cpp">
+      <Filter>Source Files\Entity\Pathfinding</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +94,12 @@
     </ClInclude>
     <ClInclude Include="include\utils.h">
       <Filter>Header Files\System</Filter>
+    </ClInclude>
+    <ClInclude Include="include\pathfinding.h">
+      <Filter>Header Files\Entity\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="include\node.h">
+      <Filter>Header Files\Entity\Pathfinding</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,6 +15,7 @@
     <ClCompile Include="src\colonist.cpp" />
     <ClCompile Include="src\environment.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\pathfinding.cpp" />
     <ClCompile Include="src\rock.cpp" />
     <ClCompile Include="src\tree.cpp" />
   </ItemGroup>
@@ -23,7 +24,9 @@
     <ClInclude Include="include\colonist.h" />
     <ClInclude Include="include\entity.h" />
     <ClInclude Include="include\environment.h" />
+    <ClInclude Include="include\node.h" />
     <ClInclude Include="include\object.h" />
+    <ClInclude Include="include\pathfinding.h" />
     <ClInclude Include="include\rock.h" />
     <ClInclude Include="include\tree.h" />
     <ClInclude Include="include\utils.h" />
