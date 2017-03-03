@@ -64,7 +64,7 @@ private:
 	/// \return Distance to the end Node
 	///
 	///////////////////////////////////////////////// 
-	int distance(const std::shared_ptr<Node> kpStartNode, const std::shared_ptr<Node> kpEndNode);
+	float distance(const std::shared_ptr<Node> kpStartNode, const std::shared_ptr<Node> kpEndNode);
 
 	/////////////////////////////////////////////////
 	///

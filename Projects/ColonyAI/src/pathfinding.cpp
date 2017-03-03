@@ -14,8 +14,8 @@ Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment
 	sf::err() << "[PATHFINDING] Generating nodes for A* pathfinding..." << std::endl;
 
 	// Divides the map size by the diameter of the Nodes to create a required number of columns and rows in the grid
-	m_uiNodeCols = floor(m_pEnv->getSize().x / m_fNodeDiameter);
-	m_uiNodeRows = floor(m_pEnv->getSize().y / m_fNodeDiameter);
+	m_uiNodeCols = (unsigned int)floor(m_pEnv->getSize().x / m_fNodeDiameter);
+	m_uiNodeRows = (unsigned int)floor(m_pEnv->getSize().y / m_fNodeDiameter);
 
 	// For the number of Nodes needed for the width
 	for (unsigned int x = 1; x <= m_uiNodeCols; x++)
@@ -24,7 +24,7 @@ Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment
 		for (unsigned int y = 1; y <= m_uiNodeRows; y++)
 		{
 			// Pushes a new Node onto vector member of Nodes
-			m_pNodes.push_back(std::shared_ptr<Node>(new Node(sf::Vector2f((m_fNodeDiameter * x) - m_fNodeRadius, (m_fNodeDiameter * y) - m_fNodeRadius), m_pNodes.size())));
+			m_pNodes.push_back(std::shared_ptr<Node>(new Node(sf::Vector2f((m_fNodeDiameter * x) - m_fNodeRadius, (m_fNodeDiameter * y) - m_fNodeRadius), (unsigned int)m_pNodes.size())));
 		}
 	}
 
@@ -247,10 +247,10 @@ std::shared_ptr<Node> Pathfinding::nodeFromPos(const sf::Vector2f kPosition)
 float Pathfinding::calcG(std::shared_ptr<Node> currentNode, std::shared_ptr<Node> targetNode)
 {
 	// Distance from the current Node and open Node
-	double dDistToNode = Utils::magnitude(targetNode->getPosition() - currentNode->getPosition());
+	float fDistToNode = Utils::magnitude(targetNode->getPosition() - currentNode->getPosition());
 
 	// Returns resultant G value (distance to next Node plus current Node's G)
-	return dDistToNode + currentNode->getG();
+	return fDistToNode + currentNode->getG();
 }
 
 // Returns whether a Node is within a vector of Nodes
@@ -267,19 +267,19 @@ bool Pathfinding::nodeInVector(std::shared_ptr<Node> nodeToFind, std::vector<std
 }
 
 // Returns the distance from one Node to another
-int Pathfinding::distance(std::shared_ptr<Node> startNode, std::shared_ptr<Node> endNode)
+float Pathfinding::distance(std::shared_ptr<Node> startNode, std::shared_ptr<Node> endNode)
 {
 	// Number of Nodes needed horizontally to match destination
-	int xDist = (endNode->getPosition().x - startNode->getPosition().x) / m_fNodeDiameter;
+	float fXDist = (endNode->getPosition().x - startNode->getPosition().x) / m_fNodeDiameter;
 
 	// Number of Nodes needed vertically to match destination
-	int yDist = (endNode->getPosition().y - startNode->getPosition().y) / m_fNodeDiameter;
+	float fYDist = (endNode->getPosition().y - startNode->getPosition().y) / m_fNodeDiameter;
 
 	// Combines the distances in the x and y axis
-	int iDistance = abs(xDist) + abs(yDist);
+	float fDistance = abs(fXDist) + abs(fYDist);
 
 	// Returns the combined distances, bound to positive
-	return iDistance;
+	return fDistance;
 }
 
 // Returns a vector of accessible adjacent Nodes
