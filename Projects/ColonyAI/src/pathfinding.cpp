@@ -105,23 +105,22 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 			// For all adjacent nodes
 			for (std::shared_ptr<Node> adjNode : adjNodes)
 			{
-				// Resets the adjacent Node
-				adjNode->reset();
-				// Calculates the adjNode heuristic
-				adjNode->setH(distance(adjNode, targetNode));
-
 				// If adjNode is inaccessible
-				if (!adjNode->isAccessible()) {}
+				if (!adjNode->isAccessible()) { /* Ignores inaccessible Nodes */ }
 
 				// Else If adjNode is the target destination
 				else if (adjNode == targetNode)
 				{
+					// Resets the adjacent Node
+					adjNode->reset();
+
 					// Sets adj parent to the current node
 					adjNode->setParent(currentNode);
-
-					// Create G and F value for the adj Node
+					// Sets the adjNode's heuristic as the manhattan distance from the Node to the target
+					adjNode->setH(distance(adjNode, targetNode));
+					// Sets the adjNode's G value
 					adjNode->setG(calcG(currentNode, adjNode));
-					// F = G+H
+					// Sets the adjNode's F value (G+H)
 					adjNode->setF(adjNode->getG() + adjNode->getH());
 
 					// Destination found, create path
@@ -143,18 +142,18 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 				}
 
 				// Else if adjNode is on the closed list
-				else if (nodeInVector(adjNode, closedNodes)) {}
+				else if (nodeInVector(adjNode, closedNodes)) { /* Ignores Nodes already processed */ }
 
-				// Otherwise
+				// Else: adjNode is accessible, not the destination and is not on the open or closed list
 				else
 				{
-					// Parent the open node to current node
+					// Sets adj parent to the current node
 					adjNode->setParent(currentNode);
-
-					// Create G and F value for each open node
+					// Sets the adjNode's heuristic as the manhattan distance from the Node to the target
+					adjNode->setH(distance(adjNode, targetNode));
+					// Sets the adjNode's G value
 					adjNode->setG(calcG(currentNode, adjNode));
-
-					// F = G+H
+					// Sets the adjNode's F value (G+H)
 					adjNode->setF(adjNode->getG() + adjNode->getH());
 
 					// Add adjacent nodes to open list
@@ -168,7 +167,7 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 			if (!openNodes.empty())
 			{
 				// Variable to store current Node with smallest F value
-				std::shared_ptr<Node> nodeWithSmallestF = openNodes.at(0); // Sets starting Node with smallest F value to the first Node in the vector
+				std::shared_ptr<Node> nodeWithSmallestF = openNodes.back(); // Sets starting Node with smallest F value to the first Node in the vector
 
 				// For all open nodes
 				for (std::shared_ptr<Node> node : openNodes)
@@ -534,7 +533,7 @@ void Pathfinding::queuePath(std::shared_ptr<Node> targetNode)
 	}
 }
 
-// Draws pathfinding representation to a display
+// Draws the path to a display
 void Pathfinding::draw(sf::RenderTarget& target)
 {
 	// If Nodes initialised

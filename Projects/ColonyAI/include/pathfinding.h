@@ -154,7 +154,7 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Draws pathfinding representation to a display
+	/// \brief Draws the path to a display
 	///
 	/// \param target The RenderTarget to draw on
 	///
