@@ -31,9 +31,20 @@ private:
 	std::shared_ptr<Colonist> m_pColonist; //!< Pointer to the Colonist that is utilising the Pathfinding
 	std::shared_ptr<Environment> m_pEnv; //!< Pointer to the Environment the Pathfinding is operating in
 
-	float m_fNodeRadius = 7.5f; //!< Radius of the Nodes
+	float m_fNodeDiameter = 20.0f; //!< Diameter of the Nodes
+	float m_fNodeRadius = m_fNodeDiameter/2; //!< Radius of the Nodes
 
 	bool m_bNodesInit = false; //!< Whether the Nodes have been initialised
+
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Generates all Nodes for pathfinding
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void createNodes();
 
 	/////////////////////////////////////////////////
 	///
@@ -73,15 +84,6 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns a Node at a given pose
-	///
-	/// \return Node at position
-	///
-	///////////////////////////////////////////////// 
-	std::shared_ptr<Node> nodeFromPos(const sf::Vector2f kPosition);
-
-	/////////////////////////////////////////////////
-	///
 	/// \brief Forms a queue of Nodes to the given Node
 	///
 	/// \return void
@@ -105,15 +107,6 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Generates all Nodes for pathfinding
-	///
-	/// \return void
-	///
-	///////////////////////////////////////////////// 
-	void createNodes();
-
-	/////////////////////////////////////////////////
-	///
 	/// \brief Creates a path to target Node
 	///
 	/// \return void
@@ -132,12 +125,12 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the Node that is closest to the position
+	/// \brief Returns the Node that a given position falls within
 	///
-	/// \return Closest Node
+	/// \return Node at position
 	///
 	///////////////////////////////////////////////// 
-	std::shared_ptr<Node> closestNode(const sf::Vector2f kPosition);
+	std::shared_ptr<Node> nodeFromPos(const sf::Vector2f kPosition);
 
 	/////////////////////////////////////////////////
 	///

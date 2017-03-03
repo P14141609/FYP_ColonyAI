@@ -182,13 +182,13 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 					if (node->getF() < nodeWithSmallestF->getF())
 					{
 						// nodeWithSmallestF replaced with this Node
-						nodeWithSmallestF.swap(node);
+						nodeWithSmallestF = node;
 					}
 					// Else If two Nodes have the same F value
 					else if (node->getF() == nodeWithSmallestF->getF())
 					{
 						// The Node with lowest H is set
-						if (node->getH() < nodeWithSmallestF->getH()) nodeWithSmallestF.swap(node);
+						if (node->getH() < nodeWithSmallestF->getH()) nodeWithSmallestF = node;
 					}
 				}
 
@@ -207,7 +207,7 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 					}
 				}
 				// Replaces open list with new edited copy
-				openNodes.swap(newOpenNodes);
+				openNodes = newOpenNodes;
 			}
 			// Else the open list is empty
 			else

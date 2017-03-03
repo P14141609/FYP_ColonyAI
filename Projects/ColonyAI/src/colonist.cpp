@@ -56,45 +56,6 @@ void Colonist::update(const float kfElapsedTime)
 	else if (m_fHeading < 0) m_fHeading += 360;
 }
 
-// Void: Called to draw the Colonist
-void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
-{
-	// Declares new CircleShape to draw
-	sf::CircleShape circle;
-
-	// Sets the origin to the center of the circle
-	circle.setOrigin(sf::Vector2f(m_fRadius, m_fRadius));
-
-	// Sets the circle pos to position member
-	circle.setPosition(sf::Vector2f(m_position));
-
-	// Sets the circle radius to radius member
-	circle.setRadius(m_fRadius);
-
-	// Sets circle colour: Black RGB for Colonist
-	circle.setFillColor(sf::Color(0, 0, 0, 255));
-
-	// Draws circle to target
-	target.draw(circle);
-
-	// DEBUG
-
-	//// Declares line and colour
-	//sf::Vertex line[2];
-	//sf::Color colour = sf::Color(0, 0, 0, 255);
-	//
-	//// Sets the first point of the line at the Colonist position
-	//line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
-	//// Sets the second point of the line infront of the Colonist based on heading
-	//line[1] = sf::Vertex(sf::Vector2f(m_position + (Utils::unitVecFromAngle(m_fHeading) * (m_fRadius*2.0f))), colour);
-	//
-	//// Draws the line to target
-	//target.draw(line, 2, sf::Lines);
-	//
-	//// Draws pathfinding info
-	//m_pPathfinding->draw(target);
-}
-
 // Void: Processes IDLE state functionality
 void Colonist::idle()
 {
@@ -111,7 +72,7 @@ void Colonist::explore()
 		m_pPathfinding->calcAccess();
 
 		// Declares a cone that the randPos will sit within infront of the Colonist
-		float fCone = 90;
+		float fCone = 90.0f;
 
 		// Defines random float for a delta heading
 		float fDeltaHeading = (rand() % (int)fCone) - (fCone*0.5f);
@@ -123,13 +84,14 @@ void Colonist::explore()
 
 		// With the randPos currently a Unit Vector it's now multiplied to be ahead of the Colonist instead of 1.0f distance away
 		randPos *= m_fSpeed;
-		//randPos = sf::Vector2f(-25, -25);
-
-		// Creates a path to the position if within Environment
+		
+		// If position is within the Environment
 		if (Utils::pointInArea(m_position + randPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
 		{
-			m_pPathfinding->createPathTo(m_pPathfinding->closestNode(m_position + randPos));
+			// Creates path to the random position
+			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(m_position + randPos));
 		}
+		// Else 
 		else m_fHeading += 180; // Reverses Colonist heading
 	}
 }
@@ -178,4 +140,42 @@ bool Colonist::moveTo(const sf::Vector2f kDestination, const float fSpeed)
 	
 	// Return False (goal not achieved)
 	return false;
+}
+
+// Void: Called to draw the Colonist
+void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	// Declares new CircleShape to draw
+	sf::CircleShape circle;
+
+	// Sets the origin to the center of the circle
+	circle.setOrigin(sf::Vector2f(m_fRadius, m_fRadius));
+
+	// Sets the circle pos to position member
+	circle.setPosition(sf::Vector2f(m_position));
+
+	// Sets the circle radius to radius member
+	circle.setRadius(m_fRadius);
+
+	// Sets circle colour: Black RGB for Colonist
+	circle.setFillColor(sf::Color(0, 0, 0, 255));
+
+	// Draws circle to target
+	target.draw(circle);
+
+	// DEBUG
+	// Declares line and colour
+	sf::Vertex line[2];
+	sf::Color colour = sf::Color(0, 0, 0, 255);
+
+	// Sets the first point of the line at the Colonist position
+	line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
+	// Sets the second point of the line infront of the Colonist based on heading
+	line[1] = sf::Vertex(sf::Vector2f(m_position + (Utils::unitVecFromAngle(m_fHeading) * (m_fRadius*2.0f))), colour);
+
+	// Draws the line to target
+	target.draw(line, 2, sf::Lines);
+
+	// Draws pathfinding info
+	m_pPathfinding->draw(target);
 }
