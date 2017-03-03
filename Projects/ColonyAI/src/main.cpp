@@ -75,11 +75,11 @@ int main()
 		// Clears window making it entirely black
 		window.clear(sf::Color(0, 0, 0, 255));
 
-		// Draws environment
-		window.draw(environment);
-
 		// Sets view to size of environment
 		window.setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)environment.getSize().x, (float)environment.getSize().y)));
+
+		// Draws environment
+		window.draw(environment);
 
 		// Displays the current frame
 		window.display();
