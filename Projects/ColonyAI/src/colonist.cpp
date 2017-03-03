@@ -76,20 +76,22 @@ void Colonist::explore()
 
 		// Defines random float for a delta heading
 		float fDeltaHeading = (rand() % (int)fCone) - (fCone*0.5f);
-		// Applies delta to the heading
+		// Applies the delta heading
 		m_fHeading += fDeltaHeading;
 
-		// Defines position to path towards with the heading + random angle
-		sf::Vector2f randPos = Utils::unitVecFromAngle(m_fHeading);
+		// Defines the delta position with a unit vector from the heading
+		sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
+		// Converts the delta position from a unit vector to a sizeable displacement with the Colonist speed
+		deltaPos *= m_fSpeed;
 
-		// With the randPos currently a Unit Vector it's now multiplied to be ahead of the Colonist instead of 1.0f distance away
-		randPos *= m_fSpeed;
-		
-		// If position is within the Environment
-		if (Utils::pointInArea(m_position + randPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
+		// Creates the randomly determined destination position 
+		sf::Vector2f targetPos = m_position + deltaPos;
+
+		// If destination is within the Environment
+		if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
 		{
-			// Creates path to the random position
-			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(m_position + randPos));
+			// Creates path to the destination
+			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
 		}
 		// Else 
 		else m_fHeading += 180; // Reverses Colonist heading

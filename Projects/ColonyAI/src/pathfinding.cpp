@@ -17,11 +17,11 @@ Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment
 	m_uiNodeCols = (unsigned int)floor(m_pEnv->getSize().x / m_fNodeDiameter);
 	m_uiNodeRows = (unsigned int)floor(m_pEnv->getSize().y / m_fNodeDiameter);
 
-	// For the number of Nodes needed for the width
-	for (unsigned int x = 1; x <= m_uiNodeCols; x++)
+	// For the number of Nodes needed for the height
+	for (unsigned int y = 1; y <= m_uiNodeRows; y++)
 	{
-		// For the number of Nodes needed for the height
-		for (unsigned int y = 1; y <= m_uiNodeRows; y++)
+		// For the number of Nodes needed for the width
+		for (unsigned int x = 1; x <= m_uiNodeCols; x++)
 		{
 			// Pushes a new Node onto vector member of Nodes
 			m_pNodes.push_back(std::shared_ptr<Node>(new Node(sf::Vector2f((m_fNodeDiameter * x) - m_fNodeRadius, (m_fNodeDiameter * y) - m_fNodeRadius), (unsigned int)m_pNodes.size())));
