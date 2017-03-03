@@ -11,22 +11,17 @@ Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment
 	m_pColonist = std::shared_ptr<Colonist>(pColonist);
 	m_pEnv = kpEnvironment;
 
-	createNodes();
-}
-
-// Void: Creates Nodes for pathfinding
-void Pathfinding::createNodes()
-{
 	sf::err() << "[PATHFINDING] Generating nodes for A* pathfinding..." << std::endl;
 
-	// Divides the map size by the diameter of the Nodes
-	sf::Vector2f dividedMapSize(floor(m_pEnv->getSize().x / m_fNodeDiameter), floor(m_pEnv->getSize().y / m_fNodeDiameter));
+	// Divides the map size by the diameter of the Nodes to create a required number of columns and rows in the grid
+	m_uiNodeCols = floor(m_pEnv->getSize().x / m_fNodeDiameter);
+	m_uiNodeRows = floor(m_pEnv->getSize().y / m_fNodeDiameter);
 
 	// For the number of Nodes needed for the width
-	for (unsigned int x = 1; x <= dividedMapSize.x; x++)
+	for (unsigned int x = 1; x <= m_uiNodeCols; x++)
 	{
 		// For the number of Nodes needed for the height
-		for (unsigned int y = 1; y <= dividedMapSize.y; y++)
+		for (unsigned int y = 1; y <= m_uiNodeRows; y++)
 		{
 			// Pushes a new Node onto vector member of Nodes
 			m_pNodes.push_back(std::shared_ptr<Node>(new Node(sf::Vector2f((m_fNodeDiameter * x) - m_fNodeRadius, (m_fNodeDiameter * y) - m_fNodeRadius), m_pNodes.size())));
@@ -235,10 +230,14 @@ std::shared_ptr<Node> Pathfinding::nodeFromPos(const sf::Vector2f kPosition)
 		unsigned int uiNodeRow = (unsigned int)floor(kPosition.y / m_fNodeDiameter);
 
 		// Determines the Index using the column and row
-		unsigned int uiNodeIndex = uiNodeCol + (m_fNodeDiameter * uiNodeRow);
+		unsigned int uiNodeIndex = uiNodeCol + (m_uiNodeCols * uiNodeRow);
 
-		// Returns the Node
-		return m_pNodes.at(uiNodeIndex);
+		// If the index is within the vector
+		if (uiNodeIndex < m_pNodes.size())
+		{
+			// Returns the Node
+			return m_pNodes.at(uiNodeIndex);
+		}
 	}
 
 	// Nodes don't exist: return nullptr
@@ -306,7 +305,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// x o o
 				// o n o
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y + m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y - m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -319,7 +318,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// x c o
 					// o n o
 					// o o o
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
 
 					// If checkNode1 Node exists and is not accessible
 					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
@@ -341,7 +340,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o x o
 				// o n o
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -356,7 +355,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o x
 				// o n o
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y + m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y - m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -365,7 +364,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// o c x
 					// o n o
 					// o o o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
 					// o o x
 					// o n c
 					// o o o
@@ -406,7 +405,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// o n o
 				// o o x
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y - m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y + m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -419,7 +418,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// o o o
 					// o n o
 					// o c x
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
 
 					// If checkNode1 Node exists and is not accessible
 					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
@@ -441,7 +440,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// o n o
 				// o x o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -456,7 +455,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// o n o
 				// x o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y - m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y + m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -465,7 +464,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// o o o
 					// o n o
 					// x c o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
 					// o o o
 					// c n o
 					// x o o
@@ -541,27 +540,6 @@ void Pathfinding::draw(sf::RenderTarget& target)
 	// If Nodes initialised
 	if (m_bNodesInit)
 	{
-		// Rectangle shape for drawing
-		sf::RectangleShape rectShape;
-		
-		// NODES
-		rectShape.setSize(sf::Vector2f(m_fNodeDiameter, m_fNodeDiameter)); // Size of Node
-		rectShape.setFillColor(sf::Color(255.0f, 0.0f, 0.0f, 75.0f)); // Translucent Red
-		rectShape.setOrigin(rectShape.getSize()*0.5f); // Origin center
-		
-		// For every Node
-		for (std::shared_ptr<Node> node : m_pNodes)
-		{
-			// If Node not accessible
-			if (!node->isAccessible())
-			{
-				// Moves shape to Node position
-				rectShape.setPosition(node->getPosition()); 
-				// Draws shape
-				target.draw(rectShape);
-			}
-		}
-		
 		// PATH
 		// Declares line and colour
 		sf::Vertex line[2];

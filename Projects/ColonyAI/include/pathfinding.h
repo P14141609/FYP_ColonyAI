@@ -24,28 +24,21 @@ class Pathfinding
 {
 private:
 
-	std::vector<std::shared_ptr<Node>> m_pNodes; //!< Vector of Nodes
-
 	std::queue<sf::Vector2f> m_path; //!< Queue of positions forming a route
 
 	std::shared_ptr<Colonist> m_pColonist; //!< Pointer to the Colonist that is utilising the Pathfinding
 	std::shared_ptr<Environment> m_pEnv; //!< Pointer to the Environment the Pathfinding is operating in
 
-	float m_fNodeDiameter = 20.0f; //!< Diameter of the Nodes
-	float m_fNodeRadius = m_fNodeDiameter/2; //!< Radius of the Nodes
+	std::vector<std::shared_ptr<Node>> m_pNodes; //!< Vector of Nodes
 
 	bool m_bNodesInit = false; //!< Whether the Nodes have been initialised
 
+	float m_fNodeDiameter = 20.0f; //!< Diameter of the Nodes
+	float m_fNodeRadius = m_fNodeDiameter/2; //!< Radius of the Nodes
 
-	/////////////////////////////////////////////////
-	///
-	/// \brief Generates all Nodes for pathfinding
-	///
-	/// \return void
-	///
-	///////////////////////////////////////////////// 
-	void createNodes();
-
+	unsigned int m_uiNodeCols; //!< Count for required columns of Nodes
+	unsigned int m_uiNodeRows; //!< Count for required rows of Nodes
+	
 	/////////////////////////////////////////////////
 	///
 	/// \brief Calculates G value of a Node
