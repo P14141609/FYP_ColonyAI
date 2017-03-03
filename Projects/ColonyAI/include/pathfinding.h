@@ -82,7 +82,7 @@ private:
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void queuePath(const std::shared_ptr<Node> node);
+	void queuePath(std::shared_ptr<Node> pNode);
 
 protected:
 
@@ -96,7 +96,7 @@ public:
 	///	\param kpEnvironment The Environment the Pathfinding is operating in
 	///
 	///////////////////////////////////////////////// 
-	Pathfinding(Colonist * kpColonist, const std::shared_ptr<Environment> kpEnvironment);
+	Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment> kpEnvironment);
 
 	/////////////////////////////////////////////////
 	///

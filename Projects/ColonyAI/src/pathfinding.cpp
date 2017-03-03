@@ -45,7 +45,7 @@ void Pathfinding::calcAccess()
 }
 
 // Creates a path to target Node
-void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
+void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 {
 	sf::err() << "[PATHFINDING] Generating path..." << std::endl;
 
@@ -55,14 +55,14 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 		///////////////////// Creating Open and Closed Lists /////////////////////
 
 		// Declares vectors to store nodes to check and checked nodes
-		std::vector<std::shared_ptr<Node>> openNodes;
-		std::vector<std::shared_ptr<Node>> closedNodes;
+		std::vector<std::shared_ptr<Node>> pOpenNodes;
+		std::vector<std::shared_ptr<Node>> pClosedNodes;
 
 		// If Node closest to your current location exists
 		if (nodeFromPos(m_pColonist->getPosition()) != nullptr)
 		{
 			// Add Node at your current location to closed list
-			closedNodes.push_back(nodeFromPos(m_pColonist->getPosition()));
+			pClosedNodes.push_back(nodeFromPos(m_pColonist->getPosition()));
 		}
 		// There is no Node 
 		else
@@ -82,15 +82,15 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 			///////////////////// Setting Up The Current Node /////////////////////
 
 			// Current Node being tested
-			std::shared_ptr<Node> currentNode = closedNodes.back();
+			std::shared_ptr<Node> pCurrentNode = pClosedNodes.back();
 
 			// Resets the current Node
-			currentNode->reset();
+			pCurrentNode->reset();
 			// Sets the currentNode's heuristic as the manhattan distance from the Node to the target
-			currentNode->setH(distance(currentNode, targetNode));
+			pCurrentNode->setH(distance(pCurrentNode, kpTargetNode));
 
 			// If Current Node is actually the Target Node
-			if (currentNode == targetNode)
+			if (pCurrentNode == kpTargetNode)
 			{
 				sf::err() << "[PATHFINDING] Generating path... CurrentNode equal to TargetNode." << std::endl;
 				bPathFound = true;
@@ -100,108 +100,108 @@ void Pathfinding::createPathTo(std::shared_ptr<Node> targetNode)
 			///////////////////// Calculating Open Adjacent Nodes /////////////////////
 
 			// Get all adjacent nodes
-			std::vector<std::shared_ptr<Node>> adjNodes = getAdjacentNodes(currentNode);
+			std::vector<std::shared_ptr<Node>> pAdjNodes = getAdjacentNodes(pCurrentNode);
 
 			// For all adjacent nodes
-			for (std::shared_ptr<Node> adjNode : adjNodes)
+			for (std::shared_ptr<Node> pAdjNode : pAdjNodes)
 			{
 				// If adjNode is inaccessible
-				if (!adjNode->isAccessible()) { /* Ignores inaccessible Nodes */ }
+				if (!pAdjNode->isAccessible()) { /* Ignores inaccessible Nodes */ }
 
 				// Else If adjNode is the target destination
-				else if (adjNode == targetNode)
+				else if (pAdjNode == kpTargetNode)
 				{
 					// Resets the adjacent Node
-					adjNode->reset();
+					pAdjNode->reset();
 
 					// Sets adj parent to the current node
-					adjNode->setParent(currentNode);
+					pAdjNode->setParent(pCurrentNode);
 					// Sets the adjNode's heuristic as the manhattan distance from the Node to the target
-					adjNode->setH(distance(adjNode, targetNode));
+					pAdjNode->setH(distance(pAdjNode, kpTargetNode));
 					// Sets the adjNode's G value
-					adjNode->setG(calcG(currentNode, adjNode));
+					pAdjNode->setG(calcG(pCurrentNode, pAdjNode));
 					// Sets the adjNode's F value (G+H)
-					adjNode->setF(adjNode->getG() + adjNode->getH());
+					pAdjNode->setF(pAdjNode->getG() + pAdjNode->getH());
 
 					// Destination found, create path
-					queuePath(adjNode);
+					queuePath(pAdjNode);
 					sf::err() << "[PATHFINDING] Generating path... Finished." << std::endl;
 					bPathFound = true;
 					return;
 				}
 
 				// Else If adjNode is on the open list already
-				else if (nodeInVector(adjNode, openNodes))
+				else if (nodeInVector(pAdjNode, pOpenNodes))
 				{
 					// If (total movement cost to adjcent node through current Node) is less than (total movement cost to adjNode)
-					if (currentNode->getG() + Utils::magnitude(currentNode->getPosition() - adjNode->getPosition()) < adjNode->getG())
+					if (pCurrentNode->getG() + Utils::magnitude(pCurrentNode->getPosition() - pAdjNode->getPosition()) < pAdjNode->getG())
 					{
 						// Sets adj parent to the closed node
-						adjNode->setParent(currentNode);
+						pAdjNode->setParent(pCurrentNode);
 					}
 				}
 
 				// Else if adjNode is on the closed list
-				else if (nodeInVector(adjNode, closedNodes)) { /* Ignores Nodes already processed */ }
+				else if (nodeInVector(pAdjNode, pClosedNodes)) { /* Ignores Nodes already processed */ }
 
 				// Else: adjNode is accessible, not the destination and is not on the open or closed list
 				else
 				{
 					// Sets adj parent to the current node
-					adjNode->setParent(currentNode);
+					pAdjNode->setParent(pCurrentNode);
 					// Sets the adjNode's heuristic as the manhattan distance from the Node to the target
-					adjNode->setH(distance(adjNode, targetNode));
+					pAdjNode->setH(distance(pAdjNode, kpTargetNode));
 					// Sets the adjNode's G value
-					adjNode->setG(calcG(currentNode, adjNode));
+					pAdjNode->setG(calcG(pCurrentNode, pAdjNode));
 					// Sets the adjNode's F value (G+H)
-					adjNode->setF(adjNode->getG() + adjNode->getH());
+					pAdjNode->setF(pAdjNode->getG() + pAdjNode->getH());
 
 					// Add adjacent nodes to open list
-					openNodes.push_back(adjNode);
+					pOpenNodes.push_back(pAdjNode);
 				}
 			}
 
 			///////////////////// Determining Next Closed Node /////////////////////
 
 			// If there is an open list
-			if (!openNodes.empty())
+			if (!pOpenNodes.empty())
 			{
 				// Variable to store current Node with smallest F value
-				std::shared_ptr<Node> nodeWithSmallestF = openNodes.back(); // Sets starting Node with smallest F value to the first Node in the vector
+				std::shared_ptr<Node> pSmallestFNode = pOpenNodes.back(); // Sets starting Node with smallest F value to the first Node in the vector
 
 				// For all open nodes
-				for (std::shared_ptr<Node> node : openNodes)
+				for (std::shared_ptr<Node> pNode : pOpenNodes)
 				{
 					// If Node.F is less than currSmallest->f
-					if (node->getF() < nodeWithSmallestF->getF())
+					if (pNode->getF() < pSmallestFNode->getF())
 					{
 						// nodeWithSmallestF replaced with this Node
-						nodeWithSmallestF.swap(node);
+						pSmallestFNode.swap(pNode);
 					}
 					// Else If two Nodes have the same F value
-					else if (node->getF() == nodeWithSmallestF->getF())
+					else if (pNode->getF() == pSmallestFNode->getF())
 					{
 						// The Node with lowest H is set
-						if (node->getH() < nodeWithSmallestF->getH()) nodeWithSmallestF.swap(node);
+						if (pNode->getH() < pSmallestFNode->getH()) pSmallestFNode.swap(pNode);
 					}
 				}
 
 				// Adds Node with smallest F value to the closed list
-				closedNodes.push_back(nodeWithSmallestF);
+				pClosedNodes.push_back(pSmallestFNode);
 
 				// Removes the Node with the smalled F value from the open list
-				std::vector<std::shared_ptr<Node>> newOpenNodes;
-				for (std::shared_ptr<Node> openNode : openNodes)
+				std::vector<std::shared_ptr<Node>> pNewOpenNodes;
+				for (std::shared_ptr<Node> pOpenNode : pOpenNodes)
 				{
 					// If the openNode doesn't have the smallest F value
-					if (openNode != nodeWithSmallestF)
+					if (pOpenNode != pSmallestFNode)
 					{
 						// Pushes onto new open list
-						newOpenNodes.push_back(openNode);
+						pNewOpenNodes.push_back(pOpenNode);
 					}
 				}
 				// Replaces open list with new edited copy
-				openNodes.swap(newOpenNodes);
+				pOpenNodes.swap(pNewOpenNodes);
 			}
 			// Else the open list is empty
 			else
@@ -244,22 +244,22 @@ std::shared_ptr<Node> Pathfinding::nodeFromPos(const sf::Vector2f kPosition)
 }
 
 // Calculates G value of a Node
-float Pathfinding::calcG(std::shared_ptr<Node> currentNode, std::shared_ptr<Node> targetNode)
+float Pathfinding::calcG(const std::shared_ptr<Node> kpCurrentNode, const std::shared_ptr<Node> kpTargetNode)
 {
 	// Distance from the current Node and open Node
-	float fDistToNode = Utils::magnitude(targetNode->getPosition() - currentNode->getPosition());
+	float fDistToNode = Utils::magnitude(kpTargetNode->getPosition() - kpCurrentNode->getPosition());
 
 	// Returns resultant G value (distance to next Node plus current Node's G)
-	return fDistToNode + currentNode->getG();
+	return fDistToNode + kpCurrentNode->getG();
 }
 
 // Returns whether a Node is within a vector of Nodes
-bool Pathfinding::nodeInVector(std::shared_ptr<Node> nodeToFind, std::vector<std::shared_ptr<Node>> vector)
+bool Pathfinding::nodeInVector(const std::shared_ptr<Node> kpNodeToFind, const std::vector<std::shared_ptr<Node>> kpVector)
 {
 	// If a Node in the vector is the nodeToFind: Return True
-	for (std::shared_ptr<Node> node : vector)
+	for (std::shared_ptr<Node> pNode : kpVector)
 	{
-		if (node == nodeToFind) return true;
+		if (pNode == kpNodeToFind) return true;
 	}
 
 	// Return False: nodeToFind not found
@@ -267,13 +267,13 @@ bool Pathfinding::nodeInVector(std::shared_ptr<Node> nodeToFind, std::vector<std
 }
 
 // Returns the distance from one Node to another
-float Pathfinding::distance(std::shared_ptr<Node> startNode, std::shared_ptr<Node> endNode)
+float Pathfinding::distance(const std::shared_ptr<Node> kpStartNode, const std::shared_ptr<Node> kpEndNode)
 {
 	// Number of Nodes needed horizontally to match destination
-	float fXDist = (endNode->getPosition().x - startNode->getPosition().x) / m_fNodeDiameter;
+	float fXDist = (kpEndNode->getPosition().x - kpStartNode->getPosition().x) / m_fNodeDiameter;
 
 	// Number of Nodes needed vertically to match destination
-	float fYDist = (endNode->getPosition().y - startNode->getPosition().y) / m_fNodeDiameter;
+	float fYDist = (kpEndNode->getPosition().y - kpStartNode->getPosition().y) / m_fNodeDiameter;
 
 	// Combines the distances in the x and y axis
 	float fDistance = abs(fXDist) + abs(fYDist);
@@ -283,13 +283,13 @@ float Pathfinding::distance(std::shared_ptr<Node> startNode, std::shared_ptr<Nod
 }
 
 // Returns a vector of accessible adjacent Nodes
-std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr<Node> node)
+std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(const std::shared_ptr<Node> kpNode)
 {
 	// Defines vector of Nodes to store adjacent Nodes that are identified
 	std::vector<std::shared_ptr<Node>> adjNodes;
 
 	// If Node exists
-	if (node != nullptr)
+	if (kpNode != nullptr)
 	{
 		// Declares Node ptr to hold adjacent Nodes as they're processed
 		std::shared_ptr<Node> adjNode;
@@ -304,7 +304,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// x o o
 				// o n o
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y - m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y - m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -313,11 +313,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// x o o
 					// c n o
 					// o o o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y));
+					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
 					// x c o
 					// o n o
 					// o o o
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
 
 					// If checkNode1 Node exists and is not accessible
 					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
@@ -339,7 +339,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o x o
 				// o n o
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -354,7 +354,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o x
 				// o n o
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y - m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y - m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -363,11 +363,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// o c x
 					// o n o
 					// o o o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y - m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
 					// o o x
 					// o n c
 					// o o o
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y));
+					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
 
 					// If checkNode1 Node exists and is not accessible
 					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
@@ -389,7 +389,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// o n x
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -404,7 +404,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// o n o
 				// o o x
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y + m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -413,11 +413,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// o o o
 					// o n c
 					// o o x
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x + m_fNodeDiameter, node->getPosition().y));
+					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
 					// o o o
 					// o n o
 					// o c x
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
 
 					// If checkNode1 Node exists and is not accessible
 					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
@@ -439,7 +439,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// o n o
 				// o x o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -454,7 +454,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// o n o
 				// x o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y + m_fNodeDiameter));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -463,11 +463,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 					// o o o
 					// o n o
 					// x c o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(node->getPosition().x, node->getPosition().y + m_fNodeDiameter));
+					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
 					// o o o
 					// c n o
 					// x o o
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y));
+					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
 
 					// If checkNode1 Node exists and is not accessible
 					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
@@ -489,7 +489,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 				// o o o
 				// x n o
 				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(node->getPosition().x - m_fNodeDiameter, node->getPosition().y));
+				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
 
 				// If Node at position exists
 				if (adjNode != nullptr)
@@ -506,21 +506,21 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(std::shared_ptr
 }
 
 // Forms a queue of Nodes to the given Node
-void Pathfinding::queuePath(std::shared_ptr<Node> targetNode)
+void Pathfinding::queuePath(std::shared_ptr<Node> pTargetNode)
 {
 	// Vector for stack of Nodes to be used in path
 	std::vector<std::shared_ptr<Node>> pNodes;
 
 	// Pushes destination Node onto vector
-	pNodes.push_back(targetNode);
+	pNodes.push_back(pTargetNode);
 
 	// While Node has a parent
-	while (targetNode->getParent() != nullptr)
+	while (pTargetNode->getParent() != nullptr)
 	{
 		// Make the Node it's Parent
-		targetNode = targetNode->getParent();
+		pTargetNode = pTargetNode->getParent();
 		// Push the parent onto the path of Nodes
-		pNodes.push_back(targetNode);
+		pNodes.push_back(pTargetNode);
 	}
 
 	// pNodes is not empty
