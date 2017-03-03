@@ -40,16 +40,10 @@ void Environment::loadFromFile(const std::string ksFilePath)
 		// Assigns the first word of the line to sPrefix
 		iss >> sPrefix;
 
-		// If prefix is Size:
-		if (sPrefix == "Size:")
+		// If prefix is Environment:
+		if (sPrefix == "Environment:")
 		{
-			readSizeLine(iss); // Reads the size line
-		}
-
-		// If prefix is Colour:
-		else if (sPrefix == "Colour:")
-		{
-			readColourLine(iss); // Reads the colour line
+			readEnvLine(iss); // Reads the size line
 		}
 
 		// If prefix is Object:
@@ -105,10 +99,13 @@ void Environment::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 // Void: Reads a size file line
-void Environment::readSizeLine(std::istringstream& iss)
+void Environment::readEnvLine(std::istringstream& iss)
 {
-	// Declares two unsigned ints to store the line data
+	// Declares two unsigned ints to store the size data
 	unsigned int uiX = 0, uiY = 0;
+	// Declares three unsigned ints to store the colour data
+	unsigned int uiR = 0, uiG = 0, uiB = 0;
+
 	// Declares a string to store current word being processed
 	std::string word = ""; 
 
@@ -127,27 +124,8 @@ void Environment::readSizeLine(std::istringstream& iss)
 			// uiY is set by converting the word string to an int
 			uiY = std::stoi(word.substr(1, word.size() - 1));
 		}
-	}
-
-	sf::err() << "[FILE] Size read from file: x" << uiX << " y" << uiY << std::endl;
-
-	// Sets member to derived size
-	m_size = sf::Vector2u(uiX, uiY);
-}
-
-// Void: Reads a colour file line
-void Environment::readColourLine(std::istringstream& iss)
-{
-	// Declares three unsigned ints to store the colour data
-	unsigned int uiR = 0, uiG = 0, uiB = 0;
-	// Declares a string to store current word being processed
-	std::string word = "";
-
-	// While words can be gotten
-	while (iss >> word)
-	{
 		// If word begins with 'r'
-		if (word.front() == 'r')
+		else if (word.front() == 'r')
 		{
 			// uiR is set by converting the word string to an int
 			uiR = std::stoi(word.substr(1, word.size() - 1));
@@ -166,8 +144,10 @@ void Environment::readColourLine(std::istringstream& iss)
 		}
 	}
 
-	sf::err() << "[FILE] Colour read from file: r" << uiR << " g" << uiG << " b" << uiB << std::endl;
+	sf::err() << "[FILE] Environment read from file: x" << uiX << " y" << uiY << " r" << uiR << " g" << uiG << " b" << uiB << std::endl;
 
+	// Sets member to derived size
+	m_size = sf::Vector2u(uiX, uiY);
 	// Sets member to derived colour with 100% opacity
 	m_colour = sf::Color(uiR, uiG, uiB, 255);
 }

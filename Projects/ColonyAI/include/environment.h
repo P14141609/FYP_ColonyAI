@@ -49,25 +49,14 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Reads a size file line
+	/// \brief Reads a Environement file line
 	///
 	/// \param iss Line input string stream to read
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void readSizeLine(std::istringstream& iss);
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Reads a colour file line
-	///
-	/// \param iss Line input string stream to read
-	///
-	/// \return void
-	///
-	///////////////////////////////////////////////// 
-	void readColourLine(std::istringstream& iss);
+	void readEnvLine(std::istringstream& iss);
 
 	/////////////////////////////////////////////////
 	///
