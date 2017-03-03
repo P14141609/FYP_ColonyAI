@@ -21,33 +21,11 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Calculates a unit vector from a given angle
-	///
-	/// \param kfAngle An angle to derive a unit vector
-	///
-	/// \return The unit vector of the angle
-	///
-	///////////////////////////////////////////////// 
-	static sf::Vector2f unitVecFromAngle(const float kfAngle) { return sf::Vector2f(cosf(kfAngle * g_kfDegToRad), sinf(kfAngle * g_kfDegToRad)); }
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Calculates an angle from a given unit vector
-	///
-	/// \param kVector A unit vector to derive an angle
-	///
-	/// \return The angle of the unit vector
-	///
-	///////////////////////////////////////////////// 
-	static float angleFromUnitVec(const sf::Vector2f kUnitVector) { return (atan2(kUnitVector.y, kUnitVector.x) / g_kfPi) * 180; }
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Calculates a normal vector
+	/// \brief Calculates a unit vector
 	///
 	/// \param kVector A vector to normalise
 	///
-	/// \return Returns a normalised vector
+	/// \return Returns a unit vector of the given vector
 	///
 	///////////////////////////////////////////////// 
 	static sf::Vector2f normaliseVec(const sf::Vector2f kVector)
@@ -57,6 +35,39 @@ public:
 		// Else: return a 0,0 vector
 		else return sf::Vector2f(0.0f, 0.0f);
 	}
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Calculates a vector from a given angle
+	///
+	/// \param kfAngle An angle to derive a vector
+	///
+	/// \return The vector of the angle
+	///
+	///////////////////////////////////////////////// 
+	static sf::Vector2f vecFromAngle(const float kfAngle) { return sf::Vector2f(cosf(kfAngle), sinf(kfAngle)); }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Calculates a unit vector from a given angle
+	///
+	/// \param kfAngle An angle to derive a unit vector
+	///
+	/// \return The unit vector of the angle
+	///
+	///////////////////////////////////////////////// 
+	static sf::Vector2f unitVecFromAngle(const float kfAngle) { return normaliseVec(vecFromAngle(kfAngle)); }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Calculates an angle from a given vector
+	///
+	/// \param kVector A vector to derive an angle
+	///
+	/// \return The angle of the vector
+	///
+	///////////////////////////////////////////////// 
+	static float angleFromVec(const sf::Vector2f kVector) { return (atan2(kVector.y, kVector.x) / g_kfPi) * 180; }
 
 	/////////////////////////////////////////////////
 	///
