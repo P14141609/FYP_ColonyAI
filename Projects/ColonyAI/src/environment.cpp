@@ -4,7 +4,6 @@
 
 // Imports
 #include "environment.h"
-#include <memory>
 
 // Void: Loads Env data from a file
 void Environment::loadFromFile(const std::string ksFilePath)
