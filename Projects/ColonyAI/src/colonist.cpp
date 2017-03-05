@@ -258,24 +258,24 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// Draws circle to target
 	target.draw(circle);
 
-	// Sets circle colour: Transparent
-	circle.setFillColor(sf::Color(0, 0, 0, 0));
-	circle.setOutlineColor(sf::Color(0, 0, 0, 255));
-	circle.setOutlineThickness(1.0f);
-
-	// Sets the circle radius to radius member
-	circle.setRadius(m_fVision);
-	// Sets the origin to the center of the circle
-	circle.setOrigin(sf::Vector2f(m_fVision, m_fVision));
-	// Sets the circle pos to position member
-	circle.setPosition(sf::Vector2f(m_position));
-
-	// Draws circle to target
-	target.draw(circle);
-
 	// If system debugging
 	if (g_bDebugging)
 	{
+		// Sets circle colour: Transparent
+		circle.setFillColor(sf::Color(0, 0, 0, 0));
+		circle.setOutlineColor(sf::Color(0, 0, 0, 255));
+		circle.setOutlineThickness(1.0f);
+
+		// Sets the circle radius to radius member
+		circle.setRadius(m_fVision);
+		// Sets the origin to the center of the circle
+		circle.setOrigin(sf::Vector2f(m_fVision, m_fVision));
+		// Sets the circle pos to position member
+		circle.setPosition(sf::Vector2f(m_position));
+
+		// Draws circle to target
+		target.draw(circle);
+
 		// Declares line and colour
 		sf::Vertex line[2];
 		sf::Color colour = sf::Color(0, 0, 0, 255);
