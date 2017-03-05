@@ -23,6 +23,24 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Gets the Object position
+	///
+	/// \return The Object position vector
+	///
+	///////////////////////////////////////////////// 
+	sf::Vector2f getPosition() { return m_position; };
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Gets the Object radius
+	///
+	/// \return The Object radial size
+	///
+	///////////////////////////////////////////////// 
+	float getRadius() { return m_fRadius; };
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Purely virtual: Draws the Object to the RenderTarget
 	///
 	/// \param target The RenderTarget to draw on
@@ -32,7 +50,6 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
-
 };
 
 #endif

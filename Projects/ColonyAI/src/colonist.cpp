@@ -6,7 +6,7 @@
 #include "colonist.h"
 
 // Constructor
-Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed)
+Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading, const float kfRadius, const float kfSpeed)
 {
 	// Casts the incoming pointer to a shared_ptr and assigns it to the member
 	m_pEnvironment = std::shared_ptr<Environment>(pEnv);
@@ -15,6 +15,7 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 	m_position = kPosition;
 	m_fHeading = kfHeading;
 	m_fRadius = kfRadius;
+	m_fVision = 75.0f;
 	m_fSpeed = kfSpeed;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
@@ -25,9 +26,8 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 // Void: Called to update the Colonist
 void Colonist::update(const float kfElapsedTime)
 {
-	// TODO
-	// Update Memory
-	// Share Memories with nearby Colonists
+	// Calls method to update Colonist Memory
+	updateMemory();
 
 	switch (m_state)
 	{
@@ -58,6 +58,52 @@ void Colonist::update(const float kfElapsedTime)
 	// Binds heading to 360 degrees
 	if (m_fHeading >= 360) m_fHeading -= 360;
 	else if (m_fHeading < 0) m_fHeading += 360;
+}
+
+// Updates the Colonist's Memory
+void Colonist::updateMemory()
+{
+	// TODO
+	// Update Memory
+	// Share Memories with nearby Colonists
+
+	// For all objects in the Environment
+	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
+	{
+		// If Object is within vision of the Colonist
+		if (Utils::magnitude(pObject->getPosition() - m_position) < m_fVision)
+		{
+			// Stores whether the position is already in Memory
+			bool bPosInMemory = false;
+
+			// For all existing Memories
+			for (std::shared_ptr<Memory> pMemory : m_pMemories)
+			{
+				// If Memory has the same position as Object
+				if (pMemory->getPosition() == pObject->getPosition())
+				{
+					// Sets bPosInMem true
+					bPosInMemory = true;
+				}
+			}
+
+			// If position is in Memory
+			if (bPosInMemory)
+			{
+				// TEMPORARY
+			}
+			// Else position isn't in Memory
+			else
+			{
+				// Adds the position to Memory
+				m_pMemories.push_back(std::shared_ptr<Memory>
+				(
+					// TEMPORARY TIME
+					new Memory((long)1234, pObject->getPosition(), pObject->getRadius(), OBSTRUCTION))
+				);
+			}
+		}
+	}
 }
 
 // Void: Processes IDLE state functionality
