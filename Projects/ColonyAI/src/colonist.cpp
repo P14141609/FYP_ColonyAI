@@ -105,6 +105,52 @@ void Colonist::updateMemory()
 	}
 }
 
+// Updates the Colonist's Memory
+void Colonist::updateMemory()
+{
+	// TODO
+	// Update Memory
+	// Share Memories with nearby Colonists
+
+	// For all objects in the Environment
+	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
+	{
+		// If Object is within vision of the Colonist
+		if (Utils::magnitude(pObject->getPosition() - m_position) < m_fVision)
+		{
+			// Stores whether the position is already in Memory
+			bool bPosInMemory = false;
+
+			// For all existing Memories
+			for (std::shared_ptr<Memory> pMemory : m_pMemories)
+			{
+				// If Memory has the same position as Object
+				if (pMemory->getPosition() == pObject->getPosition())
+				{
+					// Sets bPosInMem true
+					bPosInMemory = true;
+				}
+			}
+
+			// If position is in Memory
+			if (bPosInMemory)
+			{
+				// TEMPORARY
+			}
+			// Else position isn't in Memory
+			else
+			{
+				// Adds the position to Memory
+				m_pMemories.push_back(std::shared_ptr<Memory>
+				(
+					// TEMPORARY TIME
+					new Memory((long)1234, pObject->getPosition(), pObject->getRadius(), OBSTRUCTION))
+				);
+			}
+		}
+	}
+}
+
 // Void: Processes IDLE state functionality
 void Colonist::idle()
 {
