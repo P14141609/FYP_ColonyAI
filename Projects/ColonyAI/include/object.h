@@ -16,8 +16,8 @@ private:
 
 protected:
 
-	sf::Vector2f m_position; //!< Holds the Object position
-	float m_fRadius; //!< Holds the Object radius
+	sf::Vector2f m_position; //!< Object position
+	float m_fRadius; //!< Radial size of the Object
 
 public:
 

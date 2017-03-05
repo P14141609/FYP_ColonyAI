@@ -7,8 +7,8 @@
 #include <math.h>
 
 // Constant values for calculations
-const float g_kfPi = 3.14159f;
-const float g_kfDegToRad = g_kfPi / 180;
+const float g_kfPi = 3.14159f; //!< Value of PI
+const float g_kfDegToRad = g_kfPi / 180; //!< Used to convert degrees to radians
 
 /////////////////////////////////////////////////
 ///

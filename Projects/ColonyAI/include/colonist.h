@@ -22,16 +22,16 @@ class Colonist : public Entity
 {
 private:
 
-	float m_fSpeed; //!< Holds the speed the Colonist can move at per second
-	float m_fHeading; //!< Holds the Colonist heading in degrees
+	float m_fSpeed; //!< Speed the Colonist can move at per second
+	float m_fHeading; //!< Heading in degrees
 
-	float m_fHunger; //!< Holds the hunger need level of the Colonist
-	float m_fThirst; //!< Holds the thirst need level of the Colonist
+	float m_fHunger; //!< Hunger need level of the Colonist
+	float m_fThirst; //!< Thirst need level of the Colonist
 
-	std::shared_ptr<Entity> m_pHeldEntity; //!< Holds a pointer to an Entity the Colonist is holding
+	std::shared_ptr<Entity> m_pHeldEntity; //!< Pointer to an Entity the Colonist is holding
 
 	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, BREED }; //!< Enum for AI behavioural types
-	aiState m_state; //!< Stores the current AI state that the Colonist is in
+	aiState m_state; //!< Current AI state of the Colonist
 
 	std::shared_ptr<Pathfinding> m_pPathfinding; //!< Pathfinding Object for calculating paths
 	
