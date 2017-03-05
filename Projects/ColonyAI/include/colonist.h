@@ -8,6 +8,7 @@
 #include <math.h>
 #include <queue>
 #include "entity.h"
+#include "memory.h"
 #include "pathfinding.h"
 #include "utils.h"
 
@@ -25,6 +26,8 @@ private:
 	float m_fSpeed; //!< Speed the Colonist can move at per second
 	float m_fHeading; //!< Heading in degrees
 
+	float m_fVision; //!< Radial size of Colonist vision
+
 	float m_fHunger; //!< Hunger need level of the Colonist
 	float m_fThirst; //!< Thirst need level of the Colonist
 
@@ -35,7 +38,7 @@ private:
 
 	std::shared_ptr<Pathfinding> m_pPathfinding; //!< Pathfinding Object for calculating paths
 	
-	//std::vector<std::shared_ptr<Memory>> m_pMemories; // TEMPORARY - Need to implement Memory at a later date
+	std::vector<std::shared_ptr<Memory>> m_pMemories; //!< Vector of Colonist Memory data
 
 	/////////////////////////////////////////////////
 	///
@@ -59,6 +62,15 @@ private:
 	///
 	///////////////////////////////////////////////// 
 	void update(const float kfElapsedTime);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Updates the Colonist's Memory
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void updateMemory();
 
 	/////////////////////////////////////////////////
 	///
@@ -127,12 +139,12 @@ public:
 	///
 	///	\param pEnv Pointer to the Environment the Colonist is within
 	/// \param kPosition A vector with x&y for position
-	/// \param kfRadius A float for radial size
 	/// \param kfHeading A float for initial heading
+	/// \param kfRadius A float for radial size
 	/// \param kfSpeed A float for speed per second
 	///
 	///////////////////////////////////////////////// 
-	Colonist(Environment * kpEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed);
+	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading, const float kfRadius, const float kfSpeed);
 };
 
 #endif

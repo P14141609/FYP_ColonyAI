@@ -6,7 +6,7 @@
 #include "colonist.h"
 
 // Constructor
-Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfRadius, const float kfHeading, const float kfSpeed)
+Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading, const float kfRadius, const float kfSpeed)
 {
 	// Casts the incoming pointer to a shared_ptr and assigns it to the member
 	m_pEnvironment = std::shared_ptr<Environment>(pEnv);
@@ -15,6 +15,7 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 	m_position = kPosition;
 	m_fHeading = kfHeading;
 	m_fRadius = kfRadius;
+	m_fVision = 100.0f;
 	m_fSpeed = kfSpeed;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
@@ -25,6 +26,9 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 // Void: Called to update the Colonist
 void Colonist::update(const float kfElapsedTime)
 {
+	// Calls method to update Colonist Memory
+	updateMemory();
+
 	switch (m_state)
 	{
 		case IDLE: idle(); break; // State: Idle - run method
@@ -53,6 +57,52 @@ void Colonist::update(const float kfElapsedTime)
 
 	// Binds heading to 360 degrees
 	m_fHeading = Utils::bindNum(m_fHeading, 0, 360);
+}
+
+// Updates the Colonist's Memory
+void Colonist::updateMemory()
+{
+	// TODO
+	// Update Memory
+	// Share Memories with nearby Colonists
+
+	// For all objects in the Environment
+	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
+	{
+		// If Object is within vision of the Colonist
+		if (Utils::magnitude(pObject->getPosition() - m_position) < m_fVision)
+		{
+			// Stores whether the position is already in Memory
+			bool bPosInMemory = false;
+
+			// For all existing Memories
+			for (std::shared_ptr<Memory> pMemory : m_pMemories)
+			{
+				// If Memory has the same position as Object
+				if (pMemory->getPosition() == pObject->getPosition())
+				{
+					// Sets bPosInMem true
+					bPosInMemory = true;
+				}
+			}
+
+			// If position is in Memory
+			if (bPosInMemory)
+			{
+				// TEMPORARY
+			}
+			// Else position isn't in Memory
+			else
+			{
+				// Adds the position to Memory
+				m_pMemories.push_back(std::shared_ptr<Memory>
+				(
+					// TEMPORARY TIME
+					new Memory((long)1234, pObject->getPosition(), pObject->getRadius(), OBSTRUCTION))
+				);
+			}
+		}
+	}
 }
 
 // Void: Processes IDLE state functionality
@@ -149,17 +199,15 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// Declares new CircleShape to draw
 	sf::CircleShape circle;
 
-	// Sets the origin to the center of the circle
-	circle.setOrigin(sf::Vector2f(m_fRadius, m_fRadius));
-
-	// Sets the circle pos to position member
-	circle.setPosition(sf::Vector2f(m_position));
+	// Sets circle colour: Black RGB for Colonist
+	circle.setFillColor(sf::Color(0, 0, 0, 255));
 
 	// Sets the circle radius to radius member
 	circle.setRadius(m_fRadius);
-
-	// Sets circle colour: Black RGB for Colonist
-	circle.setFillColor(sf::Color(0, 0, 0, 255));
+	// Sets the origin to the center of the circle
+	circle.setOrigin(sf::Vector2f(m_fRadius, m_fRadius));
+	// Sets the circle pos to position member
+	circle.setPosition(sf::Vector2f(m_position));
 
 	// Draws circle to target
 	target.draw(circle);
@@ -167,6 +215,21 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// If system debugging
 	if (g_bDebugging)
 	{
+		// Sets circle colour: Transparent
+		circle.setFillColor(sf::Color(0, 0, 0, 0));
+		circle.setOutlineColor(sf::Color(0, 0, 0, 255));
+		circle.setOutlineThickness(1.0f);
+
+		// Sets the circle radius to radius member
+		circle.setRadius(m_fVision);
+		// Sets the origin to the center of the circle
+		circle.setOrigin(sf::Vector2f(m_fVision, m_fVision));
+		// Sets the circle pos to position member
+		circle.setPosition(sf::Vector2f(m_position));
+
+		// Draws circle to target
+		target.draw(circle);
+
 		// Declares line and colour
 		sf::Vertex line[2];
 		sf::Color colour = sf::Color(0, 0, 0, 255);
