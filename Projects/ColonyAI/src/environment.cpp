@@ -230,17 +230,17 @@ void Environment::readEntityLine(std::istringstream& iss)
 			// fY is set by converting the word string to a float
 			fY = std::stof(word.substr(1, word.size() - 1));
 		}
-		// If word begins with 'r'
-		else if (word.front() == 'r')
-		{
-			// fR is set by converting the word string to a float
-			fR = std::stof(word.substr(1, word.size() - 1));
-		}
 		// If word begins with 'h'
 		else if (word.front() == 'h')
 		{
 			// fH is set by converting the word string to a float
 			fH = std::stof(word.substr(1, word.size() - 1));
+		}
+		// If word begins with 'r'
+		else if (word.front() == 'r')
+		{
+			// fR is set by converting the word string to a float
+			fR = std::stof(word.substr(1, word.size() - 1));
 		}
 		// If word begins with 's'
 		else if (word.front() == 's')
@@ -256,8 +256,8 @@ void Environment::readEntityLine(std::istringstream& iss)
 		}
 	}
 
-	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << " r" << fR << " h" << fH << " s" << fS << std::endl;
+	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << " h" << fH << " r" << fR << " s" << fS << std::endl;
 
 	// With entityType creates a new Entity subclass and stores a reference in the m_pEntities member
-	if (entityType == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>( new Colonist(this, sf::Vector2f(fX, fY), fR, fH, fS) ) );
+	if (entityType == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>( new Colonist(this, sf::Vector2f(fX, fY), fH, fR, fS) ) );
 }
