@@ -46,6 +46,12 @@
     <Filter Include="Header Files\Entity\Pathfinding">
       <UniqueIdentifier>{b2650a39-d077-4e36-85e4-48e16cf8d3b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Entity\Memory">
+      <UniqueIdentifier>{79686238-c51a-4f92-8ed8-c85cae61cbdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Entity\Memory">
+      <UniqueIdentifier>{7830e1c0-8f05-456b-9cd5-02c1d6eec19a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\environment.cpp">
@@ -68,6 +74,9 @@
     </ClCompile>
     <ClCompile Include="src\pathfinding.cpp">
       <Filter>Source Files\Entity\Pathfinding</Filter>
+    </ClCompile>
+    <ClCompile Include="src\memory.cpp">
+      <Filter>Source Files\Entity\Memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="include\node.h">
       <Filter>Header Files\Entity\Pathfinding</Filter>
+    </ClInclude>
+    <ClInclude Include="include\memory.h">
+      <Filter>Header Files\Entity\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
