@@ -6,6 +6,9 @@
 #include <SFML/System.hpp>
 #include <math.h>
 
+// Global boolean for debugging
+bool g_bDebugging = false; //!< Used to display debug info or not
+
 // Constant values for calculations
 const float g_kfPi = 3.14159f; //!< Value of PI
 const float g_kfDegToRad = g_kfPi / 180; //!< Used to convert degrees to radians
