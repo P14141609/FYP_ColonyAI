@@ -25,6 +25,10 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 // Void: Called to update the Colonist
 void Colonist::update(const float kfElapsedTime)
 {
+	// TODO
+	// Update Memory
+	// Share Memories with nearby Colonists
+
 	switch (m_state)
 	{
 		case IDLE: idle(); break; // State: Idle - run method
