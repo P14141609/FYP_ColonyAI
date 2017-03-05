@@ -140,11 +140,9 @@ public:
 	///	\param pEnv Pointer to the Environment the Colonist is within
 	/// \param kPosition A vector with x&y for position
 	/// \param kfHeading A float for initial heading
-	/// \param kfRadius A float for radial size
-	/// \param kfSpeed A float for speed per second
 	///
 	///////////////////////////////////////////////// 
-	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading, const float kfRadius, const float kfSpeed);
+	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading);
 };
 
 #endif

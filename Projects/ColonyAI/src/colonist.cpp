@@ -6,7 +6,7 @@
 #include "colonist.h"
 
 // Constructor
-Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading, const float kfRadius, const float kfSpeed)
+Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading)
 {
 	// Casts the incoming pointer to a shared_ptr and assigns it to the member
 	m_pEnvironment = std::shared_ptr<Environment>(pEnv);
@@ -14,9 +14,9 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 	// Sets member values to corresponding input
 	m_position = kPosition;
 	m_fHeading = kfHeading;
-	m_fRadius = kfRadius;
+	m_fRadius = 7.5f;
 	m_fVision = 100.0f;
-	m_fSpeed = kfSpeed;
+	m_fSpeed = 50.0f;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 

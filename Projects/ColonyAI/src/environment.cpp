@@ -103,8 +103,6 @@ void Environment::readEnvLine(std::istringstream& iss)
 {
 	// Declares two unsigned ints to store the size data
 	unsigned int uiX = 0, uiY = 0;
-	// Declares three unsigned ints to store the colour data
-	unsigned int uiR = 0, uiG = 0, uiB = 0;
 
 	// Declares a string to store current word being processed
 	std::string word = ""; 
@@ -124,32 +122,12 @@ void Environment::readEnvLine(std::istringstream& iss)
 			// uiY is set by converting the word string to an int
 			uiY = std::stoi(word.substr(1, word.size() - 1));
 		}
-		// If word begins with 'r'
-		else if (word.front() == 'r')
-		{
-			// uiR is set by converting the word string to an int
-			uiR = std::stoi(word.substr(1, word.size() - 1));
-		}
-		// If word begins with 'g'
-		else if (word.front() == 'g')
-		{
-			// uiG is set by converting the word string to an int
-			uiG = std::stoi(word.substr(1, word.size() - 1));
-		}
-		// If word begins with 'b'
-		else if (word.front() == 'b')
-		{
-			// uiB is set by converting the word string to an int
-			uiB = std::stoi(word.substr(1, word.size() - 1));
-		}
 	}
 
-	sf::err() << "[FILE] Environment read from file: x" << uiX << " y" << uiY << " r" << uiR << " g" << uiG << " b" << uiB << std::endl;
+	sf::err() << "[FILE] Environment read from file: x" << uiX << " y" << uiY << std::endl;
 
 	// Sets member to derived size
 	m_size = sf::Vector2u(uiX, uiY);
-	// Sets member to derived colour with 100% opacity
-	m_colour = sf::Color(uiR, uiG, uiB, 255);
 }
 
 // Void: Reads an Object file line
@@ -211,7 +189,7 @@ void Environment::readEntityLine(std::istringstream& iss)
 	// Declares an enum to store which Entity subclass is indicated
 	enum subclass { NONE, COLONIST }; subclass entityType = NONE;
 	// Declares two floats to store the position data
-	float fX = 0, fY = 0, fH = 0, fR = 0, fS = 0;
+	float fX = 0, fY = 0, fH = 0;
 	// Declares a string to store current word being processed
 	std::string word = "";
 
@@ -236,18 +214,6 @@ void Environment::readEntityLine(std::istringstream& iss)
 			// fH is set by converting the word string to a float
 			fH = std::stof(word.substr(1, word.size() - 1));
 		}
-		// If word begins with 'r'
-		else if (word.front() == 'r')
-		{
-			// fR is set by converting the word string to a float
-			fR = std::stof(word.substr(1, word.size() - 1));
-		}
-		// If word begins with 's'
-		else if (word.front() == 's')
-		{
-			// fS is set by converting the word string to a float
-			fS = std::stof(word.substr(1, word.size() - 1));
-		}
 		// Else
 		else
 		{
@@ -256,8 +222,8 @@ void Environment::readEntityLine(std::istringstream& iss)
 		}
 	}
 
-	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << " h" << fH << " r" << fR << " s" << fS << std::endl;
+	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << " h" << fH << std::endl;
 
 	// With entityType creates a new Entity subclass and stores a reference in the m_pEntities member
-	if (entityType == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>( new Colonist(this, sf::Vector2f(fX, fY), fH, fR, fS) ) );
+	if (entityType == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>( new Colonist(this, sf::Vector2f(fX, fY), fH) ) );
 }
