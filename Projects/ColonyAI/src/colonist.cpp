@@ -31,11 +31,11 @@ void Colonist::update(const float kfElapsedTime)
 
 		case EXPLORE: explore(); break; // State: Explore - run method
 
-		case FORAGE: explore(); break; // State: Forage - run method
+		case FORAGE: forage(); break; // State: Forage - run method
 
-		case TENDTONEEDS: explore(); break; // State: TendToNeeds - run method
+		case TENDTONEEDS: tendToNeeds(); break; // State: TendToNeeds - run method
 
-		case BREED: explore(); break; // State: Breed - run method
+		case BREED: breed(); break; // State: Breed - run method
 
 		default: m_state = IDLE; break; // No valid state found: set IDLE;
 	}
@@ -52,8 +52,7 @@ void Colonist::update(const float kfElapsedTime)
 	}
 
 	// Binds heading to 360 degrees
-	if (m_fHeading >= 360) m_fHeading -= 360;
-	else if (m_fHeading < 0) m_fHeading += 360;
+	m_fHeading = Utils::bindNum(m_fHeading, 0, 360);
 }
 
 // Void: Processes IDLE state functionality
