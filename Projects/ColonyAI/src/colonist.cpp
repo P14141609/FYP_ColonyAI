@@ -15,7 +15,7 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 	m_position = kPosition;
 	m_fHeading = kfHeading;
 	m_fRadius = kfRadius;
-	m_fVision = 75.0f;
+	m_fVision = 100.0f;
 	m_fSpeed = kfSpeed;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
@@ -199,17 +199,30 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// Declares new CircleShape to draw
 	sf::CircleShape circle;
 
-	// Sets the origin to the center of the circle
-	circle.setOrigin(sf::Vector2f(m_fRadius, m_fRadius));
-
-	// Sets the circle pos to position member
-	circle.setPosition(sf::Vector2f(m_position));
+	// Sets circle colour: Black RGB for Colonist
+	circle.setFillColor(sf::Color(0, 0, 0, 255));
 
 	// Sets the circle radius to radius member
 	circle.setRadius(m_fRadius);
+	// Sets the origin to the center of the circle
+	circle.setOrigin(sf::Vector2f(m_fRadius, m_fRadius));
+	// Sets the circle pos to position member
+	circle.setPosition(sf::Vector2f(m_position));
 
-	// Sets circle colour: Black RGB for Colonist
-	circle.setFillColor(sf::Color(0, 0, 0, 255));
+	// Draws circle to target
+	target.draw(circle);
+
+	// Sets circle colour: Transparent
+	circle.setFillColor(sf::Color(0, 0, 0, 0));
+	circle.setOutlineColor(sf::Color(0, 0, 0, 255));
+	circle.setOutlineThickness(1.0f);
+
+	// Sets the circle radius to radius member
+	circle.setRadius(m_fVision);
+	// Sets the origin to the center of the circle
+	circle.setOrigin(sf::Vector2f(m_fVision, m_fVision));
+	// Sets the circle pos to position member
+	circle.setPosition(sf::Vector2f(m_position));
 
 	// Draws circle to target
 	target.draw(circle);
