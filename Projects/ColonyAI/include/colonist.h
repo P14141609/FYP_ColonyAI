@@ -8,6 +8,7 @@
 #include <math.h>
 #include <queue>
 #include "entity.h"
+#include "memory.h"
 #include "pathfinding.h"
 #include "utils.h"
 
@@ -35,7 +36,7 @@ private:
 
 	std::shared_ptr<Pathfinding> m_pPathfinding; //!< Pathfinding Object for calculating paths
 	
-	//std::vector<std::shared_ptr<Memory>> m_pMemories; // TEMPORARY - Need to implement Memory at a later date
+	std::vector<std::shared_ptr<Memory>> m_pMemories; //!< Vector of Colonist Memory data
 
 	/////////////////////////////////////////////////
 	///
