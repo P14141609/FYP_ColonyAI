@@ -50,6 +50,13 @@ int main()
 			// If KeyPressed event is called
 			if (event.type == sf::Event::KeyPressed)
 			{
+				// If Tab is pressed
+				if (event.key.code == sf::Keyboard::Tab)
+				{
+					// Toggles debugging boolean
+					g_bDebugging = !g_bDebugging;
+				}
+
 				// If Esc is pressed
 				if (event.key.code == sf::Keyboard::Escape)
 				{
