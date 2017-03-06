@@ -189,6 +189,9 @@ void Environment::readObjectLine(std::istringstream& iss)
 
 			// If the word is Tree
 			else if (word == "Tree") type = TREE; // Sets objectType to corresponding value
+
+			// If the word is Water
+			else if (word == "Water") type = WATER; // Sets objectType to corresponding value
 		}
 	}
 
@@ -198,6 +201,7 @@ void Environment::readObjectLine(std::istringstream& iss)
 	if (type == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY), fR)));
 	else if (type == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY), fR)));
 	else if (type == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY), fR)));
+	else if (type == WATER) m_pObjects.push_back(std::shared_ptr<Object>(new Water(sf::Vector2f(fX, fY), fR)));
 }
 
 // Void: Reads an Entity file line

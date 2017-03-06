@@ -19,6 +19,7 @@
     <ClCompile Include="src\pathfinding.cpp" />
     <ClCompile Include="src\rock.cpp" />
     <ClCompile Include="src\tree.cpp" />
+    <ClCompile Include="src\water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\bush.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="include\rock.h" />
     <ClInclude Include="include\tree.h" />
     <ClInclude Include="include\utils.h" />
+    <ClInclude Include="include\water.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="environments\env01.cfg" />

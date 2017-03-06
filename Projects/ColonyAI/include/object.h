@@ -5,7 +5,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-enum ObjectType { BUSH, ROCK, TREE }; //!< Enum for Object types
+enum ObjectType { BUSH, ROCK, TREE, WATER }; //!< Enum for Object types
 
 /////////////////////////////////////////////////
 ///
@@ -76,6 +76,7 @@ public:
 		if (kType == BUSH) return "bush";
 		if (kType == ROCK) return "rock";
 		if (kType == TREE) return "tree";
+		if (kType == WATER) return "water";
 		return "ERROR";
 	};
 };

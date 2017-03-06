@@ -14,6 +14,8 @@
 #include "bush.h"
 #include "rock.h"
 #include "tree.h"
+#include "water.h"
+
 #include "entity.h"
 #include "colonist.h"
 
