@@ -70,7 +70,7 @@ void Colonist::updateMemory()
 	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
 	{
 		// If Object is within vision of the Colonist
-		if (Utils::magnitude(pObject->getPosition() - m_position) < m_fVision)
+		if (Utils::magnitude(pObject->getPosition() - m_position) - pObject->getRadius() < m_fVision)
 		{
 			// Stores whether the position is already in Memory
 			bool bPosInMemory = false;
