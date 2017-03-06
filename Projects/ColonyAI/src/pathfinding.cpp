@@ -39,7 +39,29 @@ void Pathfinding::calcAccess()
 {
 	sf::err() << "[PATHFINDING] Calculating node accessibility..." << std::endl;
 
-	// TEMPORARY - Need memories to determine inaccessible nodes
+	// For every Object in the Colonist's Memory
+	for (std::shared_ptr<Memory> pMemory : m_pColonist->getMemories())
+	{
+		// For all Nodes
+		for (std::shared_ptr<Node> pNode : m_pNodes)
+		{
+			// If Node is accessible
+			if (pNode->isAccessible())
+			{
+				// Defines the distance from the Node to the Memory
+				float fDistToMem = Utils::magnitude(pMemory->getPosition() - pNode->getPosition());
+				// Defines the clearance, amount of the distance that isn't in the radius
+				float fClearance = fDistToMem - pMemory->getRadius();
+
+				// If clearance is less than the radius of the Colonist
+				if (fClearance <= m_pColonist->getRadius())
+				{
+					// Sets Node as inaccessible
+					pNode->setAccessible(false);
+				}
+			}
+		}
+	}
 
 	sf::err() << "[PATHFINDING] Calculating node accessibility... Finished." << std::endl;
 }
@@ -53,6 +75,13 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 	if (kpTargetNode == nullptr) 
 	{
 		sf::err() << "[PATHFINDING] Generating path... Error - Target node nullptr." << std::endl;
+		return;
+	}
+
+	// If targetNode is inaccessible
+	if (!kpTargetNode->isAccessible())
+	{
+		sf::err() << "[PATHFINDING] Generating path... Error - Target node inaccessible." << std::endl;
 		return;
 	}
 
@@ -154,6 +183,9 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 				// Else: adjNode is accessible, not the destination and is not on the open or closed list
 				else
 				{
+					// Resets the adjacent Node
+					pAdjNode->reset();
+
 					// Sets adj parent to the current node
 					pAdjNode->setParent(pCurrentNode);
 					// Sets the adjNode's heuristic as the manhattan distance from the Node to the target
@@ -546,7 +578,7 @@ void Pathfinding::draw(sf::RenderTarget& target)
 	// If Nodes initialised
 	if (m_bNodesInit)
 	{
-		// PATH
+		///////////////////// PATH /////////////////////
 		// Declares line and colour
 		sf::Vertex line[2];
 		sf::Color colour = sf::Color(255, 0, 0, 255);
@@ -582,6 +614,29 @@ void Pathfinding::draw(sf::RenderTarget& target)
 
 				// Draws the line to target
 				target.draw(line, 2, sf::Lines);
+			}
+		}
+
+		///////////////////// NODES /////////////////////
+		// Rectangle shape for drawing
+		sf::RectangleShape rectShape;
+		rectShape.setSize(sf::Vector2f(m_fNodeDiameter, m_fNodeDiameter)); // Size of Node
+		rectShape.setFillColor(sf::Color(0, 0, 0, 0)); // Transparent
+		rectShape.setOutlineColor(sf::Color(255, 0, 0, 255)); // Red
+		rectShape.setOutlineThickness(1.f);
+		rectShape.setOrigin(rectShape.getSize()*0.5f); // Origin center
+
+		// For every Node
+		for (std::shared_ptr<Node> pNode : m_pNodes)
+		{
+			// If Node is inaccessible
+			if (!pNode->isAccessible())
+			{
+				// Moves rect to Node position
+				rectShape.setPosition(pNode->getPosition());
+
+				// Draws rect to target
+				target.draw(rectShape);
 			}
 		}
 	}

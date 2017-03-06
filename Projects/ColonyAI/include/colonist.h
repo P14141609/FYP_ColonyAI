@@ -144,6 +144,15 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Gets the Colonist Memory vector
+	///
+	/// \return Vector of Memories
+	///
+	///////////////////////////////////////////////// 
+	std::vector<std::shared_ptr<Memory>> getMemories() { return m_pMemories; }
 };
 
 #endif

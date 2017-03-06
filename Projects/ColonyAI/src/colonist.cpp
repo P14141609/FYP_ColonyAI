@@ -117,6 +117,9 @@ void Colonist::updateMemory()
 				(
 					new Memory((long)time(NULL), pObject->getPosition(), pObject->getRadius(), type))
 				);
+
+				// Calculates Node accessibility with new Memory added
+				m_pPathfinding->calcAccess();
 			}
 		}
 	}
