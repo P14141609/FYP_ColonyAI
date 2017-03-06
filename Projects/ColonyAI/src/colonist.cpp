@@ -69,7 +69,7 @@ void Colonist::updateMemory()
 	// Update Memory
 	// Share Memories with nearby Colonists
 
-	// For all objects in the Environment
+	// For all Objects in the Environment
 	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
 	{
 		// If Object is within vision of the Colonist
@@ -118,6 +118,33 @@ void Colonist::updateMemory()
 			}
 		}
 	}
+
+	// For all Entities in the Environment
+	for (std::shared_ptr<Entity> pEntity : m_pEnvironment->getEntities())
+	{
+		// If Entity is within vision of the Colonist
+		if (Utils::magnitude(pEntity->getPosition() - m_position) - pEntity->getRadius() < m_fVision)
+		{
+			// If the Entity is a Colonist
+			if (pEntity->getType() == COLONIST)
+			{
+				// For all the Colonist's Memories
+				for (std::shared_ptr<Memory> pMemory : m_pMemories)
+				{
+					// If memory is in other Colonist's memory
+						// Update time to the most recent of the two
+
+					// If memory isn't in other Colonist's memory
+						// Add memory to our memory
+				}
+			}
+			// Else
+			else 
+			{
+				// TEMPORARY - Need to add other Entity handling later with food, stone and lumber
+			}
+		}
+	}
 }
 
 // Void: Processes IDLE state functionality
@@ -136,12 +163,13 @@ void Colonist::explore()
 		m_pPathfinding->calcAccess();
 
 		// Declares a cone that the randPos will sit within infront of the Colonist
-		float fCone = 90.0f;
+		float fCone = 60.0f;
 
-		// Defines random float for a delta heading
-		float fDeltaHeading = (rand() % (int)fCone) - (fCone*0.5f);
+		// Defines a random angle ((0 and fCone) - 30) so -30 to 30
+		float fRandomAngle = (rand() % (int)(fCone+1)) - (fCone*0.5f);
+
 		// Applies the delta heading
-		m_fHeading += fDeltaHeading;
+		m_fHeading += fRandomAngle;
 
 		// Defines the delta position with a unit vector from the heading
 		sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
@@ -156,9 +184,9 @@ void Colonist::explore()
 		{
 			// Creates path to the destination
 			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
-		}
+		}		
 		// Else 
-		else m_fHeading += 180; // Reverses Colonist heading
+		//else m_fHeading += 180; // Reverses Colonist heading
 	}
 }
 

@@ -23,7 +23,6 @@ int main()
 	// Gets user input whether to load or create Environment
 	std::cout << "Load or Create Environment file?: ";
 	std::cin >> sInput;
-	std::cout << std::endl;
 
 	// If 'Create' selected
 	if (sInput == "Create")
@@ -37,7 +36,6 @@ int main()
 		// Gets user input for the Environment directory
 		std::cout << "Select Environment: 'res/environments/YOURINPUT.cfg': ";
 		std::cin >> sInput;
-		std::cout << std::endl;
 
 		// Defines Environment directory
 		std::string sEnvDir("environments/" + sInput + ".cfg");
@@ -48,8 +46,7 @@ int main()
 		// Attempts to load an Evironment from file directory
 		if (!environment.loadFromFile(sEnvDir))
 		{
-			std::cerr << "\n Error - Environment '" << sInput << "' could not be read.\n";
-			std::cerr << '\n'; system("pause");
+			sf::err() << "Error - Environment '" << sInput << "' could not be read." << std::endl << std::endl;	system("pause");
 		}
 		// Proceed with program
 		else
