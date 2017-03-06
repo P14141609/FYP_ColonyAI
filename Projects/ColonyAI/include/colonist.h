@@ -7,6 +7,7 @@
 #include <memory>
 #include <math.h>
 #include <queue>
+#include <ctime>
 #include "entity.h"
 #include "memory.h"
 #include "pathfinding.h"

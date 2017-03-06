@@ -115,8 +115,7 @@ void Colonist::updateMemory()
 				// Adds the position to Memory with corresponding type
 				m_pMemories.push_back(std::shared_ptr<Memory>
 				(
-					// TEMPORARY TIME
-					new Memory((long)1234, pObject->getPosition(), pObject->getRadius(), type))
+					new Memory((long)time(NULL), pObject->getPosition(), pObject->getRadius(), type))
 				);
 			}
 		}
