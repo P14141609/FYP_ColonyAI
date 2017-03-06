@@ -118,5 +118,8 @@
     <None Include="environments\env01.cfg">
       <Filter>Resource Files\Environments</Filter>
     </None>
+    <None Include="environments\env02.cfg">
+      <Filter>Resource Files\Environments</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -31,7 +31,7 @@ int main()
 	// Instantiates new Environment
 	Environment environment = Environment();
 	// Loads an Evironment from file
-	environment.loadFromFile("environments\\env01.cfg");
+	environment.loadFromFile("environments\\env02.cfg");
 
 	// While the window is open
 	while (window.isOpen())
