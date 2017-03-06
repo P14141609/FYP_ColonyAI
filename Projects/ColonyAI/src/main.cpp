@@ -55,6 +55,7 @@ int main()
 				{
 					// Toggles debugging boolean
 					g_bDebugging = !g_bDebugging;
+					sf::err() << "[DEBUGGING] Debug Mode set to " << Utils::boolToStr(g_bDebugging) << "." << std::endl;
 				}
 
 				// If Esc is pressed

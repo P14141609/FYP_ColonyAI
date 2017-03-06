@@ -168,6 +168,21 @@ public:
 		// Returns the newly bound number
 		return fNumber;
 	}
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the boolean value in a string form
+	///
+	/// \param kbValue Boolean to convert
+	///
+	/// \return Returns a string of "true" or "false"
+	///
+	///////////////////////////////////////////////// 
+	static std::string boolToStr(const bool kbValue)
+	{
+		if (kbValue) return "true";
+		return "false";
+	}
 };
 
 #endif
