@@ -61,6 +61,15 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Returns the Memorised info radius
+	///
+	/// \return The Memorised info radius
+	///
+	///////////////////////////////////////////////// 
+	float getRadius() { return m_fRadius; }
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Assigns a new value to the Memory type
 	///
 	/// \param kType New type value

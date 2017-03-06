@@ -215,6 +215,20 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// If system debugging
 	if (g_bDebugging)
 	{
+		///////////////////// HEADING /////////////////////
+		// Declares line and colour
+		sf::Vertex line[2];
+		sf::Color colour = sf::Color(0, 0, 0, 255);
+
+		// Sets the first point of the line at the Colonist position
+		line[0] = sf::Vertex(m_position, colour);
+		// Sets the second point of the line infront of the Colonist based on heading
+		line[1] = sf::Vertex(m_position + (Utils::unitVecFromAngle(m_fHeading) * (m_fRadius*2.0f)), colour);
+
+		// Draws the line to target
+		target.draw(line, 2, sf::Lines);
+
+		///////////////////// VISION /////////////////////
 		// Sets circle colour: Transparent
 		circle.setFillColor(sf::Color(0, 0, 0, 0));
 		circle.setOutlineColor(sf::Color(0, 0, 0, 255));
@@ -225,23 +239,40 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		// Sets the origin to the center of the circle
 		circle.setOrigin(sf::Vector2f(m_fVision, m_fVision));
 		// Sets the circle pos to position member
-		circle.setPosition(sf::Vector2f(m_position));
+		circle.setPosition(m_position);
 
 		// Draws circle to target
 		target.draw(circle);
 
-		// Declares line and colour
-		sf::Vertex line[2];
-		sf::Color colour = sf::Color(0, 0, 0, 255);
+		///////////////////// MEMORY /////////////////////
+		// For all Memories
+		for (std::shared_ptr<Memory> pMemory : m_pMemories)
+		{
+			// Sets the first point of the line at the Colonist position
+			line[0] = sf::Vertex(m_position, colour);
+			// Sets the second point of the line at the Memory position
+			line[1] = sf::Vertex(pMemory->getPosition(), colour);
 
-		// Sets the first point of the line at the Colonist position
-		line[0] = sf::Vertex(sf::Vector2f(m_position), colour);
-		// Sets the second point of the line infront of the Colonist based on heading
-		line[1] = sf::Vertex(sf::Vector2f(m_position + (Utils::unitVecFromAngle(m_fHeading) * (m_fRadius*2.0f))), colour);
+			// Draws the line to target
+			target.draw(line, 2, sf::Lines);
 
-		// Draws the line to target
-		target.draw(line, 2, sf::Lines);
+			// Sets circle colour: Transparent
+			circle.setFillColor(sf::Color(0, 0, 0, 0));
+			circle.setOutlineColor(sf::Color(0, 0, 0, 255));
+			circle.setOutlineThickness(1.0f);
 
+			// Sets the circle radius to radius member
+			circle.setRadius(pMemory->getRadius());
+			// Sets the origin to the center of the circle
+			circle.setOrigin(sf::Vector2f(pMemory->getRadius(), pMemory->getRadius()));
+			// Sets the circle pos to position member
+			circle.setPosition(pMemory->getPosition());
+
+			// Draws circle to target
+			target.draw(circle);
+		}
+
+		///////////////////// PATHFINDING /////////////////////
 		// Draws pathfinding info
 		m_pPathfinding->draw(target);
 	}
