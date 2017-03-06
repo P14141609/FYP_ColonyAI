@@ -49,6 +49,13 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 {
 	sf::err() << "[PATHFINDING] Generating path..." << std::endl;
 
+	// If targetNode doesn't exist
+	if (kpTargetNode == nullptr) 
+	{
+		sf::err() << "[PATHFINDING] Generating path... Error - Target node nullptr." << std::endl;
+		return;
+	}
+
 	// If Nodes initialised
 	if (m_bNodesInit)
 	{
