@@ -63,6 +63,21 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Converts an ObjectType to a string
+	///
+	/// \return The Object type in string form
+	///
+	///////////////////////////////////////////////// 
+	static std::string typeToStr(const ObjectType kType)
+	{
+		if (kType == BUSH) return "bush";
+		if (kType == ROCK) return "rock";
+		if (kType == TREE) return "tree";
+		return "ERROR";
+	};
 };
 
 #endif

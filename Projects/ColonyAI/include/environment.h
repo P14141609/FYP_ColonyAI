@@ -97,10 +97,10 @@ public:
 	///
 	/// \param ksDirectory The Env file path to load
 	///
-	/// \return void
+	/// \return Whether the Environment was loaded successfully
 	///
 	///////////////////////////////////////////////// 
-	void loadFromFile(const std::string ksFilePath);
+	bool loadFromFile(const std::string ksFilePath);
 
 	/////////////////////////////////////////////////
 	///

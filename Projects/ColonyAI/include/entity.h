@@ -99,6 +99,19 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	std::shared_ptr<Environment> getEnvironment() { return m_pEnvironment; };
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Converts an EntityType to a string
+	///
+	/// \return The Entity type in string form
+	///
+	///////////////////////////////////////////////// 
+	static std::string typeToStr(const EntityType kType)
+	{
+		if (kType == COLONIST) return "colonist";
+		return "ERROR";
+	};
 };
 
 #endif

@@ -5,8 +5,8 @@
 // Imports
 #include "environment.h"
 
-// Void: Loads Env data from a file
-void Environment::loadFromFile(const std::string ksFilePath)
+// Bool: Loads Env data from a file
+bool Environment::loadFromFile(const std::string ksFilePath)
 {
 	// Declares a file stream with the input file path
 	std::fstream envFile(ksFilePath, std::ios_base::in);
@@ -17,7 +17,7 @@ void Environment::loadFromFile(const std::string ksFilePath)
 		// Prints status
 		sf::err() << "[FILE] Unable to open: " << ksFilePath << std::endl;
 		// Exits the method
-		return;	
+		return false;	
 	}
 	// Else the file is open
 	else
@@ -64,6 +64,8 @@ void Environment::loadFromFile(const std::string ksFilePath)
 
 	// Closes Environment file
 	envFile.close();
+
+	return true;
 }
 
 // Void: Called to update the environment
@@ -139,7 +141,7 @@ void Environment::readEnvLine(std::istringstream& iss)
 		}
 	}
 
-	sf::err() << "[FILE] Environment read from file: x" << uiX << " y" << uiY << std::endl;
+	sf::err() << "[FILE] Environment read: x(" << uiX << ") y(" << uiY << ")" << std::endl;
 
 	// Sets member to derived size
 	m_size = sf::Vector2u(uiX, uiY);
@@ -148,8 +150,8 @@ void Environment::readEnvLine(std::istringstream& iss)
 // Void: Reads an Object file line
 void Environment::readObjectLine(std::istringstream& iss)
 {
-	// Declares an enum to store which Object subclass is indicated
-	enum subclass { NONE, BUSH, ROCK, TREE }; subclass objectType = NONE;
+	// Declares an ObjectType object to store the type data
+	ObjectType type;
 	// Declares three floats to store the position and size data
 	float fX = 0, fY = 0, fR = 0;
 	// Declares a string to store current word being processed
@@ -180,29 +182,29 @@ void Environment::readObjectLine(std::istringstream& iss)
 		else
 		{
 			// If the word is Bush
-			if (word == "Bush") objectType = BUSH; // Sets objectType to corresponding value
+			if (word == "Bush") type = BUSH; // Sets objectType to corresponding value
 
 			// If the word is Rock
-			else if (word == "Rock") objectType = ROCK; // Sets objectType to corresponding value
+			else if (word == "Rock") type = ROCK; // Sets objectType to corresponding value
 
 			// If the word is Tree
-			else if (word == "Tree") objectType = TREE; // Sets objectType to corresponding value
+			else if (word == "Tree") type = TREE; // Sets objectType to corresponding value
 		}
 	}
 
-	sf::err() << "[FILE] Object data read from file: type" << objectType << " x" << fX << " y" << fY << " r" << fR << std::endl;
+	sf::err() << "[FILE] Object read: type(" << Object::typeToStr(type) << ") x(" << fX << ") y(" << fY << ") r(" << fR << ")" << std::endl;
 
 	// With objectType creates a new Object subclass and stores a reference in the m_pObjects member
-	if (objectType == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY), fR)));
-	else if (objectType == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY), fR)));
-	else if (objectType == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY), fR)));
+	if (type == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY), fR)));
+	else if (type == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY), fR)));
+	else if (type == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY), fR)));
 }
 
 // Void: Reads an Entity file line
 void Environment::readEntityLine(std::istringstream& iss)
 {
-	// Declares an enum to store which Entity subclass is indicated
-	enum subclass { NONE, COLONIST }; subclass entityType = NONE;
+	// Declares an EntityType object to store the type data
+	EntityType type;
 	// Declares two floats to store the position data
 	float fX = 0, fY = 0, fH = 0;
 	// Declares a string to store current word being processed
@@ -233,12 +235,12 @@ void Environment::readEntityLine(std::istringstream& iss)
 		else
 		{
 			// If the word is Colonist
-			if (word == "Colonist") entityType = COLONIST; // Sets entityType to corresponding value
+			if (word == "Colonist") type = COLONIST; // Sets entityType to corresponding value
 		}
 	}
 
-	sf::err() << "[FILE] Entity data read from file: type" << entityType << " x" << fX << " y" << fY << " h" << fH << std::endl;
+	sf::err() << "[FILE] Entity read: type(" << Entity::typeToStr(type) << ") x(" << fX << ") y(" << fY << ") h(" << fH << ")" << std::endl;
 
 	// With entityType creates a new Entity subclass and stores a reference in the m_pEntities member
-	if (entityType == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>( new Colonist(this, sf::Vector2f(fX, fY), fH) ) );
+	if (type == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>( new Colonist(this, sf::Vector2f(fX, fY), fH) ) );
 }
