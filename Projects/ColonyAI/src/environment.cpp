@@ -86,8 +86,12 @@ void Environment::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	// For every Object in the Environment
 	for (std::shared_ptr<Object> object : m_pObjects)
 	{
-		// Draws Object to RenderTarget
-		object->draw(target, states);
+		// If Object is not a Tree
+		if (object->getType() != TREE)
+		{
+			// Draws Object to RenderTarget
+			object->draw(target, states);
+		}
 	}
 
 	// For every Entity in the Environment
@@ -95,6 +99,17 @@ void Environment::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		// Draws Entity to RenderTarget
 		entity->draw(target, states);
+	}
+
+	// For every Object in the Environment
+	for (std::shared_ptr<Object> object : m_pObjects)
+	{
+		// If Object is a Tree
+		if (object->getType() == TREE)
+		{
+			// Draws Object to RenderTarget
+			object->draw(target, states);
+		}
 	}
 }
 

@@ -266,14 +266,6 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		// For all Memories
 		for (std::shared_ptr<Memory> pMemory : m_pMemories)
 		{
-			// Sets the first point of the line at the Colonist position
-			line[0] = sf::Vertex(m_position, colour);
-			// Sets the second point of the line at the Memory position
-			line[1] = sf::Vertex(pMemory->getPosition(), colour);
-
-			// Draws the line to target
-			target.draw(line, 2, sf::Lines);
-
 			// Sets circle colour: Transparent with blue outline
 			circle.setFillColor(sf::Color(0, 0, 0, 0));
 			circle.setOutlineColor(colour);
@@ -288,6 +280,16 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 			// Draws circle to target
 			target.draw(circle);
+
+			// Sets the colour to translucent blue
+			colour = sf::Color(0, 0, 255, 75);
+			// Sets the first point of the line at the Colonist position
+			line[0] = sf::Vertex(m_position, colour);
+			// Sets the second point of the line at the Memory position
+			line[1] = sf::Vertex(pMemory->getPosition(), colour);
+
+			// Draws the line to target
+			target.draw(line, 2, sf::Lines);
 		}
 
 		///////////////////// PATHFINDING /////////////////////
