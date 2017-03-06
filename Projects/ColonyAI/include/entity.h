@@ -8,6 +8,8 @@
 
 class Environment;
 
+enum EntityType { COLONIST }; //!< Enum for Entity types
+
 /////////////////////////////////////////////////
 ///
 /// \brief Abstract base class for entities
@@ -19,12 +21,23 @@ private:
 	
 protected:
 
+	EntityType m_type; //!< Entity type
+
 	std::shared_ptr<Environment> m_pEnvironment; //!< Pointer to the Environment the Entity is within
 
 	sf::Vector2f m_position; //!< Entity position
 	float m_fRadius; //!< Radial size of the Entity
 
 public:
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Gets the Entity type
+	///
+	/// \return The Entity type
+	///
+	///////////////////////////////////////////////// 
+	EntityType getType() { return m_type; };
 
 	/////////////////////////////////////////////////
 	///

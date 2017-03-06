@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+enum ObjectType { BUSH, ROCK, TREE }; //!< Enum for Object types
+
 /////////////////////////////////////////////////
 ///
 /// \brief Abstract base class for objects
@@ -16,10 +18,21 @@ private:
 
 protected:
 
+	ObjectType m_type; //!< Object type
+
 	sf::Vector2f m_position; //!< Object position
 	float m_fRadius; //!< Radial size of the Object
 
 public:
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Gets the Object type
+	///
+	/// \return The Object type
+	///
+	///////////////////////////////////////////////// 
+	ObjectType getType() { return m_type; };
 
 	/////////////////////////////////////////////////
 	///

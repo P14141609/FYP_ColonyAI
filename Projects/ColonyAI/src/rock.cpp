@@ -8,6 +8,9 @@
 // Constructor
 Rock::Rock(const sf::Vector2f kPosition, const float kfRadius)
 {
+	// Defines the ObjectType
+	m_type = ROCK;
+
 	// Sets member values to corresponding input
 	m_position = kPosition;
 	m_fRadius = kfRadius;

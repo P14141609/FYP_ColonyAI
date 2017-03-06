@@ -8,6 +8,9 @@
 // Constructor
 Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading)
 {
+	// Defines the EntityType
+	m_type = COLONIST;
+
 	// Casts the incoming pointer to a shared_ptr and assigns it to the member
 	m_pEnvironment = std::shared_ptr<Environment>(pEnv);
 
