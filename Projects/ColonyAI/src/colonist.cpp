@@ -92,16 +92,28 @@ void Colonist::updateMemory()
 			// If position is in Memory
 			if (bPosInMemory)
 			{
-				// TEMPORARY
+				// TEMPORARY - Need to update whether it is still a valid memory
 			}
 			// Else position isn't in Memory
 			else
 			{
-				// Adds the position to Memory
+				// Declares a MemoryType with default: OBSTRUCTION
+				MemoryType type = OBSTRUCTION;
+
+				// If Object is a Bush
+				if (pObject->getType() == BUSH) { type = FOOD_SOURCE; }
+
+				// If Object is a Rock
+				else if (pObject->getType() == ROCK) { /* TEMPORARY - Need Stone_Source type */ }
+
+				// If Object is a Tree
+				else if (pObject->getType() == TREE) { /* TEMPORARY - Need Lumber_Source type */ }
+
+				// Adds the position to Memory with corresponding type
 				m_pMemories.push_back(std::shared_ptr<Memory>
 				(
 					// TEMPORARY TIME
-					new Memory((long)1234, pObject->getPosition(), pObject->getRadius(), OBSTRUCTION))
+					new Memory((long)1234, pObject->getPosition(), pObject->getRadius(), type))
 				);
 			}
 		}
