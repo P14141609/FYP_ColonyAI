@@ -104,10 +104,13 @@ void Colonist::updateMemory()
 				if (pObject->getType() == BUSH) { type = FOOD_SOURCE; }
 
 				// If Object is a Rock
-				else if (pObject->getType() == ROCK) { /* TEMPORARY - Need Stone_Source type */ }
+				else if (pObject->getType() == ROCK) { type = STONE_SOURCE; }
 
 				// If Object is a Tree
-				else if (pObject->getType() == TREE) { /* TEMPORARY - Need Lumber_Source type */ }
+				else if (pObject->getType() == TREE) { type = LUMBER_SOURCE; }
+
+				// If Object is Water
+				else if (pObject->getType() == WATER) { type = WATER_SOURCE; }
 
 				// Adds the position to Memory with corresponding type
 				m_pMemories.push_back(std::shared_ptr<Memory>

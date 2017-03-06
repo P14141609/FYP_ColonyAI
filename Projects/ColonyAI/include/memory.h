@@ -5,7 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-enum MemoryType { OBSTRUCTION, FOOD_SOURCE, WATER_SOURCE }; //!< Enum for Memory types
+enum MemoryType { OBSTRUCTION, FOOD, FOOD_SOURCE, STONE, STONE_SOURCE, LUMBER, LUMBER_SOURCE, WATER_SOURCE
+}; //!< Enum for Memory types
 
 /////////////////////////////////////////////////
 ///
