@@ -229,9 +229,12 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		target.draw(line, 2, sf::Lines);
 
 		///////////////////// VISION /////////////////////
-		// Sets circle colour: Transparent
+		// Sets the colour to blue
+		colour = sf::Color(0, 0, 255, 255);
+
+		// Sets circle colour: Transparent with black outline
 		circle.setFillColor(sf::Color(0, 0, 0, 0));
-		circle.setOutlineColor(sf::Color(0, 0, 0, 255));
+		circle.setOutlineColor(colour);
 		circle.setOutlineThickness(1.0f);
 
 		// Sets the circle radius to radius member
@@ -256,9 +259,9 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 			// Draws the line to target
 			target.draw(line, 2, sf::Lines);
 
-			// Sets circle colour: Transparent
+			// Sets circle colour: Transparent with blue outline
 			circle.setFillColor(sf::Color(0, 0, 0, 0));
-			circle.setOutlineColor(sf::Color(0, 0, 0, 255));
+			circle.setOutlineColor(colour);
 			circle.setOutlineThickness(1.0f);
 
 			// Sets the circle radius to radius member
