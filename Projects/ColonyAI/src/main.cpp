@@ -14,6 +14,23 @@
 #include <SFML/Window.hpp>
 #include "environment.h"
 
+//!< Struct that holds window properties
+struct WindowProperties
+{
+	//!< Constructor
+	WindowProperties(const std::string ksTitle, const sf::Vector2u kSize)
+	{
+		// Sets member values to corresponding input
+		m_sTitle = ksTitle;
+		m_size = kSize;
+	}
+
+	bool m_bFullscreen = false; //!< Whether the window is in fullscreen mode
+	std::string m_sTitle = ""; //!< The window title
+	sf::Vector2u m_size = sf::Vector2u(1,1); //!< The window size
+};
+
+//!< Returns a View correctly letterboxed for the display
 sf::View letterboxView(sf::View view, const sf::Vector2u kWindowSize)
 {
 	// Defines view aspect ratio
@@ -107,8 +124,11 @@ int main()
 		// Intitialises a seed for rand()
 		srand((unsigned int)time(NULL));
 
+		// Defines WindowsProperties with given title and size
+		WindowProperties winProps("Colony-based AI in a 2D environment - Final Year Project - P14141609", sf::Vector2u(1280, 720));
+
 		// Instantiates window
-		sf::RenderWindow window(sf::VideoMode(1280, 720), "ColonyAI - P14141609", sf::Style::Default);
+		sf::RenderWindow window(sf::VideoMode(winProps.m_size.x, winProps.m_size.y), winProps.m_sTitle.c_str(), sf::Style::Default);
 
 		// Initialises a clock for the update loop
 		sf::Clock clock;
@@ -132,6 +152,28 @@ int main()
 				// If KeyPressed event is called
 				if (event.type == sf::Event::KeyPressed)
 				{
+					// If F11 is pressed
+					if (event.key.code == sf::Keyboard::F11)
+					{
+						// Toggles fullscreen mode
+						winProps.m_bFullscreen = !winProps.m_bFullscreen;
+
+						// If now in fullscreen mode
+						if (winProps.m_bFullscreen)
+						{
+							// Recreates the window with size that's the size of the display, standard title and style of none
+							window.create(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), winProps.m_sTitle.c_str(), sf::Style::None);
+							// Positions window at 0,0
+							window.setPosition(sf::Vector2i(0, 0));
+						}
+						// Else in windowed mode
+						else
+						{
+							// Recreates the window with default size, standard title and default style
+							window.create(sf::VideoMode(winProps.m_size.x, winProps.m_size.y), winProps.m_sTitle.c_str(), sf::Style::Default);
+						}
+					}
+
 					// If Tab is pressed
 					if (event.key.code == sf::Keyboard::Tab)
 					{
