@@ -51,7 +51,7 @@ void Pathfinding::calcAccess(const sf::Vector2f kPosition, const float kfRadius)
 			float fClearance = fDistToMem - kfRadius;
 
 			// If clearance is less than the radius of the Colonist
-			if (fClearance <= m_pColonist->getRadius())
+			if (fClearance <= m_pColonist->getRadius()*1.25)
 			{
 				// Sets Node as inaccessible
 				pNode->setAccessible(false);
