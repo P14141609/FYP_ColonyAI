@@ -36,7 +36,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="environments\env01.cfg" />
-    <None Include="environments\env02.cfg" />
+    <None Include="environments\Forest.cfg" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4662F040-7E1C-466F-8946-FF7A47F88949}</ProjectGuid>
