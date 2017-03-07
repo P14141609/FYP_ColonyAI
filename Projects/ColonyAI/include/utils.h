@@ -138,6 +138,30 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Determines the long with the lowest value
+	///
+	/// \param klA Long for comparison
+	/// \param klB Long for comparison
+	///
+	/// \return Returns the lowest value
+	///
+	///////////////////////////////////////////////// 
+	static long min(const long klA, const long klB) { if (klA <= klB) { return klA; } return klB; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Determines the long with the highest value
+	///
+	/// \param klA Long for comparison
+	/// \param klB Long for comparison
+	///
+	/// \return Returns the highest value
+	///
+	///////////////////////////////////////////////// 
+	static long max(const long klA, const long klB) { if (klA >= klB) { return klA; } return klB; }
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Inverts a positive number to negative and vice versa
 	///
 	/// \param kfNumber Float to invert

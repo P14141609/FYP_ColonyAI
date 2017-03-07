@@ -75,9 +75,6 @@
     <ClCompile Include="src\colonist.cpp">
       <Filter>Source Files\Entity\Colonist</Filter>
     </ClCompile>
-    <ClCompile Include="src\memory.cpp">
-      <Filter>Source Files\Entity\Colonist</Filter>
-    </ClCompile>
     <ClCompile Include="src\water.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>

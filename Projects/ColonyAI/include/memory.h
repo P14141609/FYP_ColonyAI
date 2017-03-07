@@ -4,9 +4,10 @@
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <memory>
+#include "object.h"
 
-enum MemoryType { OBSTRUCTION, FOOD, FOOD_SOURCE, STONE, STONE_SOURCE, LUMBER, LUMBER_SOURCE, WATER_SOURCE
-}; //!< Enum for Memory types
+enum MemoryType { OBSTRUCTION, FOOD, FOOD_SOURCE, STONE, STONE_SOURCE, LUMBER, LUMBER_SOURCE, WATER_SOURCE }; //!< Enum for Memory types
 
 /////////////////////////////////////////////////
 ///
@@ -18,11 +19,8 @@ class Memory
 private:
 
 	long m_lTime; //!< Memory time
-	sf::Vector2f m_position; //!< Memory position
-
-	float m_fRadius; //!< Memorised info radius
-	
 	MemoryType m_type; //!< Memory type
+	std::shared_ptr<Object> m_pObject; //!< Memory Object
 
 protected:
 
@@ -33,12 +31,17 @@ public:
 	/// \brief Constructor
 	///
 	/// \param klTime Time of Memory creation
-	/// \param kPosition Position of the Memory
-	/// \param kfRadius Radius of the info memorised
 	/// \param kType Type of Memory
+	/// \param kpObject Object the Memory refers to
 	///
 	///////////////////////////////////////////////// 
-	Memory(const long klTime, const sf::Vector2f kPosition, const float kfRadius, const MemoryType kType);
+	Memory(const long klTime, const std::shared_ptr<Object> kpObject, const MemoryType kType)
+	{
+		// Sets member values to corresponding input
+		m_lTime = klTime;
+		m_type = kType;
+		m_pObject = kpObject;
+	}
 
 	/////////////////////////////////////////////////
 	///
@@ -53,21 +56,12 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the Memory time
+	/// \brief Gets the Memory time
 	///
 	/// \return The Memory time
 	///
 	///////////////////////////////////////////////// 
 	long getTime() { return m_lTime; }
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Returns the Memorised info radius
-	///
-	/// \return The Memorised info radius
-	///
-	///////////////////////////////////////////////// 
-	float getRadius() { return m_fRadius; }
 
 	/////////////////////////////////////////////////
 	///
@@ -82,7 +76,7 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the Memory type
+	/// \brief Gets the Memory type
 	///
 	/// \return The Memory type
 	///
@@ -91,12 +85,12 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the Memory position
+	/// \brief Gets the Memory Object
 	///
-	/// \return The Memory position
+	/// \return The Memory Object
 	///
 	///////////////////////////////////////////////// 
-	sf::Vector2f getPosition() { return m_position; }
+	std::shared_ptr<Object> getObject() { return m_pObject; }
 };
 
 #endif

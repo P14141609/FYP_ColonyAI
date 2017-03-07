@@ -65,10 +65,6 @@ void Colonist::update(const float kfElapsedTime)
 // Updates the Colonist's Memory
 void Colonist::updateMemory()
 {
-	// TODO
-	// Update Memory
-	// Share Memories with nearby Colonists
-
 	// For all Objects in the Environment
 	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
 	{
@@ -82,7 +78,7 @@ void Colonist::updateMemory()
 			for (std::shared_ptr<Memory> pMemory : m_pMemories)
 			{
 				// If Memory has the same position as Object
-				if (pMemory->getPosition() == pObject->getPosition())
+				if (pMemory->getObject()->getPosition() == pObject->getPosition())
 				{
 					// Sets bPosInMem true
 					bPosInMemory = true;
@@ -115,11 +111,11 @@ void Colonist::updateMemory()
 				// Adds the position to Memory with corresponding type
 				m_pMemories.push_back(std::shared_ptr<Memory>
 				(
-					new Memory((long)time(NULL), pObject->getPosition(), pObject->getRadius(), type))
+					new Memory((long)time(NULL), pObject, type))
 				);
 
-				// Calculates Node accessibility with new Memory added
-				m_pPathfinding->calcAccess(m_pMemories.back()->getPosition(), m_pMemories.back()->getRadius());
+				// Calculates Node accessibility with new Memory Object
+				m_pPathfinding->calcAccess(pObject->getPosition(), pObject->getRadius());
 			}
 		}
 	}
@@ -133,14 +129,40 @@ void Colonist::updateMemory()
 			// If the Entity is a Colonist
 			if (pEntity->getType() == COLONIST)
 			{
-				// For all the Colonist's Memories
-				for (std::shared_ptr<Memory> pMemory : m_pMemories)
-				{
-					// If memory is in other Colonist's memory
-						// Update time to the most recent of the two
+				// Casts the Entity to a Colonist
+				std::shared_ptr<Colonist> pColonist = std::dynamic_pointer_cast<Colonist>(pEntity);
 
-					// If memory isn't in other Colonist's memory
-						// Add memory to our memory
+				// For all of their Memories
+				for (std::shared_ptr<Memory> pTheirMemory : pColonist->getMemories())
+				{
+					// Declares bool; whether their Memory is in ours
+					bool bInTheirMem = false;
+
+					// For all of our Memories
+					for (std::shared_ptr<Memory> pOurMemory : m_pMemories)
+					{
+						// If our Memory is in theirs
+						if (pOurMemory->getObject() == pTheirMemory->getObject())
+						{
+							// Update our time to the most recent of the two
+							// This means the Memories are kept up to date
+							pOurMemory->setTime(Utils::max(pOurMemory->getTime(), pTheirMemory->getTime()));
+
+							// Sets true; their memory is in ours
+							bInTheirMem = true;
+						}
+					}
+
+					// If other Colonist's Memory isn't in our Memory
+					if (!bInTheirMem)
+					{
+						// Add their Memory to our Memory
+						// Note a new ptr is created instead of having two Colonists with the same Memory ptr
+						m_pMemories.push_back(std::shared_ptr<Memory>(pTheirMemory.get()));
+
+						// Calculates Node accessibility with new Memory Object
+						m_pPathfinding->calcAccess(pTheirMemory->getObject()->getPosition(), pTheirMemory->getObject()->getRadius());
+					}
 				}
 			}
 			// Else
@@ -302,11 +324,11 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 			circle.setOutlineThickness(1.0f);
 
 			// Sets the circle radius to radius member
-			circle.setRadius(pMemory->getRadius());
+			circle.setRadius(pMemory->getObject()->getRadius());
 			// Sets the origin to the center of the circle
-			circle.setOrigin(sf::Vector2f(pMemory->getRadius(), pMemory->getRadius()));
+			circle.setOrigin(sf::Vector2f(pMemory->getObject()->getRadius(), pMemory->getObject()->getRadius()));
 			// Sets the circle pos to position member
-			circle.setPosition(pMemory->getPosition());
+			circle.setPosition(pMemory->getObject()->getPosition());
 
 			// Draws circle to target
 			target.draw(circle);
@@ -316,7 +338,7 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 			// Sets the first point of the line at the Colonist position
 			line[0] = sf::Vertex(m_position, colour);
 			// Sets the second point of the line at the Memory position
-			line[1] = sf::Vertex(pMemory->getPosition(), colour);
+			line[1] = sf::Vertex(pMemory->getObject()->getPosition(), colour);
 
 			// Draws the line to target
 			target.draw(line, 2, sf::Lines);

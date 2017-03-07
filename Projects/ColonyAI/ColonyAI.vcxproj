@@ -15,7 +15,6 @@
     <ClCompile Include="src\colonist.cpp" />
     <ClCompile Include="src\environment.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\memory.cpp" />
     <ClCompile Include="src\pathfinding.cpp" />
     <ClCompile Include="src\rock.cpp" />
     <ClCompile Include="src\tree.cpp" />
