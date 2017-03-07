@@ -111,10 +111,13 @@ public:
 	///
 	/// \brief Calculates which Nodes are accessible
 	///
+	///	\param kPosition A point in the Environment
+	///	\param kfRadius The radius arounf the point that will be inaccessible
+	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void calcAccess();
+	void calcAccess(const sf::Vector2f kPosition, const float kfRadius);
 
 	/////////////////////////////////////////////////
 	///

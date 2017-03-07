@@ -119,7 +119,7 @@ void Colonist::updateMemory()
 				);
 
 				// Calculates Node accessibility with new Memory added
-				m_pPathfinding->calcAccess();
+				m_pPathfinding->calcAccess(m_pMemories.back()->getPosition(), m_pMemories.back()->getRadius());
 			}
 		}
 	}
@@ -164,9 +164,6 @@ void Colonist::explore()
 	// If path queue is empty
 	if (m_pPathfinding->getPath().empty())
 	{
-		// Calculates the accessibility of the Nodes
-		m_pPathfinding->calcAccess();
-
 		// Declares a cone that the randPos will sit within infront of the Colonist
 		float fCone = 60.0f;
 

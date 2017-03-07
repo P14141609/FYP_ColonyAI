@@ -35,30 +35,26 @@ Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment
 }
 
 // Calculates which Nodes are accessible
-void Pathfinding::calcAccess()
+void Pathfinding::calcAccess(const sf::Vector2f kPosition, const float kfRadius)
 {
 	sf::err() << "[PATHFINDING] Calculating node accessibility..." << std::endl;
 
-	// For every Object in the Colonist's Memory
-	for (std::shared_ptr<Memory> pMemory : m_pColonist->getMemories())
+	// For all Nodes
+	for (std::shared_ptr<Node> pNode : m_pNodes)
 	{
-		// For all Nodes
-		for (std::shared_ptr<Node> pNode : m_pNodes)
+		// If Node is accessible
+		if (pNode->isAccessible())
 		{
-			// If Node is accessible
-			if (pNode->isAccessible())
-			{
-				// Defines the distance from the Node to the Memory
-				float fDistToMem = Utils::magnitude(pMemory->getPosition() - pNode->getPosition());
-				// Defines the clearance, amount of the distance that isn't in the radius
-				float fClearance = fDistToMem - pMemory->getRadius();
+			// Defines the distance from the Node to the point
+			float fDistToMem = Utils::magnitude(kPosition - pNode->getPosition());
+			// Defines the clearance, amount of the distance that isn't in the radius
+			float fClearance = fDistToMem - kfRadius;
 
-				// If clearance is less than the radius of the Colonist
-				if (fClearance <= m_pColonist->getRadius())
-				{
-					// Sets Node as inaccessible
-					pNode->setAccessible(false);
-				}
+			// If clearance is less than the radius of the Colonist
+			if (fClearance <= m_pColonist->getRadius())
+			{
+				// Sets Node as inaccessible
+				pNode->setAccessible(false);
 			}
 		}
 	}
