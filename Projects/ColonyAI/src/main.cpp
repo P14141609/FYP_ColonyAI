@@ -25,13 +25,13 @@ int main()
 	std::cin >> sInput;
 
 	// If 'Create' selected
-	if (sInput == "Create")
+	if (Utils::toLowercase(sInput) == "create")
 	{
 		// TEMPORARY - For level editor
 	}
 
 	// If 'Load' selected
-	else if (sInput == "Load")
+	else if (Utils::toLowercase(sInput) == "load")
 	{
 		// Gets user input for the Environment directory
 		std::cout << "Select Environment: 'res/environments/YOURINPUT.cfg': ";
@@ -46,7 +46,7 @@ int main()
 		// Attempts to load an Evironment from file directory
 		if (!environment.loadFromFile(sEnvDir))
 		{
-			sf::err() << "Error - Environment '" << sInput << "' could not be read." << std::endl << std::endl;	system("pause");
+			sf::err() << "Error - Environment '" << sEnvDir << "' could not be read." << std::endl << std::endl; system("pause");
 		}
 		// Proceed with program
 		else

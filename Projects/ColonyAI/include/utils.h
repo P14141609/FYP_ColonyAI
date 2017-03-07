@@ -183,6 +183,60 @@ public:
 		if (kbValue) return "true";
 		return "false";
 	}
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the string completely lowercase
+	///
+	/// \param ksString String to modify
+	///
+	/// \return Returns a string in lowercase
+	///
+	///////////////////////////////////////////////// 
+	static std::string toLowercase(const std::string ksString)
+	{
+		// Declares 'locale' for tolower to function
+		std::locale loc;
+		// Declares string for result
+		std::string sResult;
+
+		// For all chars in string
+		for (unsigned int i = 0; i < ksString.length(); i++)
+		{
+			// Adds the char to the result in lowercase
+			sResult += std::tolower(ksString[i], loc);
+		}
+			
+		// Returns resultant string
+		return sResult;
+	}
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the string completely uppercase
+	///
+	/// \param ksString String to modify
+	///
+	/// \return Returns a string in uppercase
+	///
+	///////////////////////////////////////////////// 
+	static std::string toUppercase(const std::string ksString)
+	{
+		// Declares 'locale' for toupper to function
+		std::locale loc;
+		// Declares string for result
+		std::string sResult;
+
+		// For all chars in string
+		for (unsigned int i = 0; i < ksString.length(); i++)
+		{
+			// Adds the char to the result in uppercase
+			sResult += std::toupper(ksString[i], loc);
+		}
+
+		// Returns resultant string
+		return sResult;
+	}
 };
 
 #endif
