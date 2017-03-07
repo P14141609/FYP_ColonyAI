@@ -95,6 +95,8 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 		{
 			// Add Node at your current location to closed list
 			pClosedNodes.push_back(nodeFromPos(m_pColonist->getPosition()));
+			// Resets the current Node
+			pClosedNodes.back()->reset();
 		}
 		// There is no Node 
 		else
@@ -116,8 +118,6 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 			// Current Node being tested
 			std::shared_ptr<Node> pCurrentNode = pClosedNodes.back();
 
-			// Resets the current Node
-			pCurrentNode->reset();
 			// Sets the currentNode's heuristic as the manhattan distance from the Node to the target
 			pCurrentNode->setH(distance(pCurrentNode, kpTargetNode));
 
