@@ -14,6 +14,50 @@
 #include <SFML/Window.hpp>
 #include "environment.h"
 
+sf::View letterboxView(sf::View view, const sf::Vector2u kWindowSize)
+{
+	// Defines view aspect ratio
+	float fViewRatio = (float)view.getSize().x / (float)view.getSize().y;
+	// Defines window aspect ratio
+	float fWindowRatio = (float)kWindowSize.x / (float)kWindowSize.y;
+
+	// Defines vector for new view size
+	sf::Vector2f newSize(1.0f, 1.0f);
+	// Defines vector for new view position
+	sf::Vector2f newPosition(0.0f, 0.0f);
+
+	// Declares bool for whether the view needs letter boxing left&right: true or top&bottom: false
+	bool bViewFitsHeight;
+
+	// If the window aspect ratio is smaller than the view aspect ratio
+	if (fWindowRatio < fViewRatio) bViewFitsHeight = false; // The view doesn't fit the fit the height
+	// Else 
+	else bViewFitsHeight = true; // The view fits the height
+
+	// Fits height: modify view X axis
+	if (bViewFitsHeight)
+	{
+		// Scales the width by the window aspect ratio 
+		newSize.x = fViewRatio / fWindowRatio;
+		// Moves the position across
+		newPosition.x = (1 - newSize.x) / 2;
+	}
+	// Fits width: modify view Y axis
+	else 
+	{
+		// Scales the height by the window aspect ratio 
+		newSize.y = fWindowRatio / fViewRatio;
+		// Moves the position down
+		newPosition.y = (1 - newSize.y) / 2;
+	}
+
+	// Sets the view's viewport with newly configured params
+	view.setViewport(sf::FloatRect(newPosition, newSize));
+
+	// Returns letterboxed view
+	return view;
+}
+
 //!< Entry point for the application
 int main()
 {
@@ -121,8 +165,11 @@ int main()
 			// Clears window making it entirely black
 			window.clear(sf::Color(0, 0, 0, 255));
 
+			// Defines the View of the Environment
+			sf::View envView(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(environment.getSize())));
+			
 			// Sets view to size of environment
-			window.setView(sf::View(sf::FloatRect(0.0f, 0.0f, (float)environment.getSize().x, (float)environment.getSize().y)));
+			window.setView(letterboxView(envView, window.getSize()));
 
 			// Draws environment
 			window.draw(environment);

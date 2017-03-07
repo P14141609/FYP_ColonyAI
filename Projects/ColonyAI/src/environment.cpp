@@ -82,8 +82,12 @@ void Environment::update(const float kfElapsedTime)
 // Void: Called to draw the environment
 void Environment::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	// Clears previous frame and draws the Environment colour to the target
-	target.clear(m_colour);
+	// Rectangle shape for drawing
+	sf::RectangleShape rectShape;
+	rectShape.setSize(sf::Vector2f(m_size.x, m_size.y)); // Size of Environment
+	rectShape.setFillColor(m_colour);
+	// Draws shape to display
+	target.draw(rectShape);
 
 	// For every Object in the Environment
 	for (std::shared_ptr<Object> object : m_pObjects)
