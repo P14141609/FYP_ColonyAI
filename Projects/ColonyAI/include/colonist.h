@@ -68,10 +68,12 @@ private:
 	///
 	/// \brief Updates the Colonist's Memory
 	///
+	/// \param klTime The current time
+	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void updateMemory();
+	void updateMemory(const long klTime);
 
 	/////////////////////////////////////////////////
 	///
@@ -123,12 +125,12 @@ private:
 	/// \brief Moves the Colonist toward a destination at an input speed
 	///
 	/// \param kDestination A position to move toward
-	/// \param fSpeed The speed it should move at
+	/// \param kfElapsedTime kfElapsedTime The time passed since last update in seconds
 	///
 	/// \return Whether Colonist is at the destination
 	///
 	///////////////////////////////////////////////// 
-	bool moveTo(const sf::Vector2f kDestination, const float fSpeed);
+	bool moveTo(const sf::Vector2f kDestination, const float kfElapsedTime);
 
 protected:
 

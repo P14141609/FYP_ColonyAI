@@ -30,7 +30,7 @@ Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float
 void Colonist::update(const float kfElapsedTime)
 {
 	// Calls method to update Colonist Memory
-	updateMemory();
+	updateMemory((long)time(NULL));
 
 	switch (m_state)
 	{
@@ -51,7 +51,7 @@ void Colonist::update(const float kfElapsedTime)
 	if (!m_pPathfinding->getPath().empty())
 	{
 		// Paths the Colonist to the pos at the front of the queue
-		if (moveTo(m_pPathfinding->getPath().front(), m_fSpeed*kfElapsedTime))
+		if (moveTo(m_pPathfinding->getPath().front(), kfElapsedTime))
 		{
 			// Removes the location at the front of the queue
 			m_pPathfinding->popPath();
@@ -63,7 +63,7 @@ void Colonist::update(const float kfElapsedTime)
 }
 
 // Updates the Colonist's Memory
-void Colonist::updateMemory()
+void Colonist::updateMemory(const long klTime)
 {
 	// For all Objects in the Environment
 	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
@@ -111,7 +111,7 @@ void Colonist::updateMemory()
 				// Adds the position to Memory with corresponding type
 				m_pMemories.push_back(std::shared_ptr<Memory>
 				(
-					new Memory((long)time(NULL), pObject, type))
+					new Memory(klTime, pObject, type))
 				);
 
 				// Calculates Node accessibility with new Memory Object
@@ -233,13 +233,13 @@ void Colonist::breed()
 }
 
 // Bool: Moves the Colonist toward a destination at an input speed - Returns whether Colonist is at the destination
-bool Colonist::moveTo(const sf::Vector2f kDestination, const float fSpeed)
+bool Colonist::moveTo(const sf::Vector2f kDestination, const float kfElapsedTime)
 {
 	// Defines the distance between current and desired position
 	sf::Vector2f distance = kDestination - m_position;
 	
 	// Defines displacement with the distance normal and speed
-	sf::Vector2f displacement = Utils::normaliseVec(distance) * fSpeed;
+	sf::Vector2f displacement = Utils::normaliseVec(distance) * (m_fSpeed*kfElapsedTime);
 
 	// If the displacement is larger than the distance between positions
 	if (Utils::magnitude(displacement) >= Utils::magnitude(distance))
