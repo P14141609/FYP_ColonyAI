@@ -62,7 +62,7 @@ void Colonist::update(const float kfElapsedTime)
 	m_fHeading = Utils::bindNum(m_fHeading, 0, 360);
 }
 
-// Updates the Colonist's Memory
+// Void: Updates the Colonist's Memory
 void Colonist::updateMemory(const long klTime)
 {
 	// For all Objects in the Environment

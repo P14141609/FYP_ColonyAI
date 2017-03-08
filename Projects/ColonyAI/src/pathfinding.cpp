@@ -8,6 +8,7 @@
 // Constructor
 Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment> kpEnvironment)
 {
+	// Sets member values to corresponding input
 	m_pColonist = std::shared_ptr<Colonist>(pColonist);
 	m_pEnv = kpEnvironment;
 
@@ -34,7 +35,7 @@ Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment
 	sf::err() << "[PATHFINDING] Generating nodes for A* pathfinding... Finished." << std::endl;
 }
 
-// Calculates which Nodes are accessible
+// Void: Calculates which Nodes are accessible
 void Pathfinding::calcAccess(const sf::Vector2f kPosition, const float kfRadius)
 {
 	sf::err() << "[PATHFINDING] Calculating node accessibility..." << std::endl;
@@ -62,7 +63,7 @@ void Pathfinding::calcAccess(const sf::Vector2f kPosition, const float kfRadius)
 	sf::err() << "[PATHFINDING] Calculating node accessibility... Finished." << std::endl;
 }
 
-// Creates a path to target Node
+// Void: Creates a path to target Node
 void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 {
 	sf::err() << "[PATHFINDING] Generating path..." << std::endl;
@@ -251,7 +252,7 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 	else { sf::err() << "[PATHFINDING] Generating path... Error - Nodes not intitialised." << std::endl; }
 }
 
-// Returns the Node that a given position falls within
+// std::shared_ptr<Node>: Detemines the Node that a given position falls within
 std::shared_ptr<Node> Pathfinding::nodeFromPos(const sf::Vector2f kPosition)
 {
 	// If Nodes exist
@@ -278,7 +279,7 @@ std::shared_ptr<Node> Pathfinding::nodeFromPos(const sf::Vector2f kPosition)
 	return nullptr;
 }
 
-// Calculates G value of a Node
+// Float: Calculates G value of a Node - Returns the calculated G value
 float Pathfinding::calcG(const std::shared_ptr<Node> kpCurrentNode, const std::shared_ptr<Node> kpTargetNode)
 {
 	// Distance from the current Node and open Node
@@ -288,7 +289,7 @@ float Pathfinding::calcG(const std::shared_ptr<Node> kpCurrentNode, const std::s
 	return fDistToNode + kpCurrentNode->getG();
 }
 
-// Returns whether a Node is within a vector of Nodes
+// Bool: Detemines whether a Node is within a vector of Nodes - Returns whether the Node is in the vector
 bool Pathfinding::nodeInVector(const std::shared_ptr<Node> kpNodeToFind, const std::vector<std::shared_ptr<Node>> kpVector)
 {
 	// If a Node in the vector is the nodeToFind: Return True
@@ -301,7 +302,7 @@ bool Pathfinding::nodeInVector(const std::shared_ptr<Node> kpNodeToFind, const s
 	return false;
 }
 
-// Returns the distance from one Node to another
+// Float: Detemines the distance from one Node to another with the manhattan algorithm - Returns distance to the end Node
 float Pathfinding::distance(const std::shared_ptr<Node> kpStartNode, const std::shared_ptr<Node> kpEndNode)
 {
 	// Number of Nodes needed horizontally to match destination
@@ -317,7 +318,7 @@ float Pathfinding::distance(const std::shared_ptr<Node> kpStartNode, const std::
 	return fDistance;
 }
 
-// Returns a vector of accessible adjacent Nodes
+// std::vector<std::shared_ptr<Node>>: Generates a vector of accessible adjacent Nodes - Returns accessible Nodes adjacent to the given Node
 std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(const std::shared_ptr<Node> kpNode)
 {
 	// Defines vector of Nodes to store adjacent Nodes that are identified
@@ -540,7 +541,7 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(const std::shar
 	return adjNodes;
 }
 
-// Forms a queue of Nodes to the given Node
+// Void: Forms a queue of Nodes to the given Node
 void Pathfinding::queuePath(std::shared_ptr<Node> pTargetNode)
 {
 	// Vector for stack of Nodes to be used in path
@@ -568,7 +569,7 @@ void Pathfinding::queuePath(std::shared_ptr<Node> pTargetNode)
 	}
 }
 
-// Draws the path to a display
+// Void: Draws the path to a display
 void Pathfinding::draw(sf::RenderTarget& target)
 {
 	// If Nodes initialised

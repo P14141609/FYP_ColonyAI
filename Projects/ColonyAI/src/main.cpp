@@ -30,7 +30,7 @@ struct WindowProperties
 	sf::Vector2u m_size = sf::Vector2u(1,1); //!< The window size
 };
 
-//!< Returns a View correctly letterboxed for the display
+//!< sf::View: Modifies a View to fit a display with letterboxing - Returns a View correctly letterboxed for the display
 sf::View letterboxView(sf::View view, const sf::Vector2u kWindowSize)
 {
 	// Defines view aspect ratio

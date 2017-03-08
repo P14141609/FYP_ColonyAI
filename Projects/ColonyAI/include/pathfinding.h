@@ -50,7 +50,7 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns whether a Node is within a vector of Nodes
+	/// \brief Detemines whether a Node is within a vector of Nodes
 	///
 	/// \return Whether the Node is in the vector
 	///
@@ -59,7 +59,7 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the distance from one Node to another with the manhattan algorithm
+	/// \brief Detemines the distance from one Node to another with the manhattan algorithm
 	///
 	/// \return Distance to the end Node
 	///
@@ -68,7 +68,7 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns a vector of accessible adjacent Nodes
+	/// \brief Generates a vector of accessible adjacent Nodes
 	///
 	/// \return Accessible Nodes adjacent to the given Node
 	///
@@ -121,7 +121,7 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the Node that a given position falls within
+	/// \brief Detemines the Node that a given position falls within
 	///
 	/// \return Node at position
 	///
@@ -130,7 +130,7 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the vector of Nodes
+	/// \brief Gets the vector of Nodes
 	///
 	/// \return Vector of Nodes
 	///
@@ -139,7 +139,7 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the path queue
+	/// \brief Gets the path queue
 	///
 	/// \return Queue of positions
 	///

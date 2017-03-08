@@ -5,7 +5,7 @@
 // Imports
 #include "environment.h"
 
-// Bool: Loads Env data from a file
+// Bool: Loads Env data from a file - Returns whether the Environment was loaded successfully
 bool Environment::loadFromFile(const std::string ksFilePath)
 {
 	// Declares a file stream with the input file path
