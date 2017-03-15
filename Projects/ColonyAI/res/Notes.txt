@@ -5,11 +5,12 @@ ToDo:
 	Obstacle Clearing
 	Reproduction
 	Colony Role Delegation
-	Add Entity Memories
+
 	Add Bush food production
+	Add specific Entity Memories?
 	Add Saplings? for lumber replenishment
 
 Bugs:
-	Fix delta heading screwing up explore()
+	Fix delta heading somehow screwing up colonist.explore()
 	window.close() causes memory exception
 	delete_scalar.ccp exception occasionally

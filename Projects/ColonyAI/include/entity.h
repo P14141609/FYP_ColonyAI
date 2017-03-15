@@ -8,7 +8,7 @@
 
 class Environment;
 
-enum EntityType { COLONIST }; //!< Enum for Entity types
+enum EntityType { COLONIST, FOOD, LUMBER, STONE }; //!< Enum for Entity types
 
 /////////////////////////////////////////////////
 ///
