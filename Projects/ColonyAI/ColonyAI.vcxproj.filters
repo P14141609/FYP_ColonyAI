@@ -125,4 +125,9 @@
       <Filter>Resource Files\Environments</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="res\Notes.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
 </Project>
