@@ -6,7 +6,6 @@ ToDo:
 	Reproduction
 	Colony Role Delegation
 
-	Add Bush food production
 	Add specific Entity Memories?
 	Add Saplings? for lumber replenishment
 
