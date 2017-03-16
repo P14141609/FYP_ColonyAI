@@ -1,10 +1,10 @@
+#pragma once
 #ifndef ENTITY_H
 #define ENTITY_H
 
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include "environment.h"
 
 class Environment;
 
@@ -37,7 +37,7 @@ public:
 	/// \return The Entity type
 	///
 	///////////////////////////////////////////////// 
-	EntityType getType() { return m_type; };
+	EntityType getType() { return m_type; }
 
 	/////////////////////////////////////////////////
 	///
@@ -71,7 +71,7 @@ public:
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void setPosition(const sf::Vector2f kPosition) { m_position = kPosition; };
+	void setPosition(const sf::Vector2f kPosition) { m_position = kPosition; }
 
 	/////////////////////////////////////////////////
 	///
@@ -80,7 +80,7 @@ public:
 	/// \return The Entity position vector
 	///
 	///////////////////////////////////////////////// 
-	sf::Vector2f getPosition() { return m_position; };
+	sf::Vector2f getPosition() { return m_position; }
 	
 	/////////////////////////////////////////////////
 	///
@@ -89,7 +89,7 @@ public:
 	/// \return The Entity radial size
 	///
 	///////////////////////////////////////////////// 
-	float getRadius() { return m_fRadius; };
+	float getRadius() { return m_fRadius; }
 
 	/////////////////////////////////////////////////
 	///
@@ -98,7 +98,7 @@ public:
 	/// \return A pointer to the Environment the Entity is within
 	///
 	///////////////////////////////////////////////// 
-	std::shared_ptr<Environment> getEnvironment() { return m_pEnvironment; };
+	std::shared_ptr<Environment> getEnvironment() { return m_pEnvironment; }
 
 	/////////////////////////////////////////////////
 	///
@@ -111,7 +111,7 @@ public:
 	{
 		if (kType == COLONIST) return "colonist";
 		return "ERROR";
-	};
+	}
 };
 
 #endif

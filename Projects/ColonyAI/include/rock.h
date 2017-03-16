@@ -1,9 +1,11 @@
+#pragma once
 #ifndef ROCK_H
 #define ROCK_H
 
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <memory>
 #include "object.h"
 
 /////////////////////////////////////////////////
@@ -35,11 +37,12 @@ public:
 	///
 	/// \brief Constructor
 	///
+	///	\param pEnv Pointer to the Environment the Rock is within
 	/// \param kPosition A vector with x&y for position
 	/// \param kfRadius A float for the radius
 	///
 	///////////////////////////////////////////////// 
-	Rock(const sf::Vector2f kPosition, const float kfRadius);
+	Rock(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition, const float kfRadius);
 };
 
 #endif

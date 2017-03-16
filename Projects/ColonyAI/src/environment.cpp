@@ -71,11 +71,25 @@ bool Environment::loadFromFile(const std::string ksFilePath)
 // Void: Called to update the environment
 void Environment::update(const float kfElapsedTime)
 {
+	// For every Object in the Environment
+	for (std::shared_ptr<Object> pObject : m_pObjects)
+	{
+		// If Object is a Bush
+		if (pObject->getType() == BUSH)
+		{
+			// Casts the Object to a Bush
+			std::shared_ptr<Bush> pBush = std::dynamic_pointer_cast<Bush>(pObject);
+
+			// Updates the Bush
+			pBush->update(kfElapsedTime);
+		}
+	}
+
 	// For every Entity in the Environment
-	for (std::shared_ptr<Entity> entity : m_pEntities)
+	for (std::shared_ptr<Entity> pEntity : m_pEntities)
 	{
 		// Updates the Entity
-		entity->update(kfElapsedTime);
+		pEntity->update(kfElapsedTime);
 	}
 }
 
@@ -84,37 +98,37 @@ void Environment::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	// Rectangle shape for drawing
 	sf::RectangleShape rectShape;
-	rectShape.setSize(sf::Vector2f(m_size.x, m_size.y)); // Size of Environment
+	rectShape.setSize(sf::Vector2f((float)m_size.x, (float)m_size.y)); // Size of Environment
 	rectShape.setFillColor(m_colour);
 	// Draws shape to display
 	target.draw(rectShape);
 
 	// For every Object in the Environment
-	for (std::shared_ptr<Object> object : m_pObjects)
+	for (std::shared_ptr<Object> pObject : m_pObjects)
 	{
 		// If Object is not a Tree
-		if (object->getType() != TREE)
+		if (pObject->getType() != TREE)
 		{
 			// Draws Object to RenderTarget
-			object->draw(target, states);
+			pObject->draw(target, states);
 		}
 	}
 
 	// For every Entity in the Environment
-	for (std::shared_ptr<Entity> entity : m_pEntities)
+	for (std::shared_ptr<Entity> pEntity : m_pEntities)
 	{
 		// Draws Entity to RenderTarget
-		entity->draw(target, states);
+		pEntity->draw(target, states);
 	}
 
 	// For every Object in the Environment
-	for (std::shared_ptr<Object> object : m_pObjects)
+	for (std::shared_ptr<Object> pObject : m_pObjects)
 	{
 		// If Object is a Tree
-		if (object->getType() == TREE)
+		if (pObject->getType() == TREE)
 		{
 			// Draws Object to RenderTarget
-			object->draw(target, states);
+			pObject->draw(target, states);
 		}
 	}
 }
@@ -201,11 +215,14 @@ void Environment::readObjectLine(std::istringstream& iss)
 
 	sf::err() << "[FILE] Object read: type(" << Object::typeToStr(type) << ") x(" << fX << ") y(" << fY << ") r(" << fR << ")" << std::endl;
 
+	// Creates a shared_ptr from this object
+	std::shared_ptr<Environment> pThisEnv = std::shared_ptr<Environment>(this);
+
 	// With objectType creates a new Object subclass and stores a reference in the m_pObjects member
-	if (type == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(sf::Vector2f(fX, fY), fR)));
-	else if (type == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(sf::Vector2f(fX, fY), fR)));
-	else if (type == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(sf::Vector2f(fX, fY), fR)));
-	else if (type == WATER) m_pObjects.push_back(std::shared_ptr<Object>(new Water(sf::Vector2f(fX, fY), fR)));
+	if (type == BUSH) m_pObjects.push_back(std::shared_ptr<Object>(new Bush(pThisEnv, sf::Vector2f(fX, fY), fR)));
+	else if (type == ROCK) m_pObjects.push_back(std::shared_ptr<Object>(new Rock(pThisEnv, sf::Vector2f(fX, fY), fR)));
+	else if (type == TREE) m_pObjects.push_back(std::shared_ptr<Object>(new Tree(pThisEnv, sf::Vector2f(fX, fY), fR)));
+	else if (type == WATER) m_pObjects.push_back(std::shared_ptr<Object>(new Water(pThisEnv, sf::Vector2f(fX, fY), fR)));
 }
 
 // Void: Reads an Entity file line
@@ -244,11 +261,18 @@ void Environment::readEntityLine(std::istringstream& iss)
 		{
 			// If the word is Colonist
 			if (word == "Colonist") type = COLONIST; // Sets entityType to corresponding value
+
+			// If the word is Food
+			else if (word == "Food") type = FOOD; // Sets entityType to corresponding value
 		}
 	}
 
 	sf::err() << "[FILE] Entity read: type(" << Entity::typeToStr(type) << ") x(" << fX << ") y(" << fY << ") h(" << fH << ")" << std::endl;
 
+	// Creates a shared_ptr from this object
+	std::shared_ptr<Environment> pThisEnv = std::shared_ptr<Environment>(this);
+
 	// With entityType creates a new Entity subclass and stores a reference in the m_pEntities member
-	if (type == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>( new Colonist(this, sf::Vector2f(fX, fY), fH) ) );
+	if (type == COLONIST) m_pEntities.push_back( std::shared_ptr<Entity>(new Colonist(pThisEnv, sf::Vector2f(fX, fY), fH)));
+	else if (type == FOOD) m_pEntities.push_back(std::shared_ptr<Entity>(new Food(pThisEnv, sf::Vector2f(fX, fY))));
 }

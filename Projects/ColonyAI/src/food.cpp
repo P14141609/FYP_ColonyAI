@@ -6,21 +6,19 @@
 #include "food.h"
 
 // Constructor
-Food::Food(Environment * pEnv, const sf::Vector2f kPosition)
+Food::Food(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition)
 {
 	// Defines the EntityType
 	m_type = FOOD;
 
-	// Casts the incoming pointer to a shared_ptr and assigns it to the member
-	m_pEnvironment = std::shared_ptr<Environment>(pEnv);
-
 	// Sets member values to corresponding input
+	m_pEnvironment = pEnv;
 	m_position = kPosition;
 	m_fRadius = 3.0f;
 }
 
 // Void: Called to draw the Food
-void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
+void Food::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	// Declares new CircleShape to draw
 	sf::CircleShape circle;
@@ -37,4 +35,10 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 	// Draws circle to target
 	target.draw(circle);
+}
+
+// Void: Updates the Food with elapsed time
+void Food::update(const float kfElapsedTime)
+{
+	// TEMPORARY - Need to add expiration
 }

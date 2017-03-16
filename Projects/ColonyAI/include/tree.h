@@ -1,9 +1,11 @@
+#pragma once
 #ifndef TREE_H
 #define TREE_H
 
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <memory>
 #include "object.h"
 
 /////////////////////////////////////////////////
@@ -35,11 +37,12 @@ public:
 	///
 	/// \brief Constructor
 	///
+	///	\param pEnv Pointer to the Environment the Tree is within
 	/// \param kPosition A vector with x&y for position
 	/// \param kfRadius A float for the radius
 	///
 	///////////////////////////////////////////////// 
-	Tree(const sf::Vector2f kPosition, const float kfRadius);
+	Tree(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition, const float kfRadius);
 };
 
 #endif

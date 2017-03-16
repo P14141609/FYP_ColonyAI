@@ -1,3 +1,4 @@
+#pragma once
 #ifndef MEMORY_H
 #define MEMORY_H
 
@@ -7,7 +8,9 @@
 #include <memory>
 #include "object.h"
 
-enum MemoryType { OBSTRUCTION, FOOD, FOOD_SOURCE, STONE, STONE_SOURCE, LUMBER, LUMBER_SOURCE, WATER_SOURCE }; //!< Enum for Memory types
+class Object;
+
+enum MemoryType { OBSTRUCTION, FOOD_ENTITY, FOOD_SOURCE, STONE_ENTITY, STONE_SOURCE, LUMBER_ENTITY, LUMBER_SOURCE, WATER_SOURCE }; //!< Enum for Memory types
 
 /////////////////////////////////////////////////
 ///
