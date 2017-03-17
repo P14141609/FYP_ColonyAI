@@ -25,7 +25,7 @@ protected:
 
 	std::shared_ptr<Environment> m_pEnvironment; //!< Pointer to the Environment the Object is within
 
-	sf::Vector2f m_position; //!< Object position
+	sf::Vector2f m_position; //!< In-world coordinates
 	float m_fRadius; //!< Radial size of the Object
 
 public:

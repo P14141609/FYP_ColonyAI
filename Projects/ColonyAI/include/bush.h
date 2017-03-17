@@ -44,7 +44,7 @@ public:
 	/// \brief Constructor
 	///
 	///	\param pEnv Pointer to the Environment the Bush is within
-	/// \param kPosition A vector with x&y for position
+	/// \param kPosition A vector with in-world position
 	/// \param kfRadius A float for the radius
 	///
 	///////////////////////////////////////////////// 
