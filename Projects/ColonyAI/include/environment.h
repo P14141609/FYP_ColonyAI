@@ -1,3 +1,4 @@
+#pragma once
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
@@ -122,7 +123,7 @@ public:
 	/// \return The size vector
 	///
 	///////////////////////////////////////////////// 
-	sf::Vector2u getSize() { return m_size; };
+	sf::Vector2u getSize() { return m_size; }
 
 	/////////////////////////////////////////////////
 	///
@@ -131,7 +132,16 @@ public:
 	/// \return The vector of Objects
 	///
 	///////////////////////////////////////////////// 
-	std::vector<std::shared_ptr<Object>> getObjects() { return m_pObjects; };
+	std::vector<std::shared_ptr<Object>> getObjects() { return m_pObjects; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the Environment Object member
+	///
+	/// \return Pointer to the Object vector
+	///
+	///////////////////////////////////////////////// 
+	std::vector<std::shared_ptr<Object>>* getObjectVec() { return &m_pObjects; }
 
 	/////////////////////////////////////////////////
 	///
@@ -140,7 +150,16 @@ public:
 	/// \return The vector of Entities
 	///
 	///////////////////////////////////////////////// 
-	std::vector<std::shared_ptr<Entity>> getEntities() { return m_pEntities; };
+	std::vector<std::shared_ptr<Entity>> getEntities() { return m_pEntities; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the Environment Entity member
+	///
+	/// \return Pointer to the Entity vector
+	///
+	///////////////////////////////////////////////// 
+	std::vector<std::shared_ptr<Entity>>* getEntityVec() { return &m_pEntities; }
 };
 
 #endif

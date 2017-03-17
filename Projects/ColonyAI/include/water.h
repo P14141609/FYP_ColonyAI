@@ -1,9 +1,11 @@
+#pragma once
 #ifndef WATER_H
 #define WATER_H
 
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <memory>
 #include "object.h"
 
 /////////////////////////////////////////////////
@@ -35,11 +37,12 @@ public:
 	///
 	/// \brief Constructor
 	///
+	///	\param pEnv Pointer to the Environment the Water is within
 	/// \param kPosition A vector with in-world position
 	/// \param kfRadius A float for the radius
 	///
 	///////////////////////////////////////////////// 
-	Water(const sf::Vector2f kPosition, const float kfRadius);
+	Water(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition, const float kfRadius);
 };
 
 #endif

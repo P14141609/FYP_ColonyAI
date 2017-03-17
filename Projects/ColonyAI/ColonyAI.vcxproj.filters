@@ -78,6 +78,9 @@
     <ClCompile Include="src\water.cpp">
       <Filter>Source Files\Object</Filter>
     </ClCompile>
+    <ClCompile Include="src\food.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\environment.h">
@@ -115,6 +118,9 @@
     </ClInclude>
     <ClInclude Include="include\water.h">
       <Filter>Header Files\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="include\food.h">
+      <Filter>Header Files\Entity</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

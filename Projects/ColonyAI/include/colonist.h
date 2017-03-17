@@ -1,3 +1,4 @@
+#pragma once
 #ifndef COLONIST_H
 #define COLONIST_H
 
@@ -13,6 +14,7 @@
 #include "pathfinding.h"
 #include "utils.h"
 
+class Entity;
 class Pathfinding;
 
 /////////////////////////////////////////////////
@@ -145,7 +147,7 @@ public:
 	/// \param kfHeading A float for initial heading
 	///
 	///////////////////////////////////////////////// 
-	Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading);
+	Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition, const float kfHeading);
 
 	/////////////////////////////////////////////////
 	///

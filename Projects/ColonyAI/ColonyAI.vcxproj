@@ -14,6 +14,7 @@
     <ClCompile Include="src\bush.cpp" />
     <ClCompile Include="src\colonist.cpp" />
     <ClCompile Include="src\environment.cpp" />
+    <ClCompile Include="src\food.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\pathfinding.cpp" />
     <ClCompile Include="src\rock.cpp" />
@@ -25,6 +26,7 @@
     <ClInclude Include="include\colonist.h" />
     <ClInclude Include="include\entity.h" />
     <ClInclude Include="include\environment.h" />
+    <ClInclude Include="include\food.h" />
     <ClInclude Include="include\memory.h" />
     <ClInclude Include="include\node.h" />
     <ClInclude Include="include\object.h" />

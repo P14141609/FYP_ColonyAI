@@ -1,9 +1,12 @@
+#pragma once
 #ifndef OBJECT_H
 #define OBJECT_H
 
 // Imports
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+
+class Environment;
 
 enum ObjectType { BUSH, ROCK, TREE, WATER }; //!< Enum for Object types
 
@@ -20,6 +23,8 @@ protected:
 
 	ObjectType m_type; //!< Object type
 
+	std::shared_ptr<Environment> m_pEnvironment; //!< Pointer to the Environment the Object is within
+
 	sf::Vector2f m_position; //!< In-world coordinates
 	float m_fRadius; //!< Radial size of the Object
 
@@ -32,7 +37,7 @@ public:
 	/// \return The Object type
 	///
 	///////////////////////////////////////////////// 
-	ObjectType getType() { return m_type; };
+	ObjectType getType() { return m_type; }
 
 	/////////////////////////////////////////////////
 	///
@@ -41,7 +46,7 @@ public:
 	/// \return The Object position vector
 	///
 	///////////////////////////////////////////////// 
-	sf::Vector2f getPosition() { return m_position; };
+	sf::Vector2f getPosition() { return m_position; }
 
 	/////////////////////////////////////////////////
 	///
@@ -50,7 +55,7 @@ public:
 	/// \return The Object radial size
 	///
 	///////////////////////////////////////////////// 
-	float getRadius() { return m_fRadius; };
+	float getRadius() { return m_fRadius; }
 
 	/////////////////////////////////////////////////
 	///
@@ -78,7 +83,7 @@ public:
 		if (kType == TREE) return "tree";
 		if (kType == WATER) return "water";
 		return "ERROR";
-	};
+	}
 };
 
 #endif

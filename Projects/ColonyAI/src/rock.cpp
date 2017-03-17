@@ -6,12 +6,13 @@
 #include "rock.h"
 
 // Constructor
-Rock::Rock(const sf::Vector2f kPosition, const float kfRadius)
+Rock::Rock(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition, const float kfRadius)
 {
 	// Defines the ObjectType
 	m_type = ROCK;
 
 	// Sets member values to corresponding input
+	m_pEnvironment = pEnv;
 	m_position = kPosition;
 	m_fRadius = kfRadius;
 }

@@ -6,15 +6,13 @@
 #include "colonist.h"
 
 // Constructor
-Colonist::Colonist(Environment * pEnv, const sf::Vector2f kPosition, const float kfHeading)
+Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition, const float kfHeading)
 {
 	// Defines the EntityType
 	m_type = COLONIST;
 
-	// Casts the incoming pointer to a shared_ptr and assigns it to the member
-	m_pEnvironment = std::shared_ptr<Environment>(pEnv);
-
 	// Sets member values to corresponding input
+	m_pEnvironment = pEnv;
 	m_position = kPosition;
 	m_fHeading = kfHeading;
 	m_fRadius = 7.5f;

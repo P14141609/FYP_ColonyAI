@@ -6,12 +6,13 @@
 #include "water.h"
 
 // Constructor
-Water::Water(const sf::Vector2f kPosition, const float kfRadius)
+Water::Water(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition, const float kfRadius)
 {
 	// Defines the ObjectType
 	m_type = WATER;
 
 	// Sets member values to corresponding input
+	m_pEnvironment = pEnv;
 	m_position = kPosition;
 	m_fRadius = kfRadius;
 }
