@@ -35,7 +35,7 @@ public:
 	///
 	/// \brief Constructor
 	///
-	/// \param kPosition A vector with x&y for position
+	/// \param kPosition A vector with in-world position
 	/// \param kfRadius A float for the radius
 	///
 	///////////////////////////////////////////////// 

@@ -25,7 +25,7 @@ protected:
 
 	std::shared_ptr<Environment> m_pEnvironment; //!< Pointer to the Environment the Entity is within
 
-	sf::Vector2f m_position; //!< Entity position
+	sf::Vector2f m_position; //!< In-world coordinates
 	float m_fRadius; //!< Radial size of the Entity
 
 public:

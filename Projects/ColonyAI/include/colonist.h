@@ -141,7 +141,7 @@ public:
 	/// \brief Constructor
 	///
 	///	\param pEnv Pointer to the Environment the Colonist is within
-	/// \param kPosition A vector with x&y for position
+	/// \param kPosition A vector with in-world position
 	/// \param kfHeading A float for initial heading
 	///
 	///////////////////////////////////////////////// 
