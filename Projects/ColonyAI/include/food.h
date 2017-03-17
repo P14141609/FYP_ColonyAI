@@ -49,7 +49,7 @@ public:
 	/// \brief Constructor
 	///
 	///	\param pEnv Shared Pointer to the Environment the Food is within
-	/// \param kPosition A vector with x&y for position
+	/// \param kPosition A vector with in-world position
 	///
 	///////////////////////////////////////////////// 
 	Food(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPosition);
