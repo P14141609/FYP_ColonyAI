@@ -6,10 +6,10 @@
 #include "pathfinding.h"
 
 // Constructor
-Pathfinding::Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment> kpEnvironment)
+Pathfinding::Pathfinding(const std::shared_ptr<Colonist> kpColonist, const std::shared_ptr<Environment> kpEnvironment)
 {
 	// Sets member values to corresponding input
-	m_pColonist = std::shared_ptr<Colonist>(pColonist);
+	m_pColonist = kpColonist;
 	m_pEnv = kpEnvironment;
 
 	sf::err() << "[PATHFINDING] Generating nodes for A* pathfinding..." << std::endl;

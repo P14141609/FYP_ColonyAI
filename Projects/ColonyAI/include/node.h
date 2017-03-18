@@ -118,7 +118,7 @@ public:
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void setParent(const std::shared_ptr<Node> kpParent) { m_pParent = kpParent; }
+	void setParent(std::shared_ptr<Node> pParent) { m_pParent.swap(pParent); }
 
 	/////////////////////////////////////////////////
 	///

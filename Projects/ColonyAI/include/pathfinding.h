@@ -93,11 +93,11 @@ public:
 	///
 	/// \brief Constructor
 	///
-	///	\param pColonist The Colonist that is utilising the Pathfinding
+	///	\param kpColonist The Colonist that is utilising the Pathfinding
 	///	\param kpEnvironment The Environment the Pathfinding is operating in
 	///
 	///////////////////////////////////////////////// 
-	Pathfinding(Colonist * pColonist, const std::shared_ptr<Environment> kpEnvironment);
+	Pathfinding(const std::shared_ptr<Colonist> kpColonist, const std::shared_ptr<Environment> kpEnvironment);
 
 	/////////////////////////////////////////////////
 	///
