@@ -221,6 +221,7 @@ void Colonist::updateState()
 		m_state = BREED;
 	}
 
+	// Tier 05 - Nothing specifically to do
 	// Else - Explore
 	else
 	{
@@ -284,20 +285,42 @@ void Colonist::tendToNeeds()
 	float fHungerPerc = (m_fHunger / fFatalHunger) * 100;
 	float fThirstPerc = (m_fThirst / fFatalThirst) * 100;
 
-	// If Hunger is more dire than thirst
+	// If hunger is more dire than thirst
 	if (fHungerPerc > fThirstPerc)
 	{
-		// If has vision of food
-		// Go eat
+		// If has vision of food entity
+		/*if ()
+		{
+			// Go eat nearest food
+		}
 
 		// Else If has memory of a food source
+		else*/ if (Memory::typeInMem(FOOD_SOURCE, m_pMemories))
+		{
+			// Go to nearest source
+		}
+
+		// Else - No knowledge of food or source
+		else
+		{
+			// Look for food
+			explore();
+		}
 	}
 	else
 	{
-		// If has vision of water
-		// Go drink
+		// If has memory of a Water source
+		if (Memory::typeInMem(WATER_SOURCE, m_pMemories))
+		{
+			// Go to nearest source and drink
+		}
 
-		// Else If has memory of a water source
+		// Else - No knowledge of water
+		else
+		{
+			// Look for Water
+			explore();
+		}
 	}
 }
 
