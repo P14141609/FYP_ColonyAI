@@ -18,6 +18,8 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_fRadius = 7.5f;
 	m_fVision = 100.0f;
 	m_fSpeed = 50.0f;
+	m_fHunger = 25.0f;
+	m_fThirst = 25.0f;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 
@@ -30,6 +32,9 @@ void Colonist::update(const float kfElapsedTime)
 	// Calls method to update Colonist Memory
 	updateMemory((long)time(NULL));
 
+	// Calls method to update Colonist AI state
+	updateState();
+
 	switch (m_state)
 	{
 		case IDLE: idle(); break; // State: Idle - run method
@@ -41,6 +46,8 @@ void Colonist::update(const float kfElapsedTime)
 		case TENDTONEEDS: tendToNeeds(); break; // State: TendToNeeds - run method
 
 		case BREED: breed(); break; // State: Breed - run method
+
+		case DECEASED: break; // State: Deceased - No action
 
 		default: m_state = IDLE; break; // No valid state found: set IDLE;
 	}
@@ -58,6 +65,10 @@ void Colonist::update(const float kfElapsedTime)
 
 	// Binds heading to 360 degrees
 	m_fHeading = Utils::bindNum(m_fHeading, 0, 360);
+
+	// Iterates Hunger
+	m_fHunger += kfElapsedTime;
+	m_fThirst += kfElapsedTime;
 }
 
 // Void: Updates the Colonist's Memory
@@ -172,6 +183,51 @@ void Colonist::updateMemory(const long klTime)
 	}
 }
 
+// Void: Updates the Colonist's AI state
+void Colonist::updateState()
+{
+	// Defines fatal levels of hunger and thirst
+	float fFatalHunger = 1000.0f;
+	float fFatalThirst = 1000.0f;
+	// Defines percentages
+	float fHungerPerc = (m_fHunger / fFatalHunger) * 100;
+	float fThirstPerc = (m_fThirst / fFatalThirst) * 100;
+
+	// Tier 01 - Is the Colonist Dead
+	// If thirst or hunger is 100% of fatal level
+	if (fHungerPerc >= 100.0f || fThirstPerc >= 100.0f)
+	{
+		m_state = DECEASED;
+	}
+
+	// Tier 02 - Is the Colonist dying
+	// If thirst or hunger is 75% of fatal level
+	else if (fHungerPerc >= 75.0f || fThirstPerc >= 75.0f)
+	{
+		m_state = TENDTONEEDS;
+	}
+
+	// Tier 03 - Are there collectable resources
+	// If known food sources
+	else if (Memory::typeInMem(FOOD_SOURCE, m_pMemories))
+	{
+		m_state = FORAGE;
+	}
+
+	// Tier 04 - Is there someone to breed with?
+	// If hunger and thirst satisfied greatly
+	else if (fHungerPerc <= 15.0f && fThirstPerc <= 15.0f)
+	{
+		m_state = BREED;
+	}
+
+	// Else - Explore
+	else
+	{
+		m_state = EXPLORE;
+	}
+}
+
 // Void: Processes IDLE state functionality
 void Colonist::idle()
 {
@@ -221,7 +277,28 @@ void Colonist::forage()
 // Void: Processes TENDTONEEDS state functionality
 void Colonist::tendToNeeds()
 {
-	m_state = IDLE; // TEMPORARY
+	// Defines fatal levels of hunger and thirst
+	float fFatalHunger = 90.0f;
+	float fFatalThirst = 60.0f;
+	// Defines percentages
+	float fHungerPerc = (m_fHunger / fFatalHunger) * 100;
+	float fThirstPerc = (m_fThirst / fFatalThirst) * 100;
+
+	// If Hunger is more dire than thirst
+	if (fHungerPerc > fThirstPerc)
+	{
+		// If has vision of food
+		// Go eat
+
+		// Else If has memory of a food source
+	}
+	else
+	{
+		// If has vision of water
+		// Go drink
+
+		// Else If has memory of a water source
+	}
 }
 
 // Void: Processes BREED state functionality

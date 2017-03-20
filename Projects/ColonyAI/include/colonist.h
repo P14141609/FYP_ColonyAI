@@ -36,7 +36,7 @@ private:
 
 	std::shared_ptr<Entity> m_pHeldEntity; //!< Pointer to an Entity the Colonist is holding
 
-	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, BREED }; //!< Enum for AI behavioural types
+	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, BREED, DECEASED }; //!< Enum for AI behavioural types
 	aiState m_state; //!< Current AI state of the Colonist
 
 	std::shared_ptr<Pathfinding> m_pPathfinding; //!< Pathfinding Object for calculating paths
@@ -76,6 +76,15 @@ private:
 	///
 	///////////////////////////////////////////////// 
 	void updateMemory(const long klTime);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Updates the Colonist's AI state
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void updateState();
 
 	/////////////////////////////////////////////////
 	///

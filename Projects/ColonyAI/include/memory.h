@@ -94,6 +94,28 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	std::shared_ptr<Object> getObject() { return m_pObject; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Gets the Memory Object
+	///
+	/// \param kType Type to check for
+	/// \param kpMemories Memory vector to check within
+	///
+	/// \return The Memory Object
+	///
+	///////////////////////////////////////////////// 
+	static bool typeInMem(const MemoryType kType, const std::vector<std::shared_ptr<Memory>> kpMemories) 
+	{
+		// If a Type in the vector is the kType: Return True
+		for (std::shared_ptr<Memory> pMemory : kpMemories)
+		{
+			if (pMemory->getType() == kType) return true;
+		}
+
+		// Return False: kType not found
+		return false;
+	}
 };
 
 #endif
