@@ -13,6 +13,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include "environment.h"
+#include "editor.h"
 
 //!< Struct that holds window properties
 struct WindowProperties
@@ -94,14 +95,8 @@ int main()
 	while (sInput != "load" && sInput != "create"); // Checks whether input is valid
 
 	// Proceed with program
-	// If 'Create' selected
-	if (sInput == "create")
-	{
-		// TEMPORARY - For level editor
-	}
-
 	// If 'Load' selected
-	else if (sInput == "load")
+	if (sInput == "load")
 	{
 		// Instantiates new Environment
 		Environment environment = Environment();
@@ -215,6 +210,113 @@ int main()
 
 			// Draws environment
 			window.draw(environment);
+
+			// Displays the current frame
+			window.display();
+		}
+	}
+
+	// If 'Create' selected
+	else if (sInput == "create")
+	{
+		// EDITOR NAME
+		// Declares string for Editor directory
+		std::string sEditDir;
+
+		// Gets user input for the Editor directory
+		std::cout << "Choose Environment name: 'environments/YOURINPUT.cfg': ";
+		std::cin >> sInput;
+
+		// Defines Editor directory
+		sEditDir = "environments/" + sInput + ".cfg";
+
+		// EDITOR SIZE
+		// Declares string for Editor directory
+		sf::Vector2u editorSize;
+		// Unsigned int for storing user input
+		unsigned int uiInput;
+
+		// Gets user input for the Editor X size
+		std::cout << "Environment size:" << std::endl;
+		std::cout << "    x: ";
+		std::cin >> uiInput;
+		// Defines Editor X size
+		editorSize.x = uiInput;
+
+		// Gets user input for the Editor Y size
+		std::cout << "    y: ";
+		std::cin >> uiInput;
+		// Defines Editor Y size
+		editorSize.y = uiInput;
+
+		// Instantiates new Editor
+		Editor editor = Editor(sEditDir, editorSize);
+
+		// Defines WindowsProperties with given title and size
+		WindowProperties winProps("Level Editor - Final Year Project - P14141609", sf::Vector2u(1280, 720));
+
+		// Instantiates window
+		sf::RenderWindow window(sf::VideoMode(winProps.m_size.x, winProps.m_size.y), winProps.m_sTitle.c_str(), sf::Style::Default);
+
+		// While the window is open
+		while (window.isOpen())
+		{
+			// Event object for windows event calls
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				// If Closed event is called
+				if (event.type == sf::Event::Closed)
+				{
+					// Closes window
+					window.close();
+				}
+
+				// If KeyPressed event is called
+				if (event.type == sf::Event::KeyPressed)
+				{
+					// If F11 is pressed
+					if (event.key.code == sf::Keyboard::F11)
+					{
+						// Toggles fullscreen mode
+						winProps.m_bFullscreen = !winProps.m_bFullscreen;
+
+						// If now in fullscreen mode
+						if (winProps.m_bFullscreen)
+						{
+							// Recreates the window with size that's the size of the display, standard title and style of none
+							window.create(sf::VideoMode(sf::VideoMode::getDesktopMode().width, sf::VideoMode::getDesktopMode().height), winProps.m_sTitle.c_str(), sf::Style::None);
+							// Positions window at 0,0
+							window.setPosition(sf::Vector2i(0, 0));
+						}
+						// Else in windowed mode
+						else
+						{
+							// Recreates the window with default size, standard title and default style
+							window.create(sf::VideoMode(winProps.m_size.x, winProps.m_size.y), winProps.m_sTitle.c_str(), sf::Style::Default);
+						}
+					}
+
+					// If Esc is pressed
+					if (event.key.code == sf::Keyboard::Escape)
+					{
+						// Closes window
+						window.close();
+					}
+				}
+			}
+
+			// Clears window making it entirely black
+			window.clear(sf::Color(0, 0, 0, 255));
+
+			// Defines the View of the Editor
+			sf::View editorView(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(editor.getSize())));
+
+			// Sets view to size of editor
+			window.setView(letterboxView(editorView, window.getSize()));
+
+			// Draws editor
+			window.draw(editor);
 
 			// Displays the current frame
 			window.display();
