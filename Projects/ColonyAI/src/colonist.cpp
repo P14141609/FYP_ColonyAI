@@ -23,7 +23,11 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 
-	m_pPathfinding = std::shared_ptr<Pathfinding>(new Pathfinding(std::shared_ptr<Colonist>(this), m_pEnvironment));
+	// Nullptr check
+	if (m_pEnvironment != nullptr)
+	{
+		m_pPathfinding = std::shared_ptr<Pathfinding>(new Pathfinding(std::shared_ptr<Colonist>(this), m_pEnvironment));
+	}
 }
 
 // Void: Called to update the Colonist

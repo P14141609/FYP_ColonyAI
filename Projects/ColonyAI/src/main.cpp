@@ -91,8 +91,11 @@ int main()
 
 		// Changes the input to all lowercase chars
 		sInput = Utils::toLowercase(sInput);
+
+		// If input is invalid
+		if (sInput != "load" && sInput != "create") std::cout << "Invalid input" << std::endl;
 	} 
-	while (sInput != "load" && sInput != "create"); // Checks whether input is valid
+	while (sInput != "load" && sInput != "create"); // Checks whether input isn't valid
 
 	// Proceed with program
 	// If 'Load' selected
@@ -335,6 +338,12 @@ int main()
 					{
 						editor.setHandHeading(editor.getHandHeading() + 1.0f);
 					}
+
+					// If Right is pressed
+					if (event.key.code == sf::Keyboard::Space)
+					{
+						editor.save();
+					}
 				}
 
 				// If MouseButtonPressed event is called
@@ -356,13 +365,22 @@ int main()
 				// If MouseMoved event is called
 				if (event.type == sf::Event::MouseMoved)
 				{
-					editor.setHandPos(sf::Vector2f(sf::Mouse::getPosition()));
+					editor.setHandPos(sf::Vector2f(event.mouseMove.x, event.mouseMove.y));
 				}
 
 				// If MouseWheelScrolled event is called
 				if (event.type == sf::Event::MouseWheelScrolled)
 				{
-					editor.cycleSelected();
+					// Scrolled up
+					if (event.mouseWheelScroll.delta > 0)
+					{
+						editor.cycleSelected(1);
+					}
+					// Scrolled down
+					else
+					{
+						editor.cycleSelected(-1);
+					}
 				}
 			}
 

@@ -38,7 +38,7 @@ void Editor::save()
 	for (std::shared_ptr<Entity> pEntity : m_pEntities)
 	{
 		// Passes Entity data into file
-		file << "Entity:"
+		file << "Entity: "
 			<< Utils::formatWord(Entity::typeToStr(pEntity->getType())) // Converts 'COLONIST' to 'Colonist'
 			<< " x" << pEntity->getPosition().x
 			<< " y" << pEntity->getPosition().y;
@@ -63,7 +63,7 @@ void Editor::save()
 // Void: 
 void Editor::placeSelected()
 {
-	// Draws selected item
+	// Places selected item into the level
 	if (m_hand.m_selected == m_hand.SELECTED_BUSH)
 	{
 		std::shared_ptr<Bush> item = std::shared_ptr<Bush>(new Bush(nullptr, m_hand.m_position, m_hand.m_fRadius));
@@ -93,6 +93,31 @@ void Editor::placeSelected()
 	{
 		std::shared_ptr<Food> item = std::shared_ptr<Food>(new Food(nullptr, m_hand.m_position));
 		m_pEntities.push_back(std::dynamic_pointer_cast<Entity>(item));
+	}
+}
+
+// Void:
+void Editor::cycleSelected(const int kiDirection)
+{ 
+	if (kiDirection == 1)
+	{
+		// Selects new item
+		if (m_hand.m_selected == m_hand.SELECTED_BUSH) m_hand.m_selected = m_hand.SELECTED_FOOD;
+		else if (m_hand.m_selected == m_hand.SELECTED_ROCK) m_hand.m_selected = m_hand.SELECTED_BUSH;
+		else if (m_hand.m_selected == m_hand.SELECTED_TREE) m_hand.m_selected = m_hand.SELECTED_ROCK;
+		else if (m_hand.m_selected == m_hand.SELECTED_WATER) m_hand.m_selected = m_hand.SELECTED_TREE;
+		else if (m_hand.m_selected == m_hand.SELECTED_COLONIST) m_hand.m_selected = m_hand.SELECTED_WATER;
+		else if (m_hand.m_selected == m_hand.SELECTED_FOOD) m_hand.m_selected = m_hand.SELECTED_COLONIST;
+	}
+	else if (kiDirection == -1)
+	{
+		// Selects new item
+		if (m_hand.m_selected == m_hand.SELECTED_BUSH) m_hand.m_selected = m_hand.SELECTED_ROCK;
+		else if (m_hand.m_selected == m_hand.SELECTED_ROCK) m_hand.m_selected = m_hand.SELECTED_TREE;
+		else if (m_hand.m_selected == m_hand.SELECTED_TREE) m_hand.m_selected = m_hand.SELECTED_WATER;
+		else if (m_hand.m_selected == m_hand.SELECTED_WATER) m_hand.m_selected = m_hand.SELECTED_COLONIST;
+		else if (m_hand.m_selected == m_hand.SELECTED_COLONIST) m_hand.m_selected = m_hand.SELECTED_FOOD;
+		else if (m_hand.m_selected == m_hand.SELECTED_FOOD) m_hand.m_selected = m_hand.SELECTED_BUSH;
 	}
 }
 

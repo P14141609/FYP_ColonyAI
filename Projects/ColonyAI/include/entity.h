@@ -109,7 +109,8 @@ public:
 	///////////////////////////////////////////////// 
 	static std::string typeToStr(const EntityType kType)
 	{
-		if (kType == COLONIST) return "colonist";
+		if (kType == COLONIST) return "COLONIST";
+		if (kType == FOOD) return "FOOD";
 		return "ERROR";
 	}
 };

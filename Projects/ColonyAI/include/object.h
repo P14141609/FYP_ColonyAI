@@ -78,10 +78,10 @@ public:
 	///////////////////////////////////////////////// 
 	static std::string typeToStr(const ObjectType kType)
 	{
-		if (kType == BUSH) return "bush";
-		if (kType == ROCK) return "rock";
-		if (kType == TREE) return "tree";
-		if (kType == WATER) return "water";
+		if (kType == BUSH) return "BUSH";
+		if (kType == ROCK) return "ROCK";
+		if (kType == TREE) return "TREE";
+		if (kType == WATER) return "WATER";
 		return "ERROR";
 	}
 };
