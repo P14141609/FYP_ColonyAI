@@ -374,6 +374,9 @@ int main()
 						editorView.getViewport().top * window.getSize().y
 					);
 
+					// Defines the center of the view including letterboxing
+					sf::Vector2f trueCenter(editorView.getCenter() + letterboxSize*2.0f);
+
 					// Defines the position using the size of the view times mousePos ratio
 					sf::Vector2f position(
 						((editorView.getSize().x + letterboxSize.x*2) * mousePosRatio.x) - letterboxSize.x,
@@ -391,39 +394,39 @@ int main()
 					{
 						// Defines distance from center
 						sf::Vector2f distance(
-							position.x - (editorView.getCenter().x + letterboxSize.x),
-							position.y - (editorView.getCenter().y + letterboxSize.y)
+							mousePos.x - trueCenter.x,
+							mousePos.y - trueCenter.y
 						);
 
-						// Defines proportion of position from center to window edge
-						sf::Vector2f distProp(
-							abs(distance.x) / (window.getSize().x*0.5f),
-							abs(distance.y) / (window.getSize().y*0.5f)
+						// Defines ratio of position from center to window edge
+						sf::Vector2f distRatio(
+							abs(distance.x) / trueCenter.x,
+							abs(distance.y) / trueCenter.y
 						);
 
 						// Defines offset
 						sf::Vector2f offset(0, 0);
-						//	(editorView.getCenter().x * distProp.x),
-						//	(editorView.getCenter().y * distProp.y)
+						//	(trueCenter.x * distRatio.x),
+						//	(trueCenter.y * distRatio.y)
 						//);
 
 						// Letterboxing on width: offset X axis
 						if (fWindowAspectRatio > fViewAspectRatio)
 						{
-							//position.x -= letterboxSize.x * distProp.x;
-							// If distance is positive
-							if (distance.x > 0) position.x += offset.x;
-							// If distance is negative
-							else position.x -= offset.x;
+							position.x -= offset.x;
+							//// If distance is positive
+							//if (distance.x > 0) position.x += offset.x;
+							//// If distance is negative
+							//else position.x -= offset.x;
 						}
 						// Letterboxing on height: offset Y axis
 						else
 						{
-							//position.y -= letterboxSize.y * distProp.y;
-							// If distance is positive
-							if (distance.y > 0) position.y += offset.y;
-							// If distance is negative
-							else position.y -= offset.y;
+							position.y -= offset.y;
+							//// If distance is positive
+							//if (distance.y > 0) position.y += offset.y;
+							//// If distance is negative
+							//else position.y -= offset.y;
 						}
 					}
 					
