@@ -261,11 +261,6 @@ int main()
 		// Instantiates window
 		sf::RenderWindow window(sf::VideoMode(winProps.m_size.x, winProps.m_size.y), winProps.m_sTitle.c_str(), sf::Style::Default);
 
-		// Initialises a clock for the update loop
-		sf::Clock clock;
-		// Declares var to track elapsed time
-		sf::Time elapsedTime;
-
 		// While the window is open
 		while (window.isOpen())
 		{
@@ -365,35 +360,73 @@ int main()
 				// If MouseMoved event is called
 				if (event.type == sf::Event::MouseMoved)
 				{
-					// Defines position
-					sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
+					// Defines MousePos as a Vector2f
+					sf::Vector2f mousePos(event.mouseMove.x, event.mouseMove.y);
+					// Defines MousePosition as a ratio of window size 
+					sf::Vector2f mousePosRatio(mousePos.x / (float)window.getSize().x, event.mouseMove.y / (float)window.getSize().y);
 
 					// Defines the View of the Editor
 					sf::View editorView(letterboxView(sf::View(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(editor.getSize()))), window.getSize()));
-					
-					// Need to scale position from window coords to in-view coords
+
+					// Defines the size of the letterboxing
+					sf::Vector2f letterboxSize(
+						editorView.getViewport().left * window.getSize().x,
+						editorView.getViewport().top * window.getSize().y
+					);
+
+					// Defines the position using the size of the view times mousePos ratio
+					sf::Vector2f position(
+						((editorView.getSize().x + letterboxSize.x*2) * mousePosRatio.x) - letterboxSize.x,
+						((editorView.getSize().y + letterboxSize.y*2) * mousePosRatio.y) - letterboxSize.y
+					);
 
 					// Need to apply offset to account for letterboxing
+					// Defines view aspect ratio
+					float fViewAspectRatio = (float)editorView.getSize().x / (float)editorView.getSize().y;
+					// Defines window aspect ratio
+					float fWindowAspectRatio = (float)window.getSize().x / (float)window.getSize().y;
 
-					//// Defines view aspect ratio
-					//float fViewRatio = (float)editorView.getSize().x / (float)editorView.getSize().y;
-					//// Defines window aspect ratio
-					//float fWindowRatio = (float)window.getSize().x / (float)window.getSize().y;
-				    //
-					//// Position scaled to view coords
-					//// Scales the x by the window aspect ratio 
-					//position.x *= fViewRatio / fWindowRatio;
-					//// Scales the y by the window aspect ratio 
-					//position.y *= fViewRatio / fWindowRatio;
-					//
-					//// Applies an offset to account for letterbox
-					////position -= sf::Vector2f(
-					////	(editorView.getViewport().left*editorView.getSize().x)*editorView.getViewport().width,
-					////	(editorView.getViewport().top*editorView.getSize().y)*editorView.getViewport().height);
-					//
-					////position -= sf::Vector2f((editorView.getViewport().left*editorView.getSize().x)*editorView.getViewport().width, (editorView.getViewport().top*editorView.getSize().y)*editorView.getViewport().height);//editorView.getCenter() - (editorView.getSize()*0.5f);//sf::Vector2f(editor.getSize().x*0.5f, editor.getSize().y*0.5f);
-					////position *= ((float)winProps.m_size.x / (float)winProps.m_size.y) / ((float)editorView.getSize().x / (float)editorView.getSize().y);
+					// If aspect ratios don't match
+					if (fViewAspectRatio != fWindowAspectRatio)
+					{
+						// Defines distance from center
+						sf::Vector2f distance(
+							position.x - (editorView.getCenter().x + letterboxSize.x),
+							position.y - (editorView.getCenter().y + letterboxSize.y)
+						);
 
+						// Defines proportion of position from center to window edge
+						sf::Vector2f distProp(
+							abs(distance.x) / (window.getSize().x*0.5f),
+							abs(distance.y) / (window.getSize().y*0.5f)
+						);
+
+						// Defines offset
+						sf::Vector2f offset(0, 0);
+						//	(editorView.getCenter().x * distProp.x),
+						//	(editorView.getCenter().y * distProp.y)
+						//);
+
+						// Letterboxing on width: offset X axis
+						if (fWindowAspectRatio > fViewAspectRatio)
+						{
+							//position.x -= letterboxSize.x * distProp.x;
+							// If distance is positive
+							if (distance.x > 0) position.x += offset.x;
+							// If distance is negative
+							else position.x -= offset.x;
+						}
+						// Letterboxing on height: offset Y axis
+						else
+						{
+							//position.y -= letterboxSize.y * distProp.y;
+							// If distance is positive
+							if (distance.y > 0) position.y += offset.y;
+							// If distance is negative
+							else position.y -= offset.y;
+						}
+					}
+					
 					// Sets the Editor's hand position
 					editor.setHandPos(position);
 				}
@@ -402,26 +435,10 @@ int main()
 				if (event.type == sf::Event::MouseWheelScrolled)
 				{
 					// Scrolled up
-					if (event.mouseWheelScroll.delta > 0)
-					{
-						editor.cycleSelected(1);
-					}
+					if (event.mouseWheelScroll.delta > 0) editor.cycleSelected(1);
 					// Scrolled down
-					else
-					{
-						editor.cycleSelected(-1);
-					}
+					else editor.cycleSelected(-1);
 				}
-			}
-
-			// Gets elapsed time from clock
-			elapsedTime = clock.getElapsedTime();
-
-			// Triggers the update loop 128 times a second
-			if (elapsedTime.asMilliseconds() > 1000 / 128)
-			{
-				// Restarts the clock
-				clock.restart();
 			}
 
 			// Clears window making it entirely black
