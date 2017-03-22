@@ -60,6 +60,42 @@ void Editor::save()
 	file.close();
 }
 
+// Void: 
+void Editor::placeSelected()
+{
+	// Draws selected item
+	if (m_hand.m_selected == m_hand.SELECTED_BUSH)
+	{
+		std::shared_ptr<Bush> item = std::shared_ptr<Bush>(new Bush(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_ROCK)
+	{
+		std::shared_ptr<Rock> item = std::shared_ptr<Rock>(new Rock(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_TREE)
+	{
+		std::shared_ptr<Tree> item = std::shared_ptr<Tree>(new Tree(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_WATER)
+	{
+		std::shared_ptr<Water> item = std::shared_ptr<Water>(new Water(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_COLONIST)
+	{
+		std::shared_ptr<Colonist> item = std::shared_ptr<Colonist>(new Colonist(nullptr, m_hand.m_position, m_hand.m_fHeading));
+		m_pEntities.push_back(std::dynamic_pointer_cast<Entity>(item));
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_FOOD)
+	{
+		std::shared_ptr<Food> item = std::shared_ptr<Food>(new Food(nullptr, m_hand.m_position));
+		m_pEntities.push_back(std::dynamic_pointer_cast<Entity>(item));
+	}
+}
+
 // Void: Draws the Editor to the RenderTarget
 void Editor::draw(sf::RenderTarget & target, sf::RenderStates states) const
 {
@@ -97,5 +133,37 @@ void Editor::draw(sf::RenderTarget & target, sf::RenderStates states) const
 			// Draws Object to RenderTarget
 			pObject->draw(target, states);
 		}
+	}
+
+	// Draws selected item
+	if (m_hand.m_selected == m_hand.SELECTED_BUSH)
+	{
+		std::shared_ptr<Bush> item = std::shared_ptr<Bush>(new Bush(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		std::dynamic_pointer_cast<Object>(item)->draw(target, states);
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_ROCK)
+	{
+		std::shared_ptr<Rock> item = std::shared_ptr<Rock>(new Rock(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		std::dynamic_pointer_cast<Object>(item)->draw(target, states);
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_TREE)
+	{
+		std::shared_ptr<Tree> item = std::shared_ptr<Tree>(new Tree(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		std::dynamic_pointer_cast<Object>(item)->draw(target, states);
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_WATER)
+	{
+		std::shared_ptr<Water> item = std::shared_ptr<Water>(new Water(nullptr, m_hand.m_position, m_hand.m_fRadius));
+		std::dynamic_pointer_cast<Object>(item)->draw(target, states);
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_COLONIST)
+	{
+		std::shared_ptr<Colonist> item = std::shared_ptr<Colonist>(new Colonist(nullptr, m_hand.m_position, m_hand.m_fHeading));
+		std::dynamic_pointer_cast<Entity>(item)->draw(target, states);
+	}
+	else if (m_hand.m_selected == m_hand.SELECTED_FOOD)
+	{
+		std::shared_ptr<Food> item = std::shared_ptr<Food>(new Food(nullptr, m_hand.m_position));
+		std::dynamic_pointer_cast<Entity>(item)->draw(target, states);
 	}
 }

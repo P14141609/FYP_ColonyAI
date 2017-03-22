@@ -258,6 +258,11 @@ int main()
 		// Instantiates window
 		sf::RenderWindow window(sf::VideoMode(winProps.m_size.x, winProps.m_size.y), winProps.m_sTitle.c_str(), sf::Style::Default);
 
+		// Initialises a clock for the update loop
+		sf::Clock clock;
+		// Declares var to track elapsed time
+		sf::Time elapsedTime;
+
 		// While the window is open
 		while (window.isOpen())
 		{
@@ -271,7 +276,7 @@ int main()
 					// Closes window
 					window.close();
 				}
-
+				
 				// If KeyPressed event is called
 				if (event.type == sf::Event::KeyPressed)
 				{
@@ -303,7 +308,72 @@ int main()
 						// Closes window
 						window.close();
 					}
+
+					// If Up is pressed
+					if (event.key.code == sf::Keyboard::Up)
+					{
+						editor.setHandRadius(editor.getHandRadius() + 0.25f);
+					}
+
+					// If Down is pressed
+					if (event.key.code == sf::Keyboard::Down)
+					{
+						if (editor.getHandRadius()-0.25 > 0)
+						{
+							editor.setHandRadius(editor.getHandRadius() - 0.25f);
+						}
+					}
+
+					// If Left is pressed
+					if (event.key.code == sf::Keyboard::Left)
+					{
+						editor.setHandHeading(editor.getHandHeading() - 1.0f);
+					}
+
+					// If Right is pressed
+					if (event.key.code == sf::Keyboard::Right)
+					{
+						editor.setHandHeading(editor.getHandHeading() + 1.0f);
+					}
 				}
+
+				// If MouseButtonPressed event is called
+				if (event.type == sf::Event::MouseButtonPressed)
+				{
+					// If LMouseButton is pressed
+					if (event.mouseButton.button == sf::Mouse::Left)
+					{
+						editor.placeSelected();
+					}
+
+					// Else If RMouseButton is pressed
+					if (event.mouseButton.button == sf::Mouse::Right)
+					{
+						// Delete clicked object?
+					}
+				}
+
+				// If MouseMoved event is called
+				if (event.type == sf::Event::MouseMoved)
+				{
+					editor.setHandPos(sf::Vector2f(sf::Mouse::getPosition()));
+				}
+
+				// If MouseWheelScrolled event is called
+				if (event.type == sf::Event::MouseWheelScrolled)
+				{
+					editor.cycleSelected();
+				}
+			}
+
+			// Gets elapsed time from clock
+			elapsedTime = clock.getElapsedTime();
+
+			// Triggers the update loop 128 times a second
+			if (elapsedTime.asMilliseconds() > 1000 / 128)
+			{
+				// Restarts the clock
+				clock.restart();
 			}
 
 			// Clears window making it entirely black
