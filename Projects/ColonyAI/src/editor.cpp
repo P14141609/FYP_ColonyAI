@@ -60,7 +60,7 @@ void Editor::save()
 	file.close();
 }
 
-// Void: 
+// Void: Pushes item in Hand onto the level
 void Editor::placeSelected()
 {
 	// Places selected item into the level
@@ -96,7 +96,7 @@ void Editor::placeSelected()
 	}
 }
 
-// Void:
+// Void: Cycles the current selected item
 void Editor::cycleSelected(const int kiDirection)
 { 
 	if (kiDirection == 1)

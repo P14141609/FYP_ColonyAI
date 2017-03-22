@@ -39,9 +39,9 @@ sf::View letterboxView(sf::View view, const sf::Vector2u kWindowSize)
 	// Defines window aspect ratio
 	float fWindowRatio = (float)kWindowSize.x / (float)kWindowSize.y;
 
-	// Defines vector for new view size
+	// Defines vector for new view size ratio
 	sf::Vector2f newSize(1.0f, 1.0f);
-	// Defines vector for new view position
+	// Defines vector for new view position ratio
 	sf::Vector2f newPosition(0.0f, 0.0f);
 
 	// Declares bool for whether the view needs letter boxing left&right: true or top&bottom: false
@@ -339,7 +339,7 @@ int main()
 						editor.setHandHeading(editor.getHandHeading() + 1.0f);
 					}
 
-					// If Right is pressed
+					// If Space is pressed
 					if (event.key.code == sf::Keyboard::Space)
 					{
 						editor.save();
@@ -365,7 +365,37 @@ int main()
 				// If MouseMoved event is called
 				if (event.type == sf::Event::MouseMoved)
 				{
-					editor.setHandPos(sf::Vector2f(event.mouseMove.x, event.mouseMove.y));
+					// Defines position
+					sf::Vector2f position(event.mouseMove.x, event.mouseMove.y);
+
+					// Defines the View of the Editor
+					sf::View editorView(letterboxView(sf::View(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(editor.getSize()))), window.getSize()));
+					
+					// Need to scale position from window coords to in-view coords
+
+					// Need to apply offset to account for letterboxing
+
+					//// Defines view aspect ratio
+					//float fViewRatio = (float)editorView.getSize().x / (float)editorView.getSize().y;
+					//// Defines window aspect ratio
+					//float fWindowRatio = (float)window.getSize().x / (float)window.getSize().y;
+				    //
+					//// Position scaled to view coords
+					//// Scales the x by the window aspect ratio 
+					//position.x *= fViewRatio / fWindowRatio;
+					//// Scales the y by the window aspect ratio 
+					//position.y *= fViewRatio / fWindowRatio;
+					//
+					//// Applies an offset to account for letterbox
+					////position -= sf::Vector2f(
+					////	(editorView.getViewport().left*editorView.getSize().x)*editorView.getViewport().width,
+					////	(editorView.getViewport().top*editorView.getSize().y)*editorView.getViewport().height);
+					//
+					////position -= sf::Vector2f((editorView.getViewport().left*editorView.getSize().x)*editorView.getViewport().width, (editorView.getViewport().top*editorView.getSize().y)*editorView.getViewport().height);//editorView.getCenter() - (editorView.getSize()*0.5f);//sf::Vector2f(editor.getSize().x*0.5f, editor.getSize().y*0.5f);
+					////position *= ((float)winProps.m_size.x / (float)winProps.m_size.y) / ((float)editorView.getSize().x / (float)editorView.getSize().y);
+
+					// Sets the Editor's hand position
+					editor.setHandPos(position);
 				}
 
 				// If MouseWheelScrolled event is called
