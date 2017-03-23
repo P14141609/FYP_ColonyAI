@@ -64,35 +64,59 @@ void Editor::save()
 void Editor::placeSelected()
 {
 	// Places selected item into the level
-	if (m_hand.m_selected == m_hand.SELECTED_BUSH)
+	if (m_hand.m_selected == Hand::SELECTED_BUSH)
 	{
 		std::shared_ptr<Bush> item = std::shared_ptr<Bush>(new Bush(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+		m_placeHistory.push_back(Hand::SELECTED_BUSH);
 	}
-	else if (m_hand.m_selected == m_hand.SELECTED_ROCK)
+	else if (m_hand.m_selected == Hand::SELECTED_ROCK)
 	{
 		std::shared_ptr<Rock> item = std::shared_ptr<Rock>(new Rock(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+		m_placeHistory.push_back(Hand::SELECTED_ROCK);
 	}
-	else if (m_hand.m_selected == m_hand.SELECTED_TREE)
+	else if (m_hand.m_selected == Hand::SELECTED_TREE)
 	{
 		std::shared_ptr<Tree> item = std::shared_ptr<Tree>(new Tree(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+		m_placeHistory.push_back(Hand::SELECTED_TREE);
 	}
-	else if (m_hand.m_selected == m_hand.SELECTED_WATER)
+	else if (m_hand.m_selected == Hand::SELECTED_WATER)
 	{
 		std::shared_ptr<Water> item = std::shared_ptr<Water>(new Water(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
+		m_placeHistory.push_back(Hand::SELECTED_WATER);
 	}
-	else if (m_hand.m_selected == m_hand.SELECTED_COLONIST)
+	else if (m_hand.m_selected == Hand::SELECTED_COLONIST)
 	{
 		std::shared_ptr<Colonist> item = std::shared_ptr<Colonist>(new Colonist(nullptr, m_hand.m_position, m_hand.m_fHeading));
 		m_pEntities.push_back(std::dynamic_pointer_cast<Entity>(item));
+		m_placeHistory.push_back(Hand::SELECTED_COLONIST);
 	}
-	else if (m_hand.m_selected == m_hand.SELECTED_FOOD)
+	else if (m_hand.m_selected == Hand::SELECTED_FOOD)
 	{
 		std::shared_ptr<Food> item = std::shared_ptr<Food>(new Food(nullptr, m_hand.m_position));
 		m_pEntities.push_back(std::dynamic_pointer_cast<Entity>(item));
+		m_placeHistory.push_back(Hand::SELECTED_FOOD);
+	}
+}
+
+// Void: Removes the latest placed item
+void Editor::undoPlace()
+{
+	if (!m_placeHistory.empty())
+	{
+		if ((m_placeHistory.back() == Hand::SELECTED_COLONIST) || (m_placeHistory.back() == Hand::SELECTED_FOOD))
+		{
+			m_pEntities.pop_back();
+		}
+		else
+		{
+			m_pObjects.pop_back();
+		}
+
+		m_placeHistory.pop_back();
 	}
 }
 
@@ -102,22 +126,22 @@ void Editor::cycleSelected(const int kiDirection)
 	if (kiDirection == 1)
 	{
 		// Selects new item
-		if (m_hand.m_selected == m_hand.SELECTED_BUSH) m_hand.m_selected = m_hand.SELECTED_FOOD;
-		else if (m_hand.m_selected == m_hand.SELECTED_ROCK) m_hand.m_selected = m_hand.SELECTED_BUSH;
-		else if (m_hand.m_selected == m_hand.SELECTED_TREE) m_hand.m_selected = m_hand.SELECTED_ROCK;
-		else if (m_hand.m_selected == m_hand.SELECTED_WATER) m_hand.m_selected = m_hand.SELECTED_TREE;
-		else if (m_hand.m_selected == m_hand.SELECTED_COLONIST) m_hand.m_selected = m_hand.SELECTED_WATER;
-		else if (m_hand.m_selected == m_hand.SELECTED_FOOD) m_hand.m_selected = m_hand.SELECTED_COLONIST;
+		if (m_hand.m_selected == Hand::SELECTED_BUSH) m_hand.m_selected = Hand::SELECTED_FOOD;
+		else if (m_hand.m_selected == Hand::SELECTED_ROCK) m_hand.m_selected = Hand::SELECTED_BUSH;
+		else if (m_hand.m_selected == Hand::SELECTED_TREE) m_hand.m_selected = Hand::SELECTED_ROCK;
+		else if (m_hand.m_selected == Hand::SELECTED_WATER) m_hand.m_selected = Hand::SELECTED_TREE;
+		else if (m_hand.m_selected == Hand::SELECTED_COLONIST) m_hand.m_selected = Hand::SELECTED_WATER;
+		else if (m_hand.m_selected == Hand::SELECTED_FOOD) m_hand.m_selected = Hand::SELECTED_COLONIST;
 	}
 	else if (kiDirection == -1)
 	{
 		// Selects new item
-		if (m_hand.m_selected == m_hand.SELECTED_BUSH) m_hand.m_selected = m_hand.SELECTED_ROCK;
-		else if (m_hand.m_selected == m_hand.SELECTED_ROCK) m_hand.m_selected = m_hand.SELECTED_TREE;
-		else if (m_hand.m_selected == m_hand.SELECTED_TREE) m_hand.m_selected = m_hand.SELECTED_WATER;
-		else if (m_hand.m_selected == m_hand.SELECTED_WATER) m_hand.m_selected = m_hand.SELECTED_COLONIST;
-		else if (m_hand.m_selected == m_hand.SELECTED_COLONIST) m_hand.m_selected = m_hand.SELECTED_FOOD;
-		else if (m_hand.m_selected == m_hand.SELECTED_FOOD) m_hand.m_selected = m_hand.SELECTED_BUSH;
+		if (m_hand.m_selected == Hand::SELECTED_BUSH) m_hand.m_selected = Hand::SELECTED_ROCK;
+		else if (m_hand.m_selected == Hand::SELECTED_ROCK) m_hand.m_selected = Hand::SELECTED_TREE;
+		else if (m_hand.m_selected == Hand::SELECTED_TREE) m_hand.m_selected = Hand::SELECTED_WATER;
+		else if (m_hand.m_selected == Hand::SELECTED_WATER) m_hand.m_selected = Hand::SELECTED_COLONIST;
+		else if (m_hand.m_selected == Hand::SELECTED_COLONIST) m_hand.m_selected = Hand::SELECTED_FOOD;
+		else if (m_hand.m_selected == Hand::SELECTED_FOOD) m_hand.m_selected = Hand::SELECTED_BUSH;
 	}
 }
 
@@ -147,6 +171,25 @@ void Editor::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	{
 		// Draws Entity to RenderTarget
 		pEntity->draw(target, states);
+
+		// If Entity is a Colonist
+		if (pEntity->getType() == COLONIST)
+		{
+			// Casts Entity to Colonist object
+			std::shared_ptr<Colonist> pColonist = std::dynamic_pointer_cast<Colonist>(pEntity);
+
+			// Declares line and colour
+			sf::Vertex line[2];
+			sf::Color colour = sf::Color(0, 0, 0, 255);
+
+			// Sets the first point of the line at the Colonist position
+			line[0] = sf::Vertex(pColonist->getPosition(), colour);
+			// Sets the second point of the line infront of the Colonist based on heading
+			line[1] = sf::Vertex(pColonist->getPosition() + (Utils::unitVecFromAngle(pColonist->getHeading()) * (pColonist->getRadius()*2.0f)), colour);
+
+			// Draws the line to target
+			target.draw(line, 2, sf::Lines);
+		}
 	}
 
 	// For every Object in the Environment
@@ -185,6 +228,18 @@ void Editor::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	{
 		std::shared_ptr<Colonist> item = std::shared_ptr<Colonist>(new Colonist(nullptr, m_hand.m_position, m_hand.m_fHeading));
 		std::dynamic_pointer_cast<Entity>(item)->draw(target, states);
+
+		// Declares line and colour
+		sf::Vertex line[2];
+		sf::Color colour = sf::Color(0, 0, 0, 255);
+
+		// Sets the first point of the line at the Colonist position
+		line[0] = sf::Vertex(item->getPosition(), colour);
+		// Sets the second point of the line infront of the Colonist based on heading
+		line[1] = sf::Vertex(item->getPosition() + (Utils::unitVecFromAngle(item->getHeading()) * (item->getRadius()*2.0f)), colour);
+
+		// Draws the line to target
+		target.draw(line, 2, sf::Lines);
 	}
 	else if (m_hand.m_selected == m_hand.SELECTED_FOOD)
 	{

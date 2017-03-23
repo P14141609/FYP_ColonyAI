@@ -52,6 +52,8 @@ private:
 
 	Hand m_hand; //!< Hand that holds selection pos, radius, heading and type
 
+	std::vector<Hand::selectedItem> m_placeHistory; //!< Holds the history of placed items
+
 	/////////////////////////////////////////////////
 	///
 	/// \brief Draws the Editor to the RenderTarget
@@ -95,6 +97,15 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	void placeSelected();
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Removes the latest placed item
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void undoPlace();
 
 	/////////////////////////////////////////////////
 	///

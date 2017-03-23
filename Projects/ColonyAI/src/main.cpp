@@ -325,13 +325,13 @@ int main()
 					// If Left is pressed
 					if (event.key.code == sf::Keyboard::Left)
 					{
-						editor.setHandHeading(editor.getHandHeading() - 1.0f);
+						editor.setHandHeading(editor.getHandHeading() - 0.1f);
 					}
 
 					// If Right is pressed
 					if (event.key.code == sf::Keyboard::Right)
 					{
-						editor.setHandHeading(editor.getHandHeading() + 1.0f);
+						editor.setHandHeading(editor.getHandHeading() + 0.1f);
 					}
 
 					// If Space is pressed
@@ -353,7 +353,7 @@ int main()
 					// Else If RMouseButton is pressed
 					if (event.mouseButton.button == sf::Mouse::Right)
 					{
-						// Delete clicked object?
+						editor.undoPlace();
 					}
 				}
 
