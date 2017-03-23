@@ -160,6 +160,15 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Gets the Colonist heading angle
+	///
+	/// \return Heading in degrees
+	///
+	///////////////////////////////////////////////// 
+	float getHeading() { return m_fHeading; }
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Gets the Colonist Memory vector
 	///
 	/// \return Vector of Memories

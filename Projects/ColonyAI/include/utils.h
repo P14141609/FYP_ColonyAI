@@ -262,6 +262,32 @@ public:
 		// Returns resultant string
 		return sResult;
 	}
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the string in lowercase with a capital first letter
+	///
+	/// \param ksString String to modify
+	///
+	/// \return Returns a formatted string
+	///
+	///////////////////////////////////////////////// 
+	static std::string formatWord(const std::string ksString)
+	{
+		// Declares 'locale' for toupper to function
+		std::locale loc;
+		// Declares string for result
+		std::string sResult;
+
+		// Converts the string to lowercase
+		sResult = toLowercase(ksString);
+
+		// Changes the first letter to uppercase
+		sResult[0] = std::toupper(ksString[0], loc);
+
+		// Returns resultant string
+		return sResult;
+	}
 };
 
 #endif

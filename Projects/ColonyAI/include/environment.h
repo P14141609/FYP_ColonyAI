@@ -98,7 +98,7 @@ public:
 	///
 	/// \brief Loads Env data from a file
 	///
-	/// \param ksDirectory The Env file path to load
+	/// \param ksFilePath The Env file path to load
 	///
 	/// \return Whether the Environment was loaded successfully
 	///

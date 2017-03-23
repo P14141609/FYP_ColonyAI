@@ -81,6 +81,9 @@
     <ClCompile Include="src\food.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
+    <ClCompile Include="src\editor.cpp">
+      <Filter>Source Files\Environment</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\environment.h">
@@ -121,6 +124,9 @@
     </ClInclude>
     <ClInclude Include="include\food.h">
       <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="include\editor.h">
+      <Filter>Header Files\Environment</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
