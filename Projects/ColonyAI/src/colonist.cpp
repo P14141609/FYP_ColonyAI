@@ -51,7 +51,7 @@ void Colonist::update(const float kfElapsedTime)
 
 		case BREED: breed(); break; // State: Breed - run method
 
-		case DECEASED: break; // State: Deceased - No action
+		case DECEASED: deceased(); break; // State: Deceased - run method
 
 		default: m_state = IDLE; break; // No valid state found: set IDLE;
 	}
@@ -82,7 +82,7 @@ void Colonist::updateMemory(const long klTime)
 	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
 	{
 		// If Object is within vision of the Colonist
-		if (Utils::magnitude(pObject->getPosition() - m_position) - pObject->getRadius() < m_fVision)
+		if (inVision(pObject->getPosition(), pObject->getRadius()))
 		{
 			// Stores whether the position is already in Memory
 			bool bPosInMemory = false;
@@ -191,8 +191,8 @@ void Colonist::updateMemory(const long klTime)
 void Colonist::updateState()
 {
 	// Defines fatal levels of hunger and thirst
-	float fFatalHunger = 1000.0f;
-	float fFatalThirst = 1000.0f;
+	float fFatalHunger = 100.0f;
+	float fFatalThirst = 100.0f;
 	// Defines percentages
 	float fHungerPerc = (m_fHunger / fFatalHunger) * 100;
 	float fThirstPerc = (m_fThirst / fFatalThirst) * 100;
@@ -276,7 +276,7 @@ void Colonist::explore()
 // Void: Processes FORAGE state functionality
 void Colonist::forage()
 {
-	m_state = IDLE; // TEMPORARY
+	m_state = EXPLORE; // TEMPORARY
 }
 
 // Void: Processes TENDTONEEDS state functionality
@@ -292,16 +292,46 @@ void Colonist::tendToNeeds()
 	// If hunger is more dire than thirst
 	if (fHungerPerc > fThirstPerc)
 	{
+		// Defines vector to store Food in vision
+		std::vector<std::shared_ptr<Food>> pFoodInVision;
+
 		// If has vision of food entity
-		/*if ()
+		for (std::shared_ptr<Entity> pEntity : m_pEnvironment->getEntities(FOOD))
+		{
+			// If Entity is in vision
+			if (inVision(pEntity->getPosition(), pEntity->getRadius()))
+			{
+				pFoodInVision.push_back(std::dynamic_pointer_cast<Food>(pEntity));
+			}
+		}
+
+		// If there's Food in vision
+		if (!pFoodInVision.empty())
 		{
 			// Go eat nearest food
+			// TEMPORARY - Eat first food in vector
+			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(pFoodInVision.front()->getPosition()));
 		}
 
 		// Else If has memory of a food source
-		else*/ if (Memory::typeInMem(FOOD_SOURCE, m_pMemories))
+		else if (Memory::typeInMem(FOOD_SOURCE, m_pMemories))
 		{
+			// Defines vector to store Food_Source memories
+			std::vector<std::shared_ptr<Food>> pFoodSources;
+
+			// If has vision of food entity
+			for (std::shared_ptr<Memory> pMemory : m_pMemories)
+			{
+				// If Memory is Food_Source
+				if (pMemory->getType() == FOOD_SOURCE)
+				{
+					pFoodSources.push_back(std::dynamic_pointer_cast<Food>(pMemory->getObject()));
+				}
+			}
+
 			// Go to nearest source
+			// TEMPORARY - Eat first source in memory
+			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition()));
 		}
 
 		// Else - No knowledge of food or source
@@ -316,7 +346,22 @@ void Colonist::tendToNeeds()
 		// If has memory of a Water source
 		if (Memory::typeInMem(WATER_SOURCE, m_pMemories))
 		{
-			// Go to nearest source and drink
+			// Defines vector to store Water_Source memories
+			std::vector<std::shared_ptr<Water>> pWaterSources;
+
+			// If has vision of food entity
+			for (std::shared_ptr<Memory> pMemory : m_pMemories)
+			{
+				// If Memory is Food_Source
+				if (pMemory->getType() == WATER_SOURCE)
+				{
+					pWaterSources.push_back(std::dynamic_pointer_cast<Water>(pMemory->getObject()));
+				}
+			}
+
+			// Go to nearest source
+			// TEMPORARY - Eat first source in memory
+			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(pWaterSources.front()->getPosition()));
 		}
 
 		// Else - No knowledge of water
@@ -332,6 +377,21 @@ void Colonist::tendToNeeds()
 void Colonist::breed()
 {
 	m_state = IDLE; // TEMPORARY
+}
+
+// Void: Processes DECEASED state functionality
+void Colonist::deceased()
+{
+	// If path is not empty
+	if (!m_pPathfinding->getPath().empty())
+	{
+		// For all elements of path
+		for (unsigned int i = 0; i < m_pPathfinding->getPath().size(); i++)
+		{
+			// Pops element off the path
+			m_pPathfinding->popPath();
+		}
+	}
 }
 
 // Bool: Moves the Colonist toward a destination at an input speed - Returns whether Colonist is at the destination
@@ -362,14 +422,22 @@ bool Colonist::moveTo(const sf::Vector2f kDestination, const float kfElapsedTime
 	return false;
 }
 
+// Bool: Whether the position is within vision
+bool Colonist::inVision(const sf::Vector2f kPosition, const float kfRadius)
+{
+	if (Utils::magnitude(kPosition - m_position) - kfRadius < m_fVision) return true;
+	return false;
+}
+
 // Void: Called to draw the Colonist
 void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	// Declares new CircleShape to draw
 	sf::CircleShape circle;
 
-	// Sets circle colour: Black RGB for Colonist
-	circle.setFillColor(sf::Color(0, 0, 0, 255));
+	// Sets circle colour: Black RGB for alive Colonist's, grey for deceased
+	if (m_state != DECEASED) circle.setFillColor(sf::Color(0, 0, 0, 255));
+	else circle.setFillColor(sf::Color(80, 80, 80, 255));
 
 	// Sets the circle radius to radius member
 	circle.setRadius(m_fRadius);
@@ -387,7 +455,11 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		///////////////////// HEADING /////////////////////
 		// Declares line and colour
 		sf::Vertex line[2];
-		sf::Color colour = sf::Color(0, 0, 0, 255);
+		sf::Color colour;
+
+		// Sets line colour: Black RGB for alive Colonist's, grey for deceased
+		if (m_state != DECEASED) colour = sf::Color(0, 0, 0, 255);
+		else colour = sf::Color(80, 80, 80, 255);
 
 		// Sets the first point of the line at the Colonist position
 		line[0] = sf::Vertex(m_position, colour);

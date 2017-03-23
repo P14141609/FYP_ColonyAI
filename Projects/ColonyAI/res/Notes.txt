@@ -6,6 +6,7 @@ ToDo:
 	Reproduction
 	Colony Role Delegation
 
+	Need to update memories, whether they are still valid
 	Add specific Entity Memories?
 	Add Saplings? for lumber replenishment
 

@@ -133,6 +133,15 @@ private:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Processes DECEASED state functionality
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void deceased();
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Moves the Colonist toward a destination at an input speed
 	///
 	/// \param kDestination A position to move toward
@@ -142,6 +151,18 @@ private:
 	///
 	///////////////////////////////////////////////// 
 	bool moveTo(const sf::Vector2f kDestination, const float kfElapsedTime);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns whether an item is within vision
+	///
+	/// \param kPosition Position of an item to check
+	/// \param kfRadius Radial size of the item
+	///
+	/// \return Whether the item is within vision
+	///
+	///////////////////////////////////////////////// 
+	bool inVision(const sf::Vector2f kPosition, const float kfRadius);
 
 protected:
 
