@@ -13,3 +13,4 @@ Bugs:
 	Fix delta heading somehow screwing up colonist.explore()
 	window.close() causes memory exception
 	delete_scalar.ccp exception occasionally
+	Editor Hand position incorrect when view aspect ratio differs from window A.R.
