@@ -136,6 +136,33 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Returns the Environment Objects of a certain type
+	///
+	/// \param kType Type of Object to return
+	///
+	/// \return The vector of Objects that match the given type
+	///
+	///////////////////////////////////////////////// 
+	std::vector<std::shared_ptr<Object>> getObjects(const ObjectType kType)
+	{
+		// Defines vector for result
+		std::vector<std::shared_ptr<Object>> result;
+
+		// For all Objects
+		for (std::shared_ptr<Object> pObject : m_pObjects)
+		{
+			// If Object's type matches kType
+			if (pObject->getType() == kType)
+			{
+				result.push_back(pObject); // Pushes Object onto result vector
+			}
+		}
+
+		return result;
+	}
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Returns the Environment Object member
 	///
 	/// \return Pointer to the Object vector
@@ -151,6 +178,33 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	std::vector<std::shared_ptr<Entity>> getEntities() { return m_pEntities; }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns the Environment Entities of a certain type
+	///
+	/// \param kType Type of Entity to return
+	///
+	/// \return The vector of Entities that match the given type
+	///
+	///////////////////////////////////////////////// 
+	std::vector<std::shared_ptr<Entity>> getEntities(const EntityType kType)
+	{
+		// Defines vector for result
+		std::vector<std::shared_ptr<Entity>> result;
+
+		// For all Objects
+		for (std::shared_ptr<Entity> pEntity : m_pEntities)
+		{
+			// If Entity's type matches kType
+			if (pEntity->getType() == kType)
+			{
+				result.push_back(pEntity); // Pushes Entity onto result vector
+			}
+		}
+
+		return result;
+	}
 
 	/////////////////////////////////////////////////
 	///
