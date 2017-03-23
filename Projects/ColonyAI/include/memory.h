@@ -10,7 +10,7 @@
 
 class Object;
 
-enum MemoryType { OBSTRUCTION, FOOD_ENTITY, FOOD_SOURCE, STONE_ENTITY, STONE_SOURCE, LUMBER_ENTITY, LUMBER_SOURCE, WATER_SOURCE }; //!< Enum for Memory types
+enum MemoryType { NULL_OBJECT, OBSTRUCTION, FOOD_ENTITY, FOOD_SOURCE, STONE_ENTITY, STONE_SOURCE, LUMBER_ENTITY, LUMBER_SOURCE, WATER_SOURCE }; //!< Enum for Memory types
 
 /////////////////////////////////////////////////
 ///

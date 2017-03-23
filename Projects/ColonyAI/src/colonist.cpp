@@ -95,16 +95,13 @@ void Colonist::updateMemory(const long klTime)
 				{
 					// Sets bPosInMem true
 					bPosInMemory = true;
+					// Updates memory with new time
+					pMemory->setTime(klTime);
 				}
 			}
 
-			// If position is in Memory
-			if (bPosInMemory)
-			{
-				// TEMPORARY - Need to update whether it is still a valid memory
-			}
-			// Else position isn't in Memory
-			else
+			// If position isn't in Memory
+			if (!bPosInMemory)
 			{
 				// Declares a MemoryType with default: OBSTRUCTION
 				MemoryType type = OBSTRUCTION;
@@ -183,6 +180,17 @@ void Colonist::updateMemory(const long klTime)
 			{
 				// TEMPORARY - Need to add other Entity handling later with food, stone and lumber
 			}
+		}
+	}
+
+	// For all existing Memories
+	for (std::shared_ptr<Memory> pMemory : m_pMemories)
+	{
+		// If Memory Object is a nullptr and type is not set to NULL_OBJECT
+		if ((pMemory->getObject() == nullptr) && (pMemory->getType() != NULL_OBJECT))
+		{
+			// Updates Memory type to NULL_OBJECT
+			pMemory->setType(NULL_OBJECT);
 		}
 	}
 }
