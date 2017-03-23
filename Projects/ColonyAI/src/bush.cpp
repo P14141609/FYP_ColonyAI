@@ -61,6 +61,6 @@ void Bush::update(const float kfElapsedTime)
 		// Adds a Food Entity to the Environment
 		m_pEnvironment->getEntityVec()->push_back(std::shared_ptr<Food>(new Food(m_pEnvironment, foodPos)));
 
-		sf::err() << "[BUSH] Food produced at x(" << foodPos.x << " y(" << foodPos.y << ")" << std::endl;
+		sf::err() << "[BUSH] Food produced at x(" << foodPos.x << ") y(" << foodPos.y << ")" << std::endl;
 	}
 }
