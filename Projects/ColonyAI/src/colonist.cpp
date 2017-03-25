@@ -17,7 +17,7 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_fHeading = kfHeading;
 	m_fRadius = 7.5f;
 	m_fVision = 100.0f;
-	m_fSpeed = 50.0f;
+	m_fSpeed = 150.0f;
 
 	// Defines fatal levels of hunger and thirst
 	m_fFatalHunger = 180.0f; // 3 minutes
@@ -66,7 +66,7 @@ void Colonist::update(const float kfElapsedTime)
 
 		case FORAGE: forage(); break; // State: Forage - run method
 
-		case TENDTONEEDS: tendToNeeds(); break; // State: TendToNeeds - run method
+		case TENDTONEEDS: tendToNeeds(kfElapsedTime); break; // State: TendToNeeds - run method
 
 		case BREED: breed(); break; // State: Breed - run method
 
@@ -252,7 +252,7 @@ void Colonist::updateState()
 // Void: Processes IDLE state functionality
 void Colonist::idle()
 {
-	explore(); // TEMPORARY
+	// No action
 }
 
 // Void: Processes EXPLORE state functionality
@@ -296,7 +296,7 @@ void Colonist::forage()
 }
 
 // Void: Processes TENDTONEEDS state functionality
-void Colonist::tendToNeeds()
+void Colonist::tendToNeeds(const float kfElapsedTime)
 {
 	// If hunger is more dire than thirst
 	if (m_fHungerPerc > m_fThirstPerc)
@@ -319,7 +319,11 @@ void Colonist::tendToNeeds()
 		{
 			// Go eat nearest food
 			// TEMPORARY - Eat first food in vector
-			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(pFoodInVision.front()->getPosition()));
+			if (moveTo(pFoodInVision.front()->getPosition(), kfElapsedTime))
+			{
+				// Consume food at Colonist position
+				eat(pFoodInVision.front());
+			}
 		}
 
 		// Else If has memory of a food source
@@ -340,7 +344,10 @@ void Colonist::tendToNeeds()
 
 			// Go to nearest source
 			// TEMPORARY - Eat first source in memory
-			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition()));
+			if (moveTo(pFoodSources.front()->getPosition(), kfElapsedTime))
+			{
+				// TEMPORARY - If no Food at source?
+			}
 		}
 
 		// Else - No knowledge of food or source
@@ -370,7 +377,11 @@ void Colonist::tendToNeeds()
 
 			// Go to nearest source
 			// TEMPORARY - Eat first source in memory
-			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(pWaterSources.front()->getPosition()));
+			if (moveTo(pWaterSources.front()->getPosition(), kfElapsedTime))
+			{
+				// TEMPORARY - Moving over water replenishes thirst
+				m_fThirst = 0.0f;
+			}
 		}
 
 		// Else - No knowledge of water
@@ -401,6 +412,16 @@ void Colonist::deceased()
 			m_pPathfinding->popPath();
 		}
 	}
+}
+
+// Void: Consumes Food to replenish hunger
+void Colonist::eat(std::shared_ptr<Food> pFood)
+{
+	// Hunger is completely replenished
+	m_fHunger = 0.0f; // TODO - May add a level of replenishment Food can restore instead of 100%
+
+	// Removes the Food object pointer
+	pFood = nullptr;
 }
 
 // Bool: Moves the Colonist toward a destination at an input speed - Returns whether Colonist is at the destination

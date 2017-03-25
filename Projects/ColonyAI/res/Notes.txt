@@ -10,6 +10,7 @@ ToDo:
 	Add Saplings? for lumber replenishment
 
 Bugs:
+	Colonist's can have a path that is later revealed to pass through an object but nothing is done to stop the following of said path
 	Fix delta heading somehow screwing up colonist.explore()
 	window.close() causes memory exception
 	delete_scalar.ccp exception occasionally

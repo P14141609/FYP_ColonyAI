@@ -16,6 +16,7 @@
 
 class Entity;
 class Pathfinding;
+class Food;
 
 /////////////////////////////////////////////////
 ///
@@ -122,10 +123,12 @@ private:
 	///
 	/// \brief Processes TENDTONEEDS state functionality
 	///
+	/// \param kfElapsedTime The time passed since last update in seconds
+	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void tendToNeeds();
+	void tendToNeeds(const float kfElapsedTime);
 
 	/////////////////////////////////////////////////
 	///
@@ -144,6 +147,17 @@ private:
 	///
 	///////////////////////////////////////////////// 
 	void deceased();
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Consumes Food to replenish hunger
+	///
+	/// \param pFood A Food Entity to consume
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void eat(std::shared_ptr<Food> pFood);
 
 	/////////////////////////////////////////////////
 	///
