@@ -33,6 +33,11 @@ private:
 
 	float m_fHunger; //!< Hunger need level of the Colonist
 	float m_fThirst; //!< Thirst need level of the Colonist
+	float m_fHungerPerc; //!< Hunger need level of the Colonist as a percentage
+	float m_fThirstPerc; //!< Thirst need level of the Colonist as a percentage
+
+	float m_fFatalHunger; //!< Hunger need level that kills the Colonist
+	float m_fFatalThirst; //!< Thirst need level that kills the Colonist
 
 	std::shared_ptr<Entity> m_pHeldEntity; //!< Pointer to an Entity the Colonist is holding
 

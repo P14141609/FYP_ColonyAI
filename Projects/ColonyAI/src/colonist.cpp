@@ -18,8 +18,13 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_fRadius = 7.5f;
 	m_fVision = 100.0f;
 	m_fSpeed = 50.0f;
-	m_fHunger = 25.0f;
-	m_fThirst = 25.0f;
+
+	// Defines fatal levels of hunger and thirst
+	m_fFatalHunger = 180.0f; // 3 minutes
+	m_fFatalThirst = 120.0f; // 2 minutes
+	// Defines initial hunger and thirst as 25% of fatal levels
+	m_fHunger = m_fFatalHunger * 0.25f; 
+	m_fThirst = m_fFatalThirst * 0.25f;
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 
@@ -33,6 +38,20 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 // Void: Called to update the Colonist
 void Colonist::update(const float kfElapsedTime)
 {
+	// If Colonist's not deceased
+	if (m_state != DECEASED)
+	{
+		// Iterates Hunger
+		m_fHunger += kfElapsedTime;
+		m_fThirst += kfElapsedTime;
+		// Caps thirst/hunger at fatal level
+		if (m_fHunger >= m_fFatalHunger) m_fHunger = m_fFatalHunger;
+		if (m_fThirst >= m_fFatalThirst) m_fThirst = m_fFatalThirst;
+		// Defines need percentages
+		m_fHungerPerc = (m_fHunger / m_fFatalHunger) * 100;
+		m_fThirstPerc = (m_fThirst / m_fFatalThirst) * 100;
+	}
+
 	// Calls method to update Colonist Memory
 	updateMemory((long)time(NULL));
 
@@ -69,10 +88,6 @@ void Colonist::update(const float kfElapsedTime)
 
 	// Binds heading to 360 degrees
 	m_fHeading = Utils::bindNum(m_fHeading, 0, 360);
-
-	// Iterates Hunger
-	m_fHunger += kfElapsedTime;
-	m_fThirst += kfElapsedTime;
 }
 
 // Void: Updates the Colonist's Memory
@@ -198,23 +213,16 @@ void Colonist::updateMemory(const long klTime)
 // Void: Updates the Colonist's AI state
 void Colonist::updateState()
 {
-	// Defines fatal levels of hunger and thirst
-	float fFatalHunger = 100.0f;
-	float fFatalThirst = 100.0f;
-	// Defines percentages
-	float fHungerPerc = (m_fHunger / fFatalHunger) * 100;
-	float fThirstPerc = (m_fThirst / fFatalThirst) * 100;
-
 	// Tier 01 - Is the Colonist Dead
 	// If thirst or hunger is 100% of fatal level
-	if (fHungerPerc >= 100.0f || fThirstPerc >= 100.0f)
+	if (m_fHungerPerc >= 100.0f || m_fThirstPerc >= 100.0f)
 	{
 		m_state = DECEASED;
 	}
 
 	// Tier 02 - Is the Colonist dying
 	// If thirst or hunger is 75% of fatal level
-	else if (fHungerPerc >= 75.0f || fThirstPerc >= 75.0f)
+	else if (m_fHungerPerc >= 75.0f || m_fThirstPerc >= 75.0f)
 	{
 		m_state = TENDTONEEDS;
 	}
@@ -228,7 +236,7 @@ void Colonist::updateState()
 
 	// Tier 04 - Is there someone to breed with?
 	// If hunger and thirst satisfied greatly
-	else if (fHungerPerc <= 15.0f && fThirstPerc <= 15.0f)
+	else if (m_fHungerPerc <= 15.0f && m_fThirstPerc <= 15.0f)
 	{
 		m_state = BREED;
 	}
@@ -244,7 +252,7 @@ void Colonist::updateState()
 // Void: Processes IDLE state functionality
 void Colonist::idle()
 {
-	m_state = EXPLORE; // TEMPORARY
+	explore(); // TEMPORARY
 }
 
 // Void: Processes EXPLORE state functionality
@@ -284,21 +292,14 @@ void Colonist::explore()
 // Void: Processes FORAGE state functionality
 void Colonist::forage()
 {
-	m_state = EXPLORE; // TEMPORARY
+	explore(); // TEMPORARY
 }
 
 // Void: Processes TENDTONEEDS state functionality
 void Colonist::tendToNeeds()
 {
-	// Defines fatal levels of hunger and thirst
-	float fFatalHunger = 90.0f;
-	float fFatalThirst = 60.0f;
-	// Defines percentages
-	float fHungerPerc = (m_fHunger / fFatalHunger) * 100;
-	float fThirstPerc = (m_fThirst / fFatalThirst) * 100;
-
 	// If hunger is more dire than thirst
-	if (fHungerPerc > fThirstPerc)
+	if (m_fHungerPerc > m_fThirstPerc)
 	{
 		// Defines vector to store Food in vision
 		std::vector<std::shared_ptr<Food>> pFoodInVision;
@@ -384,7 +385,7 @@ void Colonist::tendToNeeds()
 // Void: Processes BREED state functionality
 void Colonist::breed()
 {
-	m_state = IDLE; // TEMPORARY
+	explore(); // TEMPORARY
 }
 
 // Void: Processes DECEASED state functionality
@@ -529,5 +530,57 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		///////////////////// PATHFINDING /////////////////////
 		// Draws pathfinding info
 		m_pPathfinding->draw(target);
+
+		///////////////////// NEEDS /////////////////////
+		// Declares new RectShape to draw need bars
+		sf::RectangleShape rect;
+		// Defines the status bars size
+		sf::Vector2f barSize(m_fRadius*3.0f, m_fRadius*0.5f);
+
+		// Thirst
+		// Sets the rect to blue
+		rect.setFillColor(sf::Color(0, 0, 255, 255));
+		// Sets the rect size
+		rect.setSize(barSize);
+		// Sets the origin to the bottom right corner of the rect
+		rect.setOrigin(sf::Vector2f(rect.getSize().x, rect.getSize().y));
+
+		// Sets the rect pos to above the Colonist
+		rect.setPosition(sf::Vector2f(m_position.x + rect.getSize().x*0.5f, (m_position.y - m_fRadius - rect.getSize().y*0.5f)));
+		// Draws rect to target
+		target.draw(rect);
+
+		// Sets the rect to red
+		rect.setFillColor(sf::Color(255, 0, 0, 255));
+		// Sets the rect size
+		rect.setSize(sf::Vector2f(barSize.x*(m_fThirstPerc / 100), barSize.y));
+		// Sets the origin to the center of the rect
+		rect.setOrigin(sf::Vector2f(rect.getSize().x, rect.getSize().y));
+
+		// Draws rect to target
+		target.draw(rect);
+
+		// Hunger
+		// Sets the rect to green
+		rect.setFillColor(sf::Color(0, 255, 0, 255));
+		// Sets the rect size
+		rect.setSize(barSize);
+		// Sets the origin to the bottom right corner of the rect
+		rect.setOrigin(sf::Vector2f(rect.getSize().x, rect.getSize().y));
+
+		// Sets the rect pos to above the Colonist
+		rect.setPosition(sf::Vector2f(m_position.x + rect.getSize().x*0.5f, (m_position.y - m_fRadius - rect.getSize().y*0.5f) - rect.getSize().y*1.5f));
+		// Draws rect to target
+		target.draw(rect);
+
+		// Sets the rect to red
+		rect.setFillColor(sf::Color(255, 0, 0, 255));
+		// Sets the rect size
+		rect.setSize(sf::Vector2f(barSize.x*(m_fHungerPerc / 100), barSize.y));
+		// Sets the origin to the center of the rect
+		rect.setOrigin(sf::Vector2f(rect.getSize().x, rect.getSize().y));
+
+		// Draws rect to target
+		target.draw(rect);
 	}
 }
