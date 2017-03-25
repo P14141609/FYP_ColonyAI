@@ -361,7 +361,7 @@ int main()
 				if (event.type == sf::Event::MouseMoved)
 				{
 					// Defines MousePos as a Vector2f
-					sf::Vector2f mousePos(event.mouseMove.x, event.mouseMove.y);
+					sf::Vector2f mousePos((float)event.mouseMove.x, (float)event.mouseMove.y);
 					// Defines MousePosition as a ratio of window size 
 					sf::Vector2f mousePosRatio(mousePos.x / (float)window.getSize().x, event.mouseMove.y / (float)window.getSize().y);
 
