@@ -123,12 +123,10 @@ private:
 	///
 	/// \brief Processes TENDTONEEDS state functionality
 	///
-	/// \param kfElapsedTime The time passed since last update in seconds
-	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void tendToNeeds(const float kfElapsedTime);
+	void tendToNeeds();
 
 	/////////////////////////////////////////////////
 	///

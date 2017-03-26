@@ -108,7 +108,7 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 
 		///////////////////// Calculating The Path /////////////////////
 
-		// Bool for whether a path was been found
+		// Bool for whether a path has been found
 		bool bPathFound = false;
 
 		// While a path has not been found
@@ -133,7 +133,7 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 			///////////////////// Calculating Open Adjacent Nodes /////////////////////
 
 			// Get all adjacent nodes
-			std::vector<std::shared_ptr<Node>> pAdjNodes = getAdjacentNodes(pCurrentNode);
+			std::vector<std::shared_ptr<Node>> pAdjNodes = adjacentNodes(pCurrentNode, true);
 
 			// For all adjacent nodes
 			for (std::shared_ptr<Node> pAdjNode : pAdjNodes)
@@ -279,6 +279,99 @@ std::shared_ptr<Node> Pathfinding::nodeFromPos(const sf::Vector2f kPosition)
 	return nullptr;
 }
 
+// std::shared_ptr<Node>: Detemines the closest accessible Node to a given position
+std::vector<std::shared_ptr<Node>> Pathfinding::perimeterNodes(const sf::Vector2f kPosition)
+{
+	// Declares vector to store the result
+	std::vector<std::shared_ptr<Node>> pResultNodes;
+
+	// If Nodes exist
+	if (!m_pNodes.empty())
+	{
+		// If Node at the position is accessible
+		if (nodeFromPos(kPosition)->isAccessible())
+		{
+			pResultNodes.push_back(nodeFromPos(kPosition)); // Adds Node at position to result vector
+			return pResultNodes; // Returns vector with single Node within
+		}
+
+		// Else - Node at position is inaccessible
+		else
+		{
+			// Declares vectors to store nodes to check and checked nodes
+			std::vector<std::shared_ptr<Node>> pOpenNodes;
+			std::vector<std::shared_ptr<Node>> pClosedNodes;
+
+			// Add Node the position to closed list - It's been checked
+			pClosedNodes.push_back(nodeFromPos(kPosition));
+
+			// Bool for whether a Node has been found
+			bool bNodeFound = false;
+
+			// While a Node has not been found
+			while (!bNodeFound)
+			{
+				// Current Node being tested
+				std::shared_ptr<Node> pCurrentNode = pClosedNodes.back();
+
+				// Get all adjacent nodes
+				std::vector<std::shared_ptr<Node>> pAdjNodes = adjacentNodes(pCurrentNode, false);
+
+				// For all adjacent nodes
+				for (std::shared_ptr<Node> pAdjNode : pAdjNodes)
+				{
+					// If adjNode is accessible
+					if (pAdjNode->isAccessible()) 
+					{
+						// Add adjacent node to resultant list
+						pResultNodes.push_back(pAdjNode);
+					}
+					
+					// Else if adjNode is on the closed list
+					else if (nodeInVector(pAdjNode, pClosedNodes)) { /* Ignores Nodes already processed */ }
+
+					// Else: adjNode is inaccessible and not on the closed list
+					else
+					{
+						// Add adjacent nodes to open list
+						pOpenNodes.push_back(pAdjNode);
+					}
+				}
+
+				// If there is an open list
+				if (!pOpenNodes.empty())
+				{
+					// Adds the first open Node to the closed list
+					pClosedNodes.push_back(pOpenNodes.front());
+
+					// Removes the Node now on the closed list from the open list
+					std::vector<std::shared_ptr<Node>> pNewOpenNodes;
+					for (std::shared_ptr<Node> pOpenNode : pOpenNodes)
+					{
+						// If the openNode isn't the Node just placed onto the closed list
+						if (pOpenNode != pClosedNodes.back())
+						{
+							// Pushes onto new open list
+							pNewOpenNodes.push_back(pOpenNode);
+						}
+					}
+					// Replaces open list with new edited copy
+					pOpenNodes.swap(pNewOpenNodes);
+				}
+				// Else the open list is empty
+				else
+				{
+					// Returns a vector of accessible Nodes around the perimeter of the position
+					return pResultNodes;
+				}
+			}
+		}
+	}
+
+	// Nodes don't exist: return empty vector
+	return pResultNodes;
+}
+
 // Float: Calculates G value of a Node - Returns the calculated G value
 float Pathfinding::calcG(const std::shared_ptr<Node> kpCurrentNode, const std::shared_ptr<Node> kpTargetNode)
 {
@@ -318,8 +411,8 @@ float Pathfinding::distance(const std::shared_ptr<Node> kpStartNode, const std::
 	return fDistance;
 }
 
-// std::vector<std::shared_ptr<Node>>: Generates a vector of accessible adjacent Nodes - Returns accessible Nodes adjacent to the given Node
-std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(const std::shared_ptr<Node> kpNode)
+// std::vector<std::shared_ptr<Node>>: Generates a vector of adjacent Nodes that can be pathed to - Returns accessible Nodes adjacent to the given Node
+std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_ptr<Node> kpNode, const bool kbStrictDiagonal)
 {
 	// Defines vector of Nodes to store adjacent Nodes that are identified
 	std::vector<std::shared_ptr<Node>> adjNodes;
@@ -335,205 +428,241 @@ std::vector<std::shared_ptr<Node>> Pathfinding::getAdjacentNodes(const std::shar
 		{
 			switch (i)
 			{
-			case 1:
-			{
-				// x o o
-				// o n o
-				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y - m_fNodeDiameter));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
+				case 1:
 				{
-					// Nodes used to check diagonal accessibility
 					// x o o
-					// c n o
-					// o o o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
-					// x c o
 					// o n o
 					// o o o
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y - m_fNodeDiameter));
 
-					// If checkNode1 Node exists and is not accessible
-					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
+					// If Node at position exists
+					if (adjNode != nullptr)
+					{
+						// If diagonal pathing is strict
+						if (kbStrictDiagonal)
+						{
+							// Nodes used to check diagonal accessibility
+							// x o o
+							// c n o
+							// o o o
+							std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
+							// x c o
+							// o n o
+							// o o o
+							std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
 
-					// Else If checkNode2 Node exists and is not accessible
-					else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+							// If checkNode1 Node exists and is not accessible
+							if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
 
-					// Both checkNodes exist and are accessible
-					else
+							// Else If checkNode2 Node exists and is not accessible
+							else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+
+							// Both checkNodes exist and are accessible
+							else
+							{
+								// Adds adjacent Node to vector
+								adjNodes.push_back(adjNode);
+							}
+						}
+						else
+						{
+							// Adds adjacent Node to vector
+							adjNodes.push_back(adjNode);
+						}
+					}
+				} break;
+
+				case 2:
+				{
+					// o x o
+					// o n o
+					// o o o
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
+
+					// If Node at position exists
+					if (adjNode != nullptr)
 					{
 						// Adds adjacent Node to vector
 						adjNodes.push_back(adjNode);
 					}
-				}
-			} break;
+				} break;
 
-			case 2:
-			{
-				// o x o
-				// o n o
-				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
+				case 3:
 				{
-					// Adds adjacent Node to vector
-					adjNodes.push_back(adjNode);
-				}
-			} break;
-
-			case 3:
-			{
-				// o o x
-				// o n o
-				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y - m_fNodeDiameter));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
-				{
-					// Nodes used to check diagonal accessibility
-					// o c x
-					// o n o
-					// o o o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
 					// o o x
-					// o n c
+					// o n o
 					// o o o
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y - m_fNodeDiameter));
 
-					// If checkNode1 Node exists and is not accessible
-					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
+					// If diagonal pathing is strict
+					if (kbStrictDiagonal)
+					{
+						// If Node at position exists
+						if (adjNode != nullptr)
+						{
+							// Nodes used to check diagonal accessibility
+							// o c x
+							// o n o
+							// o o o
+							std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y - m_fNodeDiameter));
+							// o o x
+							// o n c
+							// o o o
+							std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
 
-					// Else If checkNode2 Node exists and is not accessible
-					else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+							// If checkNode1 Node exists and is not accessible
+							if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
 
-					// Both checkNodes exist and are accessible
+							// Else If checkNode2 Node exists and is not accessible
+							else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+
+							// Both checkNodes exist and are accessible
+							else
+							{
+								// Adds adjacent Node to vector
+								adjNodes.push_back(adjNode);
+							}
+						}
+					}
 					else
 					{
 						// Adds adjacent Node to vector
 						adjNodes.push_back(adjNode);
 					}
-				}
-			} break;
+				} break;
 
-			case 4:
-			{
-				// o o o
-				// o n x
-				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
+				case 4:
 				{
-					// Adds adjacent Node to vector
-					adjNodes.push_back(adjNode);
-				}
-			} break;
-
-			case 5:
-			{
-				// o o o
-				// o n o
-				// o o x
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
-				{
-					// Nodes used to check diagonal accessibility
 					// o o o
-					// o n c
+					// o n x
+					// o o o
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
+
+					// If Node at position exists
+					if (adjNode != nullptr)
+					{
+						// Adds adjacent Node to vector
+						adjNodes.push_back(adjNode);
+					}
+				} break;
+
+				case 5:
+				{
+					// o o o
+					// o n o
 					// o o x
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
-					// o o o
-					// o n o
-					// o c x
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
 
-					// If checkNode1 Node exists and is not accessible
-					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
+					// If diagonal pathing is strict
+					if (kbStrictDiagonal)
+					{
+						// If Node at position exists
+						if (adjNode != nullptr)
+						{
+							// Nodes used to check diagonal accessibility
+							// o o o
+							// o n c
+							// o o x
+							std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y));
+							// o o o
+							// o n o
+							// o c x
+							std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
 
-					// Else If checkNode2 Node exists and is not accessible
-					else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+							// If checkNode1 Node exists and is not accessible
+							if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
 
-					// Both checkNodes exist and are accessible
+							// Else If checkNode2 Node exists and is not accessible
+							else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+
+							// Both checkNodes exist and are accessible
+							else
+							{
+								// Adds adjacent Node to vector
+								adjNodes.push_back(adjNode);
+							}
+						}
+					}
 					else
 					{
 						// Adds adjacent Node to vector
 						adjNodes.push_back(adjNode);
 					}
-				}
-			} break;
+				} break;
 
-			case 6:
-			{
-				// o o o
-				// o n o
-				// o x o
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
+				case 6:
 				{
-					// Adds adjacent Node to vector
-					adjNodes.push_back(adjNode);
-				}
-			} break;
-
-			case 7:
-			{
-				// o o o
-				// o n o
-				// x o o
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
-				{
-					// Nodes used to check diagonal accessibility
 					// o o o
 					// o n o
-					// x c o
-					std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
+					// o x o
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
+
+					// If Node at position exists
+					if (adjNode != nullptr)
+					{
+						// Adds adjacent Node to vector
+						adjNodes.push_back(adjNode);
+					}
+				} break;
+
+				case 7:
+				{
 					// o o o
-					// c n o
+					// o n o
 					// x o o
-					std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
 
-					// If checkNode1 Node exists and is not accessible
-					if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
+					// If diagonal pathing is strict
+					if (kbStrictDiagonal)
+					{
+						// If Node at position exists
+						if (adjNode != nullptr)
+						{
+							// Nodes used to check diagonal accessibility
+							// o o o
+							// o n o
+							// x c o
+							std::shared_ptr<Node> checkNode1 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x, kpNode->getPosition().y + m_fNodeDiameter));
+							// o o o
+							// c n o
+							// x o o
+							std::shared_ptr<Node> checkNode2 = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
 
-					// Else If checkNode2 Node exists and is not accessible
-					else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+							// If checkNode1 Node exists and is not accessible
+							if ((checkNode1 != nullptr) && !(checkNode1->isAccessible())) {}
 
-					// Both checkNodes exist and are accessible
+							// Else If checkNode2 Node exists and is not accessible
+							else if ((checkNode2 != nullptr) && !(checkNode2->isAccessible())) {}
+
+							// Both checkNodes exist and are accessible
+							else
+							{
+								// Adds adjacent Node to vector
+								adjNodes.push_back(adjNode);
+							}
+						}
+					}
 					else
 					{
 						// Adds adjacent Node to vector
 						adjNodes.push_back(adjNode);
 					}
-				}
-			} break;
+				} break;
 
-			case 8:
-			{
-				// o o o
-				// x n o
-				// o o o
-				adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
-
-				// If Node at position exists
-				if (adjNode != nullptr)
+				case 8:
 				{
-					// Adds adjacent Node to vector
-					adjNodes.push_back(adjNode);
-				}
-			} break;
+					// o o o
+					// x n o
+					// o o o
+					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y));
+
+					// If Node at position exists
+					if (adjNode != nullptr)
+					{
+						// Adds adjacent Node to vector
+						adjNodes.push_back(adjNode);
+					}
+				} break;
 			}
 		}
 	}

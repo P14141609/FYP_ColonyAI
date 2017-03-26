@@ -66,7 +66,7 @@ void Colonist::update(const float kfElapsedTime)
 
 		case FORAGE: forage(); break; // State: Forage - run method
 
-		case TENDTONEEDS: tendToNeeds(kfElapsedTime); break; // State: TendToNeeds - run method
+		case TENDTONEEDS: tendToNeeds(); break; // State: TendToNeeds - run method
 
 		case BREED: breed(); break; // State: Breed - run method
 
@@ -283,7 +283,7 @@ void Colonist::explore()
 		{
 			// Creates path to the destination
 			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
-		}		
+		}
 		// Else 
 		//else m_fHeading += 180; // Reverses Colonist heading
 	}
@@ -296,7 +296,7 @@ void Colonist::forage()
 }
 
 // Void: Processes TENDTONEEDS state functionality
-void Colonist::tendToNeeds(const float kfElapsedTime)
+void Colonist::tendToNeeds()
 {
 	// If hunger is more dire than thirst
 	if (m_fHungerPerc > m_fThirstPerc)
@@ -317,13 +317,29 @@ void Colonist::tendToNeeds(const float kfElapsedTime)
 		// If there's Food in vision
 		if (!pFoodInVision.empty())
 		{
-			// Go eat nearest food
-			// TEMPORARY - Eat first food in vector
-			if (moveTo(pFoodInVision.front()->getPosition(), kfElapsedTime))
+			// Go to nearest Food
+			// TEMPORARY - Eat first food in vision
+			//	If destination Node doesn't exist
+			if (m_pPathfinding->nodeFromPos(pFoodInVision.front()->getPosition()) == nullptr) {}
+			// If path is leading to the Food
+			else if (m_pPathfinding->getPath().back() == m_pPathfinding->nodeFromPos(pFoodInVision.front()->getPosition())->getPosition()) {}
+			// Destination Node exists and path isn't leading to Food
+			else
 			{
-				// Consume food at Colonist position
-				eat(pFoodInVision.front());
+				// Clears current path
+				m_pPathfinding->clearPath();
+
+				// Generate path to Water Source
+				m_pPathfinding->createPathTo(m_pPathfinding->perimeterNodes(pFoodInVision.front()->getPosition()).front());
 			}
+
+			//if (/*Within range?*/)
+			//{			
+			//	// Pick up Food?
+			//
+			//	// Consume food at Colonist position
+			//	eat(pFoodInVision.front());
+			//}
 		}
 
 		// Else If has memory of a food source
@@ -343,11 +359,25 @@ void Colonist::tendToNeeds(const float kfElapsedTime)
 			}
 
 			// Go to nearest source
-			// TEMPORARY - Eat first source in memory
-			if (moveTo(pFoodSources.front()->getPosition(), kfElapsedTime))
+			// TEMPORARY - Search first source in memory for Food
+			//	If destination Node doesn't exist
+			if (m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition()) == nullptr) {}
+			// If path is leading to the Food source
+			else if (m_pPathfinding->getPath().back() == m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition())->getPosition()) {}
+			// Destination Node exists and path isn't leading to Food source
+			else
 			{
-				// TEMPORARY - If no Food at source?
+				// Clears current path
+				m_pPathfinding->clearPath();
+
+				// Generate path to Water Source
+				m_pPathfinding->createPathTo(m_pPathfinding->perimeterNodes(pFoodSources.front()->getPosition()).front());
 			}
+
+			//if (/*Within range of Food source?*/)
+			//{
+			//	// TEMPORARY - If no Food at source?
+			//}
 		}
 
 		// Else - No knowledge of food or source
@@ -376,12 +406,26 @@ void Colonist::tendToNeeds(const float kfElapsedTime)
 			}
 
 			// Go to nearest source
-			// TEMPORARY - Eat first source in memory
-			if (moveTo(pWaterSources.front()->getPosition(), kfElapsedTime))
+			// TEMPORARY - Drink from first source in memory
+			//	If destination Node doesn't exist
+			if (m_pPathfinding->nodeFromPos(pWaterSources.front()->getPosition()) == nullptr) {}
+			// If path is leading to the Food source
+			else if (m_pPathfinding->getPath().back() == m_pPathfinding->nodeFromPos(pWaterSources.front()->getPosition())->getPosition()) {}
+			// Destination Node exists and path isn't leading to Food source
+			else
 			{
-				// TEMPORARY - Moving over water replenishes thirst
-				m_fThirst = 0.0f;
+				// Clears current path
+				m_pPathfinding->clearPath();
+
+				// Generate path to Food Source
+				m_pPathfinding->createPathTo(m_pPathfinding->perimeterNodes(pWaterSources.front()->getPosition()).front());
 			}
+
+			//if (/*Within range of Source?*/)
+			//{
+			//	// TEMPORARY - Moving over water replenishes thirst
+			//	m_fThirst = 0.0f;
+			//}
 		}
 
 		// Else - No knowledge of water
@@ -405,12 +449,7 @@ void Colonist::deceased()
 	// If path is not empty
 	if (!m_pPathfinding->getPath().empty())
 	{
-		// For all elements of path
-		for (unsigned int i = 0; i < m_pPathfinding->getPath().size(); i++)
-		{
-			// Pops element off the path
-			m_pPathfinding->popPath();
-		}
+		m_pPathfinding->clearPath();
 	}
 }
 

@@ -69,12 +69,12 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Generates a vector of accessible adjacent Nodes
+	/// \brief Generates a vector of adjacent Nodes that can be pathed to
 	///
 	/// \return Accessible Nodes adjacent to the given Node
 	///
 	///////////////////////////////////////////////// 
-	std::vector<std::shared_ptr<Node>> getAdjacentNodes(const std::shared_ptr<Node> kpNode);
+	std::vector<std::shared_ptr<Node>> adjacentNodes(const std::shared_ptr<Node> kpNode, const bool kbStrictDiagonal);
 
 	/////////////////////////////////////////////////
 	///
@@ -131,6 +131,15 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Generates a perimeter of Nodes around a given position
+	///
+	/// \return Perimeter Nodes
+	///
+	///////////////////////////////////////////////// 
+	std::vector<std::shared_ptr<Node>> perimeterNodes(const sf::Vector2f kPosition);
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Gets the vector of Nodes
 	///
 	/// \return Vector of Nodes
@@ -155,6 +164,23 @@ public:
 	///
 	///////////////////////////////////////////////// 
 	void popPath() { m_path.pop(); }
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Pops off every element in the path queue
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void clearPath() 
+	{
+		// If path is not empty
+		while (!m_path.empty())
+		{
+			// Pops element off the path
+			m_path.pop();
+		}
+	}
 
 	/////////////////////////////////////////////////
 	///
