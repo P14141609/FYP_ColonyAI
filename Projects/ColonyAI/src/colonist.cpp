@@ -385,10 +385,81 @@ void Colonist::tendToNeeds()
 			explore();
 		}
 	}
+	// If thirst is more dire than hunger
 	else
 	{
-		// If has memory of a Water source
-		if (Memory::typeInMem(WATER_SOURCE, m_pMemories))
+		// Defines vector to store Water in vision
+		std::vector<std::shared_ptr<Water>> pWaterInVision;
+
+		// If has vision of Water object
+		for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects(WATER))
+		{
+			// If Entity is in vision
+			if (inVision(pObject->getPosition(), pObject->getRadius()))
+			{
+				pWaterInVision.push_back(std::dynamic_pointer_cast<Water>(pObject));
+			}
+		}
+
+		// If there's Water in vision
+		if (!pWaterInVision.empty())
+		{
+			// Determines nearest source
+			std::shared_ptr<Water> pNearestWater = pWaterInVision.front();
+			for (std::shared_ptr<Water> pWater : pWaterInVision)
+			{
+				// If pWater is closer than pNearestWater
+				if (Utils::magnitude(pWater->getPosition() - m_position) <= Utils::magnitude(pNearestWater->getPosition() - m_position))
+				{
+					pNearestWater.swap(pWater);
+				}
+			}
+
+			// Determines nearest Node to source
+			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestWater->getPosition());
+			std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
+			for (std::shared_ptr<Node> pNode : pPerimeterNodes)
+			{
+				// If pNode is closer than pNearestNode
+				if (Utils::magnitude(pNode->getPosition() - m_position) <= Utils::magnitude(pNearestNode->getPosition() - m_position))
+				{
+					pNearestNode.swap(pNode);
+				}
+			}
+
+			//	If destination Node doesn't exist
+			if (pNearestNode == nullptr) {}
+			// Destination Node exists and path isn't leading to Water source
+			else
+			{
+				// If path exists
+				if (!m_pPathfinding->getPath().empty())
+				{
+					// If path is leading to the Water source
+					if (m_pPathfinding->getPath().back() == pNearestNode->getPosition()) {}
+					else
+					{
+						// Generate path to Water Source
+						m_pPathfinding->createPathTo(pNearestNode);
+					}
+				}
+				else
+				{
+					// Generate path to Water Source
+					m_pPathfinding->createPathTo(pNearestNode);
+				}
+			}
+
+			// If Water source is within reach
+			if (inReach(pNearestWater->getPosition(), pNearestWater->getRadius()))
+			{
+				// Replenishes thirst 
+				m_fThirst = 0.0f;
+			}
+		}
+
+		// If has Memory of a Water source
+		else if (Memory::typeInMem(WATER_SOURCE, m_pMemories))
 		{
 			// Defines vector to store Water_Source memories
 			std::vector<std::shared_ptr<Water>> pWaterSources;
