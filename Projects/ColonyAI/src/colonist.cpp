@@ -40,7 +40,7 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 void Colonist::update(const float kfElapsedTime)
 {
 	// If Colonist's not deceased
-	if (m_state != DECEASED)
+	if (isAlive())
 	{
 		// Iterates Hunger
 		//m_fHunger += kfElapsedTime; // TEMPORARY - HUNGER DISABLED
@@ -51,10 +51,10 @@ void Colonist::update(const float kfElapsedTime)
 		// Defines need percentages
 		m_fHungerPerc = (m_fHunger / m_fFatalHunger) * 100;
 		m_fThirstPerc = (m_fThirst / m_fFatalThirst) * 100;
-	}
 
-	// Calls method to update Colonist Memory
-	updateMemory((long)time(NULL));
+		// Calls method to update Colonist Memory
+		updateMemory((long)time(NULL));
+	}
 
 	// Calls method to update Colonist AI state
 	updateState();
@@ -158,36 +158,40 @@ void Colonist::updateMemory(const long klTime)
 				// Casts the Entity to a Colonist
 				std::shared_ptr<Colonist> pColonist = std::dynamic_pointer_cast<Colonist>(pEntity);
 
-				// For all of their Memories
-				for (std::shared_ptr<Memory> pTheirMemory : pColonist->getMemories())
+				// If Colonist is alive
+				if (pColonist->isAlive())
 				{
-					// Declares bool; whether their Memory is in ours
-					bool bInTheirMem = false;
-
-					// For all of our Memories
-					for (std::shared_ptr<Memory> pOurMemory : m_pMemories)
+					// For all of their Memories
+					for (std::shared_ptr<Memory> pTheirMemory : pColonist->getMemories())
 					{
-						// If our Memory is in theirs
-						if (pOurMemory->getObject() == pTheirMemory->getObject())
+						// Declares bool; whether their Memory is in ours
+						bool bInTheirMem = false;
+
+						// For all of our Memories
+						for (std::shared_ptr<Memory> pOurMemory : m_pMemories)
 						{
-							// Update our time to the most recent of the two
-							// This means the Memories are kept up to date
-							pOurMemory->setTime(Utils::max(pOurMemory->getTime(), pTheirMemory->getTime()));
+							// If our Memory is in theirs
+							if (pOurMemory->getObject() == pTheirMemory->getObject())
+							{
+								// Update our time to the most recent of the two
+								// This means the Memories are kept up to date
+								pOurMemory->setTime(Utils::max(pOurMemory->getTime(), pTheirMemory->getTime()));
 
-							// Sets true; their memory is in ours
-							bInTheirMem = true;
+								// Sets true; their memory is in ours
+								bInTheirMem = true;
+							}
 						}
-					}
 
-					// If other Colonist's Memory isn't in our Memory
-					if (!bInTheirMem)
-					{
-						// Add their Memory to our Memory
-						// Note a new ptr is created instead of having two Colonists with the same Memory ptr
-						m_pMemories.push_back(std::shared_ptr<Memory>(pTheirMemory.get()));
+						// If other Colonist's Memory isn't in our Memory
+						if (!bInTheirMem)
+						{
+							// Add their Memory to our Memory
+							// Note a new ptr is created instead of having two Colonists with the same Memory ptr
+							m_pMemories.push_back(std::shared_ptr<Memory>(pTheirMemory.get()));
 
-						// Calculates Node accessibility with new Memory Object
-						m_pPathfinding->calcAccess(pTheirMemory->getObject()->getPosition(), pTheirMemory->getObject()->getRadius());
+							// Calculates Node accessibility with new Memory Object
+							m_pPathfinding->calcAccess(pTheirMemory->getObject()->getPosition(), pTheirMemory->getObject()->getRadius());
+						}
 					}
 				}
 			}

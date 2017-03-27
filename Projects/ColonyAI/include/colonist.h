@@ -211,6 +211,19 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Gets whether the Colonist is alive
+	///
+	/// \return Whether Colonist is alive
+	///
+	///////////////////////////////////////////////// 
+	bool isAlive() 
+	{ 
+		if (m_state != DECEASED) return true; 
+		return false;
+	}
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Gets the Colonist heading angle
 	///
 	/// \return Heading in degrees
