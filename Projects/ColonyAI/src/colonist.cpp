@@ -413,7 +413,7 @@ void Colonist::tendToNeeds()
 			for (std::shared_ptr<Water> pWater : pWaterInVision)
 			{
 				// If pWater is closer than pNearestWater
-				if (Utils::magnitude(pWater->getPosition() - m_position) <= Utils::magnitude(pNearestWater->getPosition() - m_position))
+				if (Utils::magnitude(pWater->getPosition() - m_position) - pWater->getRadius() <= Utils::magnitude(pNearestWater->getPosition() - m_position) - pNearestWater->getRadius())
 				{
 					pNearestWater.swap(pWater);
 				}
@@ -483,7 +483,7 @@ void Colonist::tendToNeeds()
 			for (std::shared_ptr<Water> pWater : pWaterSources)
 			{
 				// If pWater is closer than pNearestWater
-				if (Utils::magnitude(pWater->getPosition() - m_position) <= Utils::magnitude(pNearestWater->getPosition() - m_position))
+				if (Utils::magnitude(pWater->getPosition() - m_position) - pWater->getRadius() <= Utils::magnitude(pNearestWater->getPosition() - m_position) - pNearestWater->getRadius())
 				{
 					pNearestWater.swap(pWater);
 				}
