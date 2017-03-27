@@ -68,6 +68,9 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 {
 	sf::err() << "[PATHFINDING] Generating path..." << std::endl;
 
+	// Clears current path
+	clearPath();
+
 	// If targetNode doesn't exist
 	if (kpTargetNode == nullptr) 
 	{
@@ -323,8 +326,21 @@ std::vector<std::shared_ptr<Node>> Pathfinding::perimeterNodes(const sf::Vector2
 					// If adjNode is accessible
 					if (pAdjNode->isAccessible()) 
 					{
-						// Add adjacent node to resultant list
-						pResultNodes.push_back(pAdjNode);
+						// If Node isn't diagonal to currentNode
+						if (
+							// If Node is Left of CurrentNode
+							(pAdjNode->getIndex() == pCurrentNode->getIndex() - 1) ||
+							// If Node is Right of CurrentNode
+							(pAdjNode->getIndex() == pCurrentNode->getIndex() + 1) ||
+							// If Node is Above of CurrentNode
+							(pAdjNode->getIndex() == pCurrentNode->getIndex() - m_uiNodeCols) ||
+							// If Node is Below of CurrentNode
+							(pAdjNode->getIndex() == pCurrentNode->getIndex() + m_uiNodeCols)
+						)
+						{
+							// Add adjacent node to resultant list
+							pResultNodes.push_back(pAdjNode);
+						}
 					}
 					
 					// Else if adjNode is on the closed list
@@ -494,11 +510,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_
 					// o o o
 					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y - m_fNodeDiameter));
 
-					// If diagonal pathing is strict
-					if (kbStrictDiagonal)
+					// If Node at position exists
+					if (adjNode != nullptr)
 					{
-						// If Node at position exists
-						if (adjNode != nullptr)
+						// If diagonal pathing is strict
+						if (kbStrictDiagonal)
 						{
 							// Nodes used to check diagonal accessibility
 							// o c x
@@ -523,11 +539,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_
 								adjNodes.push_back(adjNode);
 							}
 						}
-					}
-					else
-					{
-						// Adds adjacent Node to vector
-						adjNodes.push_back(adjNode);
+						else
+						{
+							// Adds adjacent Node to vector
+							adjNodes.push_back(adjNode);
+						}
 					}
 				} break;
 
@@ -553,11 +569,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_
 					// o o x
 					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x + m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
 
-					// If diagonal pathing is strict
-					if (kbStrictDiagonal)
+					// If Node at position exists
+					if (adjNode != nullptr)
 					{
-						// If Node at position exists
-						if (adjNode != nullptr)
+						// If diagonal pathing is strict
+						if (kbStrictDiagonal)
 						{
 							// Nodes used to check diagonal accessibility
 							// o o o
@@ -582,11 +598,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_
 								adjNodes.push_back(adjNode);
 							}
 						}
-					}
-					else
-					{
-						// Adds adjacent Node to vector
-						adjNodes.push_back(adjNode);
+						else
+						{
+							// Adds adjacent Node to vector
+							adjNodes.push_back(adjNode);
+						}
 					}
 				} break;
 
@@ -612,11 +628,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_
 					// x o o
 					adjNode = nodeFromPos(sf::Vector2f(kpNode->getPosition().x - m_fNodeDiameter, kpNode->getPosition().y + m_fNodeDiameter));
 
-					// If diagonal pathing is strict
-					if (kbStrictDiagonal)
+					// If Node at position exists
+					if (adjNode != nullptr)
 					{
-						// If Node at position exists
-						if (adjNode != nullptr)
+						// If diagonal pathing is strict
+						if (kbStrictDiagonal)
 						{
 							// Nodes used to check diagonal accessibility
 							// o o o
@@ -641,11 +657,11 @@ std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_
 								adjNodes.push_back(adjNode);
 							}
 						}
-					}
-					else
-					{
-						// Adds adjacent Node to vector
-						adjNodes.push_back(adjNode);
+						else
+						{
+							// Adds adjacent Node to vector
+							adjNodes.push_back(adjNode);
+						}
 					}
 				} break;
 

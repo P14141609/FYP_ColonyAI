@@ -17,6 +17,7 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_fHeading = kfHeading;
 	m_fRadius = 7.5f;
 	m_fVision = 100.0f;
+	m_fReach = m_fRadius*4;
 	m_fSpeed = 150.0f;
 
 	// Defines fatal levels of hunger and thirst
@@ -42,7 +43,7 @@ void Colonist::update(const float kfElapsedTime)
 	if (m_state != DECEASED)
 	{
 		// Iterates Hunger
-		m_fHunger += kfElapsedTime;
+		//m_fHunger += kfElapsedTime; // TEMPORARY - HUNGER DISABLED
 		m_fThirst += kfElapsedTime;
 		// Caps thirst/hunger at fatal level
 		if (m_fHunger >= m_fFatalHunger) m_fHunger = m_fFatalHunger;
@@ -326,9 +327,6 @@ void Colonist::tendToNeeds()
 			// Destination Node exists and path isn't leading to Food
 			else
 			{
-				// Clears current path
-				m_pPathfinding->clearPath();
-
 				// Generate path to Water Source
 				m_pPathfinding->createPathTo(m_pPathfinding->perimeterNodes(pFoodInVision.front()->getPosition()).front());
 			}
@@ -346,7 +344,7 @@ void Colonist::tendToNeeds()
 		else if (Memory::typeInMem(FOOD_SOURCE, m_pMemories))
 		{
 			// Defines vector to store Food_Source memories
-			std::vector<std::shared_ptr<Food>> pFoodSources;
+			std::vector<std::shared_ptr<Bush>> pFoodSources;
 
 			// If has vision of food entity
 			for (std::shared_ptr<Memory> pMemory : m_pMemories)
@@ -354,32 +352,32 @@ void Colonist::tendToNeeds()
 				// If Memory is Food_Source
 				if (pMemory->getType() == FOOD_SOURCE)
 				{
-					pFoodSources.push_back(std::dynamic_pointer_cast<Food>(pMemory->getObject()));
+					pFoodSources.push_back(std::dynamic_pointer_cast<Bush>(pMemory->getObject()));
 				}
 			}
 
 			// Go to nearest source
 			// TEMPORARY - Search first source in memory for Food
-			//	If destination Node doesn't exist
-			if (m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition()) == nullptr) {}
-			// If path is leading to the Food source
-			else if (m_pPathfinding->getPath().back() == m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition())->getPosition()) {}
-			// Destination Node exists and path isn't leading to Food source
-			else
-			{
-				// Clears current path
-				m_pPathfinding->clearPath();
+			// If FoodSources is empty
+			if (!pFoodSources.empty()) 
+			{			
+				// If destination Node doesn't exist
+				if (m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition()) == nullptr) {}
+				// If path is leading to the Food source
+				else if (m_pPathfinding->getPath().back() == m_pPathfinding->nodeFromPos(pFoodSources.front()->getPosition())->getPosition()) {}
+				// Destination Node exists and path isn't leading to Food source
+				else
+				{
+					// Generate path to Water Source
+					m_pPathfinding->createPathTo(m_pPathfinding->perimeterNodes(pFoodSources.front()->getPosition()).front());
+				}
 
-				// Generate path to Water Source
-				m_pPathfinding->createPathTo(m_pPathfinding->perimeterNodes(pFoodSources.front()->getPosition()).front());
+				//if (/*Within range of Food source?*/)
+				//{
+				//	// TEMPORARY - If no Food at source?
+				//}
 			}
-
-			//if (/*Within range of Food source?*/)
-			//{
-			//	// TEMPORARY - If no Food at source?
-			//}
 		}
-
 		// Else - No knowledge of food or source
 		else
 		{
@@ -405,27 +403,58 @@ void Colonist::tendToNeeds()
 				}
 			}
 
-			// Go to nearest source
-			// TEMPORARY - Drink from first source in memory
-			//	If destination Node doesn't exist
-			if (m_pPathfinding->nodeFromPos(pWaterSources.front()->getPosition()) == nullptr) {}
-			// If path is leading to the Food source
-			else if (m_pPathfinding->getPath().back() == m_pPathfinding->nodeFromPos(pWaterSources.front()->getPosition())->getPosition()) {}
-			// Destination Node exists and path isn't leading to Food source
-			else
+			// Determines nearest source
+			std::shared_ptr<Water> pNearestWater = pWaterSources.front();
+			for (std::shared_ptr<Water> pWater : pWaterSources)
 			{
-				// Clears current path
-				m_pPathfinding->clearPath();
-
-				// Generate path to Food Source
-				m_pPathfinding->createPathTo(m_pPathfinding->perimeterNodes(pWaterSources.front()->getPosition()).front());
+				// If pWater is closer than pNearestWater
+				if (Utils::magnitude(pWater->getPosition() - m_position) <= Utils::magnitude(pNearestWater->getPosition() - m_position))
+				{
+					pNearestWater.swap(pWater);
+				}
 			}
 
-			//if (/*Within range of Source?*/)
-			//{
-			//	// TEMPORARY - Moving over water replenishes thirst
-			//	m_fThirst = 0.0f;
-			//}
+			// Determines nearest Node to source
+			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestWater->getPosition());
+			std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
+			for (std::shared_ptr<Node> pNode : pPerimeterNodes)
+			{
+				// If pNode is closer than pNearestNode
+				if (Utils::magnitude(pNode->getPosition() - m_position) <= Utils::magnitude(pNearestNode->getPosition() - m_position))
+				{
+					pNearestNode.swap(pNode);
+				}
+			}
+
+			//	If destination Node doesn't exist
+			if (pNearestNode == nullptr) {}
+			// Destination Node exists and path isn't leading to Water source
+			else
+			{
+				// If path exists
+				if (!m_pPathfinding->getPath().empty()) 
+				{
+					// If path is leading to the Water source
+					if (m_pPathfinding->getPath().back() == pNearestNode->getPosition()) {}
+					else
+					{
+						// Generate path to Water Source
+						m_pPathfinding->createPathTo(pNearestNode);
+					}
+				}
+				else
+				{
+					// Generate path to Water Source
+					m_pPathfinding->createPathTo(pNearestNode);
+				}
+			}
+
+			// If Water source is within reach
+			if (inReach(pNearestWater->getPosition(), pNearestWater->getRadius()))
+			{
+				// Replenishes thirst 
+				m_fThirst = 0.0f;
+			}
 		}
 
 		// Else - No knowledge of water
@@ -451,6 +480,12 @@ void Colonist::deceased()
 	{
 		m_pPathfinding->clearPath();
 	}
+
+	//// If memory is not empty
+	//while (!m_pMemories.empty())
+	//{
+	//	m_pMemories.pop_back();
+	//}
 }
 
 // Void: Consumes Food to replenish hunger
@@ -495,6 +530,13 @@ bool Colonist::moveTo(const sf::Vector2f kDestination, const float kfElapsedTime
 bool Colonist::inVision(const sf::Vector2f kPosition, const float kfRadius)
 {
 	if (Utils::magnitude(kPosition - m_position) - kfRadius < m_fVision) return true;
+	return false;
+}
+
+// Bool: Whether the position is within reach
+bool Colonist::inReach(const sf::Vector2f kPosition, const float kfRadius)
+{
+	if (Utils::magnitude(kPosition - m_position) - kfRadius < m_fReach) return true;
 	return false;
 }
 
@@ -551,6 +593,25 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		circle.setRadius(m_fVision);
 		// Sets the origin to the center of the circle
 		circle.setOrigin(sf::Vector2f(m_fVision, m_fVision));
+		// Sets the circle pos to position member
+		circle.setPosition(m_position);
+
+		// Draws circle to target
+		target.draw(circle);
+
+		///////////////////// REACH /////////////////////
+		// Sets the colour to black
+		colour = sf::Color(0, 0, 0, 255);
+
+		// Sets circle colour: Transparent with black outline
+		circle.setFillColor(sf::Color(0, 0, 0, 0));
+		circle.setOutlineColor(colour);
+		circle.setOutlineThickness(1.0f);
+
+		// Sets the circle radius to radius member
+		circle.setRadius(m_fReach);
+		// Sets the origin to the center of the circle
+		circle.setOrigin(sf::Vector2f(m_fReach, m_fReach));
 		// Sets the circle pos to position member
 		circle.setPosition(m_position);
 

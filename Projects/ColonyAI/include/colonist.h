@@ -31,6 +31,7 @@ private:
 	float m_fHeading; //!< Heading in degrees
 
 	float m_fVision; //!< Radial size of Colonist vision
+	float m_fReach; //!< Radial size of the Colonist's reach
 
 	float m_fHunger; //!< Hunger need level of the Colonist
 	float m_fThirst; //!< Thirst need level of the Colonist
@@ -180,6 +181,18 @@ private:
 	///
 	///////////////////////////////////////////////// 
 	bool inVision(const sf::Vector2f kPosition, const float kfRadius);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Returns whether an item is within reach
+	///
+	/// \param kPosition Position of an item to check
+	/// \param kfRadius Radial size of the item
+	///
+	/// \return Whether the item is within reach
+	///
+	///////////////////////////////////////////////// 
+	bool inReach(const sf::Vector2f kPosition, const float kfRadius);
 
 protected:
 

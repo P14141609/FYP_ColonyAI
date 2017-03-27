@@ -14,8 +14,9 @@ ToDo:
 	Comment Pathfinding.h with params
 
 Bugs:
+	perimeterNodes() returns the perimeter around a position - This causing Colonists to path to a Node that isn't directly next to the object at said position
 	Colonist's can have a path that is later revealed to pass through an object but nothing is done to stop the following of said path
 	Fix delta heading somehow screwing up colonist.explore()
 	window.close() causes memory exception
 	delete_scalar.ccp exception occasionally
-	Editor Hand position incorrect when view aspect ratio differs from window A.R.
+	Editor Hand position incorrect when view aspect ratio differs from window aspect ratio
