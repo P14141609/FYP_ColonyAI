@@ -44,6 +44,9 @@ private:
 	///
 	/// \brief Calculates G value of a Node
 	///
+	/// \param kpCurrentNode The current Node to calculate G for
+	/// \param kpTargetNode Node that proceeds the current Node in the path
+	///
 	/// \return The calculated G value
 	///
 	///////////////////////////////////////////////// 
@@ -52,6 +55,9 @@ private:
 	/////////////////////////////////////////////////
 	///
 	/// \brief Detemines whether a Node is within a vector of Nodes
+	///
+	/// \param kpNodeToFind Node to locate within vector
+	/// \param kpVector Vector of Nodes to search through
 	///
 	/// \return Whether the Node is in the vector
 	///
@@ -62,6 +68,9 @@ private:
 	///
 	/// \brief Detemines the distance from one Node to another with the manhattan algorithm
 	///
+	/// \param kpStartNode Node to calculate distance from
+	/// \param kpEndNode Node to calculate distance to
+	///
 	/// \return Distance to the end Node
 	///
 	///////////////////////////////////////////////// 
@@ -71,6 +80,9 @@ private:
 	///
 	/// \brief Generates a vector of adjacent Nodes that can be pathed to
 	///
+	/// \param kpNode Node to calculate surroundings with
+	/// \param kbStrictDiagonal Boolean for whether to allow diagonal adjacency if it crosses another Node 
+	///
 	/// \return Accessible Nodes adjacent to the given Node
 	///
 	///////////////////////////////////////////////// 
@@ -79,6 +91,8 @@ private:
 	/////////////////////////////////////////////////
 	///
 	/// \brief Forms a queue of Nodes to the given Node
+	///
+	/// \param pNode Node to queue a path back from
 	///
 	/// \return void
 	///
@@ -103,6 +117,8 @@ public:
 	///
 	/// \brief Creates a path to target Node
 	///
+	/// \param kpTargetNode Node to route toward
+	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
@@ -124,6 +140,8 @@ public:
 	///
 	/// \brief Detemines the Node that a given position falls within
 	///
+	/// \param kPosition Position to calculate a local Node with
+	///
 	/// \return Node at position
 	///
 	///////////////////////////////////////////////// 
@@ -132,6 +150,8 @@ public:
 	/////////////////////////////////////////////////
 	///
 	/// \brief Generates a perimeter of Nodes around a given position
+	///
+	/// \param kPosition Position to calculate perimeter around
 	///
 	/// \return Perimeter Nodes
 	///
