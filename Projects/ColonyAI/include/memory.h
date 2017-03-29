@@ -97,12 +97,12 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Gets the Memory Object
+	/// \brief Gets whether a vector of Memories contains a certain type
 	///
 	/// \param kType Type to check for
 	/// \param kpMemories Memory vector to check within
 	///
-	/// \return The Memory Object
+	/// \return Whether the Memory vector contains a Memory of the given type
 	///
 	///////////////////////////////////////////////// 
 	static bool typeInMem(const MemoryType kType, const std::vector<std::shared_ptr<Memory>> kpMemories) 
