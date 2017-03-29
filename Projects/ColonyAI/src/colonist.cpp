@@ -140,7 +140,7 @@ void Colonist::updateMemory(const long klTime)
 	for (std::shared_ptr<Entity> pEntity : m_pEnvironment->getEntities())
 	{
 		// If Entity is within vision of the Colonist
-		if (Utils::magnitude(pEntity->getPosition() - m_position) - pEntity->getRadius() < m_fVision)
+		if (inVision(pEntity->getPosition(), pEntity->getRadius()))
 		{
 			// If the Entity is a Colonist
 			if (pEntity->getType() == COLONIST)
