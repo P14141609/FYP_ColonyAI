@@ -402,10 +402,12 @@ float Pathfinding::calcG(const std::shared_ptr<Node> kpCurrentNode, const std::s
 bool Pathfinding::nodeInVector(const std::shared_ptr<Node> kpNodeToFind, const std::vector<std::shared_ptr<Node>> kpVector)
 {
 	// If a Node in the vector is the nodeToFind: Return True
-	for (std::shared_ptr<Node> pNode : kpVector)
-	{
-		if (pNode == kpNodeToFind) return true;
-	}
+	//for (std::shared_ptr<Node> pNode : kpVector)
+	//{
+	//	if (pNode == kpNodeToFind) return true;
+	//}
+
+	if (std::find(kpVector.begin(), kpVector.end(), kpNodeToFind) != kpVector.end()) return true;
 
 	// Return False: nodeToFind not found
 	return false;
