@@ -1,15 +1,21 @@
 
 ToDo:
-	Resource Gathering
-	Colonist Needs
-	Obstacle Clearing
-	Reproduction
-	Colony Role Delegation
+	Need to determine a 'home' location based on distance from Food and Water
+
+	Resource Gathering:
+		Resources need to be picked up
+		Resources need to be placed at 'home'
+
+	Obstacle Clearing:
+		Objects between the 'home' and these resources will be purged
+
+	Reproduction:
+		Simple implementation needed
+
+	Colony Role Delegation?
 
 	Add specific Entity Memories?
 	Add Saplings? for lumber replenishment
-
-	Colonist's currently don't follow path to Food/Water
 
 	Comment Pathfinding.h with params
 
@@ -20,3 +26,25 @@ Bugs:
 	window.close() causes memory exception
 	delete_scalar.ccp exception occasionally
 	Editor Hand position incorrect when view aspect ratio differs from window aspect ratio
+
+Functional Requirements:
+	Program:
+		The program must be linked to SFML-2.4.0 for rendering to a window - DONE
+		The program must be able to load environments - DONE
+		The program must update and draw the contents of an environment - DONE
+	Colonist AI:
+		The AI must be able to path find - DONE
+		> The AI must be able to clear obstacles <
+		The AI must be able to communicate with one another - DONE
+		The AI must not be able to leave the environment - DONE
+		The AI must have a set of basic needs and be able to satisfy them - DONE
+		The AI must be able to die if these needs are neglected - DONE
+		> The AI must be able to reproduce if needs are met adequately <
+	Console Menu:
+		The menu must allow the user to create or load environments - DONE
+		The menu must allow the user to input required parameters when creating an environment - DONE
+	Editor:
+		The editor must allow the user to place instances of the Object subclasses - DONE
+		The editor must allow the user to place instances of the Entity subclasses - DONE
+		The editor must allow the user to choose the size of every instance placed - DONE
+		The editor must save every addition placed while editing - DONE

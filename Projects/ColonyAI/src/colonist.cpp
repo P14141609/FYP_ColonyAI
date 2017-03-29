@@ -21,11 +21,7 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_fSpeed = 150.0f;
 
 	// Defines fatal levels of hunger and thirst
-	m_fFatalHunger = 180.0f; // 3 minutes
-	m_fFatalThirst = 120.0f; // 2 minutes
-	// Defines initial hunger and thirst as 25% of fatal levels
-	m_fHunger = m_fFatalHunger * 0.25f; 
-	m_fThirst = m_fFatalThirst * 0.25f;
+	m_needs = Needs(180.0f, 120.0f); // 3 minutes // 2 minutes
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 
@@ -43,14 +39,8 @@ void Colonist::update(const float kfElapsedTime)
 	if (isAlive())
 	{
 		// Iterates Hunger
-		m_fHunger += kfElapsedTime;
-		m_fThirst += kfElapsedTime;
-		// Caps thirst/hunger at fatal level
-		if (m_fHunger >= m_fFatalHunger) m_fHunger = m_fFatalHunger;
-		if (m_fThirst >= m_fFatalThirst) m_fThirst = m_fFatalThirst;
-		// Defines need percentages
-		m_fHungerPerc = (m_fHunger / m_fFatalHunger) * 100;
-		m_fThirstPerc = (m_fThirst / m_fFatalThirst) * 100;
+		m_needs.setHunger(m_needs.getHunger() + kfElapsedTime);
+		m_needs.setThirst(m_needs.getThirst() + kfElapsedTime);
 
 		// Calls method to update Colonist Memory
 		updateMemory((long)time(NULL));
@@ -220,14 +210,14 @@ void Colonist::updateState()
 {
 	// Tier 01 - Is the Colonist Dead
 	// If thirst or hunger is 100% of fatal level
-	if (m_fHungerPerc >= 100.0f || m_fThirstPerc >= 100.0f)
+	if (m_needs.getHungerPerc() >= 100.0f || m_needs.getThirstPerc() >= 100.0f)
 	{
 		m_state = DECEASED;
 	}
 
 	// Tier 02 - Is the Colonist dying
 	// If thirst or hunger is 75% of fatal level
-	else if (m_fHungerPerc >= 75.0f || m_fThirstPerc >= 75.0f)
+	else if (m_needs.getHungerPerc() >= 75.0f || m_needs.getThirstPerc() >= 75.0f)
 	{
 		m_state = TENDTONEEDS;
 	}
@@ -241,7 +231,7 @@ void Colonist::updateState()
 
 	// Tier 04 - Is there someone to breed with?
 	// If hunger and thirst satisfied greatly
-	else if (m_fHungerPerc <= 15.0f && m_fThirstPerc <= 15.0f)
+	else if (m_needs.getHungerPerc() <= 15.0f && m_needs.getThirstPerc() <= 15.0f)
 	{
 		m_state = BREED;
 	}
@@ -304,7 +294,7 @@ void Colonist::forage()
 void Colonist::tendToNeeds()
 {
 	// If hunger is more dire than thirst
-	if (m_fHungerPerc > m_fThirstPerc)
+	if (m_needs.getHungerPerc() > m_needs.getThirstPerc())
 	{
 		// TODO - Gotta modify to consume Food instead of replenishing with Bushes
 
@@ -374,7 +364,7 @@ void Colonist::tendToNeeds()
 			if (inReach(pNearestBush->getPosition(), pNearestBush->getRadius()))
 			{
 				// Replenishes hunger 
-				m_fHunger = 0.0f;
+				m_needs.setHunger(0.0f);
 			}
 		}
 
@@ -444,7 +434,7 @@ void Colonist::tendToNeeds()
 			if (inReach(pNearestBush->getPosition(), pNearestBush->getRadius()))
 			{
 				// Replenishes hunger 
-				m_fHunger = 0.0f;
+				m_needs.setHunger(0.0f);
 			}
 		}
 		// Else - No knowledge of food or source
@@ -523,7 +513,7 @@ void Colonist::tendToNeeds()
 			if (inReach(pNearestWater->getPosition(), pNearestWater->getRadius()))
 			{
 				// Replenishes thirst 
-				m_fThirst = 0.0f;
+				m_needs.setThirst(0.0f);
 			}
 		}
 
@@ -593,7 +583,7 @@ void Colonist::tendToNeeds()
 			if (inReach(pNearestWater->getPosition(), pNearestWater->getRadius()))
 			{
 				// Replenishes thirst 
-				m_fThirst = 0.0f;
+				m_needs.setThirst(0.0f);
 			}
 		}
 
@@ -626,7 +616,7 @@ void Colonist::deceased()
 void Colonist::eat(std::shared_ptr<Food> pFood)
 {
 	// Hunger is completely replenished
-	m_fHunger = 0.0f; // TODO - May add a level of replenishment Food can restore instead of 100%
+	m_needs.setHunger(0.0f); // TODO - May add a level of replenishment Food can restore instead of 100%
 
 	// Removes the Food object pointer
 	pFood = nullptr;
@@ -808,7 +798,7 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		// Sets the rect to red
 		rect.setFillColor(sf::Color(255, 0, 0, 255));
 		// Sets the rect size
-		rect.setSize(sf::Vector2f(barSize.x*(m_fThirstPerc / 100), barSize.y));
+		rect.setSize(sf::Vector2f(barSize.x*(m_needs.getThirstPerc() / 100), barSize.y));
 		// Sets the origin to the center of the rect
 		rect.setOrigin(sf::Vector2f(rect.getSize().x, rect.getSize().y));
 
@@ -831,7 +821,7 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		// Sets the rect to red
 		rect.setFillColor(sf::Color(255, 0, 0, 255));
 		// Sets the rect size
-		rect.setSize(sf::Vector2f(barSize.x*(m_fHungerPerc / 100), barSize.y));
+		rect.setSize(sf::Vector2f(barSize.x*(m_needs.getHungerPerc() / 100), barSize.y));
 		// Sets the origin to the center of the rect
 		rect.setOrigin(sf::Vector2f(rect.getSize().x, rect.getSize().y));
 
