@@ -129,7 +129,9 @@ int main()
 		sf::RenderWindow window(sf::VideoMode(winProps.m_size.x, winProps.m_size.y), winProps.m_sTitle.c_str(), sf::Style::Default);
 
 		// Initialises a clock for the update loop
-		sf::Clock clock;
+		sf::Clock updateClock;
+		// Initialises a clock for the draw loop
+		sf::Clock drawClock;
 		// Declares var to track elapsed time
 		sf::Time elapsedTime;
 
@@ -189,33 +191,43 @@ int main()
 				}
 			}
 
-			// Gets elapsed time from clock
-			elapsedTime = clock.getElapsedTime();
+			// Gets elapsed time from update clock
+			elapsedTime = updateClock.getElapsedTime();
 
 			// Triggers the update loop 128 times a second
 			if (elapsedTime.asMilliseconds() > 1000 / 128)
 			{
 				// Restarts the clock
-				clock.restart();
+				updateClock.restart();
 
 				// Updates environment with elapsed time
 				environment.update(elapsedTime.asSeconds());
 			}
 
-			// Clears window making it entirely black
-			window.clear(sf::Color(0, 0, 0, 255));
+			// Gets elapsed time from draw clock
+			elapsedTime = drawClock.getElapsedTime();
 
-			// Defines the View of the Environment
-			sf::View envView(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(environment.getSize())));
-			
-			// Sets view to size of environment
-			window.setView(letterboxView(envView, window.getSize()));
+			// Triggers the draw loop 60 times a second
+			if (elapsedTime.asMilliseconds() > 1000 / 60)
+			{
+				// Restarts the clock
+				drawClock.restart();
 
-			// Draws environment
-			window.draw(environment);
+				// Clears window making it entirely black
+				window.clear(sf::Color(0, 0, 0, 255));
 
-			// Displays the current frame
-			window.display();
+				// Defines the View of the Environment
+				sf::View envView(sf::FloatRect(sf::Vector2f(0.0f, 0.0f), sf::Vector2f(environment.getSize())));
+
+				// Sets view to size of environment
+				window.setView(letterboxView(envView, window.getSize()));
+
+				// Draws environment
+				window.draw(environment);
+
+				// Displays the current frame
+				window.display();
+			}
 		}
 	}
 
