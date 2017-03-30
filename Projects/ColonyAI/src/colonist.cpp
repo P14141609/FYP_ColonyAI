@@ -16,13 +16,13 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_position = kPosition;
 	m_fHeading = kfHeading;
 	m_fRadius = 7.5f;
-	m_fVision = 100.0f;
+	m_fVision = 125.0f;
 	m_fReach = m_fRadius*4;
-	m_fSpeed = 150.0f;
+	m_fSpeed = 75.0f;
 	m_fBirthCooldown = 15.0f;
 
 	// Defines fatal levels of hunger and thirst
-	m_needs = Needs(300.0f, 120.0f); // 3 minutes // 2 minutes
+	m_needs = Needs(300.0f, 180.0f); // 5 minutes // 3 minutes
 
 	m_state = LABOUR; // Sets Colonist state to a default state: LABOUR
 
