@@ -19,9 +19,10 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_fVision = 100.0f;
 	m_fReach = m_fRadius*4;
 	m_fSpeed = 150.0f;
+	m_fBirthCooldown = 15.0f;
 
 	// Defines fatal levels of hunger and thirst
-	m_needs = Needs(180.0f, 120.0f); // 3 minutes // 2 minutes
+	m_needs = Needs(300.0f, 120.0f); // 3 minutes // 2 minutes
 
 	m_state = IDLE; // Sets Colonist state to a default state: IDLE
 
@@ -42,12 +43,16 @@ void Colonist::update(const float kfElapsedTime)
 		m_needs.setHunger(m_needs.getHunger() + kfElapsedTime);
 		m_needs.setThirst(m_needs.getThirst() + kfElapsedTime);
 
+		// Counts the birth cooldown down
+		if (m_fBirthCooldown > 0.0f) m_fBirthCooldown -= kfElapsedTime;
+		else if (m_fBirthCooldown < 0.0f) m_fBirthCooldown = 0.0f;
+
 		// Calls method to update Colonist Memory
 		updateMemory((long)time(NULL));
+		
+		// Calls method to update Colonist AI state
+		updateState();
 	}
-
-	// Calls method to update Colonist AI state
-	updateState();
 
 	switch (m_state)
 	{
@@ -59,7 +64,7 @@ void Colonist::update(const float kfElapsedTime)
 
 		case TENDTONEEDS: tendToNeeds(); break; // State: TendToNeeds - run method
 
-		case BREED: breed(); break; // State: Breed - run method
+		case REPRODUCE: reproduce(); break; // State: Reproduce - run method
 
 		case DECEASED: deceased(); break; // State: Deceased - run method
 
@@ -222,18 +227,18 @@ void Colonist::updateState()
 		m_state = TENDTONEEDS;
 	}
 
-	// Tier 03 - Are there collectable resources
+	// Tier 03 - Gotta reproduce
+	// If hunger and thirst satisfied greatly
+	else if ((m_needs.getHungerPerc() <= 25.0f && m_needs.getThirstPerc() <= 25.0f) && (m_fBirthCooldown == 0.0f))
+	{
+		m_state = REPRODUCE;
+	}
+
+	// Tier 04 - Are there collectable resources
 	// If known food sources
 	else if (Memory::typeInMem(FOOD_SOURCE, m_pMemories))
 	{
 		m_state = FORAGE;
-	}
-
-	// Tier 04 - Is there someone to breed with?
-	// If hunger and thirst satisfied greatly
-	else if (m_needs.getHungerPerc() <= 15.0f && m_needs.getThirstPerc() <= 15.0f)
-	{
-		m_state = BREED;
 	}
 
 	// Tier 05 - Nothing specifically to do
@@ -596,10 +601,19 @@ void Colonist::tendToNeeds()
 	}
 }
 
-// Void: Processes BREED state functionality
-void Colonist::breed()
+// Void: Processes REPRODUCE state functionality
+void Colonist::reproduce()
 {
-	explore(); // TEMPORARY
+	// Adds a cooldown to the Colonist before it can reproduce again
+	m_fBirthCooldown = 300.0f; // 5 Minute cooldown
+
+	// Adds a new Colonist Entity to the Environment
+	m_pEnvironment->getEntityVec()->push_back
+	(
+		std::shared_ptr<Entity>(new Colonist(m_pEnvironment, m_position, m_fHeading))
+	);
+
+	sf::err() << "[COLONIST] New Colonist produced at x(" << m_position.x << ") y(" << m_position.y << ") h(" << m_fHeading << ")" << std::endl;
 }
 
 // Void: Processes DECEASED state functionality

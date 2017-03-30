@@ -37,7 +37,7 @@ Functional Requirements:
 		The AI must not be able to leave the environment - DONE
 		The AI must have a set of basic needs and be able to satisfy them - DONE
 		The AI must be able to die if these needs are neglected - DONE
-		> The AI must be able to reproduce if needs are met adequately <
+		The AI must be able to reproduce if needs are met adequately - DONE
 	Console Menu:
 		The menu must allow the user to create or load environments - DONE
 		The menu must allow the user to input required parameters when creating an environment - DONE

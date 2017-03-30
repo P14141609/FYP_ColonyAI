@@ -59,7 +59,10 @@ void Bush::update(const float kfElapsedTime)
 		sf::Vector2f foodPos((Utils::unitVecFromAngle(fAngle)*m_fRadius) + m_position);
 
 		// Adds a Food Entity to the Environment
-		m_pEnvironment->getEntityVec()->push_back(std::shared_ptr<Food>(new Food(m_pEnvironment, foodPos)));
+		m_pEnvironment->getEntityVec()->push_back
+		(
+			std::shared_ptr<Entity>(new Food(m_pEnvironment, foodPos))
+		);
 
 		sf::err() << "[BUSH] Food produced at x(" << foodPos.x << ") y(" << foodPos.y << ")" << std::endl;
 	}

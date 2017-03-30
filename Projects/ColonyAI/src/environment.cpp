@@ -86,10 +86,18 @@ void Environment::update(const float kfElapsedTime)
 	}
 
 	// For every Entity in the Environment
-	for (std::shared_ptr<Entity> pEntity : m_pEntities)
+	// WHY THIS CRASHES THE PROGRAM I DON'T KNOW
+	//for (std::shared_ptr<Entity> pEntity : m_pEntities)
+	//{
+	//	// Updates the Entity
+	//	pEntity->update(kfElapsedTime);
+	//}
+
+	// For every Entity in the Environment
+	for (unsigned int i = 0; i < m_pEntities.size(); i++)
 	{
 		// Updates the Entity
-		pEntity->update(kfElapsedTime);
+		m_pEntities.at(i)->update(kfElapsedTime);
 	}
 }
 

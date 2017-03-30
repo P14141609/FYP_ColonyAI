@@ -45,14 +45,11 @@ public:
 		// Caps value between minimum and max Hunger
 		if (m_fHunger < 0.0f) m_fHunger = 0.0f;
 		else if (m_fHunger > m_fFatalHunger) m_fHunger = m_fFatalHunger;
-
-		// Updates percentage value
-		m_fHungerPerc = (kfHunger / m_fFatalHunger) * 100.0f;
 	}
 	//!< Gets Hunger level
 	float getHunger() { return m_fHunger; }
 	//!< Gets HungerPerc level
-	float getHungerPerc() const { return m_fHungerPerc; }
+	float getHungerPerc() const { return (m_fHunger / m_fFatalHunger) * 100.0f; }
 
 	//!< Sets Thirst level to a new value
 	void setThirst(const float kfThirst)
@@ -63,14 +60,11 @@ public:
 		// Caps value between minimum and max Thirst
 		if (m_fThirst < 0.0f) m_fThirst = 0.0f;
 		else if (m_fThirst > m_fFatalThirst) m_fThirst = m_fFatalThirst;
-
-		// Updates percentage value
-		m_fThirstPerc = (kfThirst / m_fFatalThirst) * 100.0f;
 	}
 	//!< Gets Thirst level
 	float getThirst() { return m_fThirst; }
 	//!< Gets ThirstPerc level
-	float getThirstPerc() const { return m_fThirstPerc; }
+	float getThirstPerc() const { return (m_fThirst / m_fFatalThirst) * 100.0f; }
 
 private:
 	float m_fHunger; //!< Hunger need level of the Colonist
@@ -78,9 +72,6 @@ private:
 
 	float m_fFatalHunger; //!< Hunger need level that kills the Colonist
 	float m_fFatalThirst; //!< Thirst need level that kills the Colonist
-
-	float m_fHungerPerc; //!< Hunger need level of the Colonist as a percentage
-	float m_fThirstPerc; //!< Thirst need level of the Colonist as a percentage
 };
 
 /////////////////////////////////////////////////
@@ -100,9 +91,11 @@ private:
 
 	Needs m_needs; //!< Hunger and Thirst data
 
+	float m_fBirthCooldown; //!< Reproduction cooldown in seconds
+
 	std::shared_ptr<Entity> m_pHeldEntity; //!< Pointer to an Entity the Colonist is holding
 
-	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, BREED, DECEASED }; //!< Enum for AI behavioural types
+	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, REPRODUCE, DECEASED }; //!< Enum for AI behavioural types
 	aiState m_state; //!< Current AI state of the Colonist
 
 	std::shared_ptr<Pathfinding> m_pPathfinding; //!< Pathfinding Object for calculating paths
@@ -190,12 +183,12 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Processes BREED state functionality
+	/// \brief Processes REPRODUCE state functionality
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void breed();
+	void reproduce();
 
 	/////////////////////////////////////////////////
 	///
