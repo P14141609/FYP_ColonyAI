@@ -13,7 +13,6 @@ ToDo:
 	Add Saplings? for lumber replenishment
 
 Bugs:
-	perimeterNodes() accounts for inaccessible Nodes so nearby Trees etc are incorporated and cause issues
 	Colonist's can have a path that is later revealed to pass through an object but nothing is done to stop the following of said path
 	Fix delta heading somehow screwing up colonist.explore()
 	window.close() causes memory exception

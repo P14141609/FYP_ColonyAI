@@ -283,7 +283,7 @@ std::shared_ptr<Node> Pathfinding::nodeFromPos(const sf::Vector2f kPosition)
 }
 
 // std::shared_ptr<Node>: Detemines the closest accessible Node to a given position
-std::vector<std::shared_ptr<Node>> Pathfinding::perimeterNodes(const sf::Vector2f kPosition)
+std::vector<std::shared_ptr<Node>> Pathfinding::perimeterNodes(const sf::Vector2f kPosition, const float kfRadius)
 {
 	// Declares vector to store the result
 	std::vector<std::shared_ptr<Node>> pResultNodes;
@@ -323,8 +323,15 @@ std::vector<std::shared_ptr<Node>> Pathfinding::perimeterNodes(const sf::Vector2
 				// For all adjacent nodes
 				for (std::shared_ptr<Node> pAdjNode : pAdjNodes)
 				{
-					// If adjNode is accessible
-					if (pAdjNode->isAccessible()) 
+					// If adjNode is too far away from position
+					// Distance from Node to pos (Greater Than) Given radius + max diagonal distance a Node can be from radius
+					if (Utils::magnitude(kPosition - pAdjNode->getPosition()) > kfRadius + Utils::magnitude(sf::Vector2f(m_fNodeDiameter, m_fNodeDiameter)))
+					{
+						/* Ignores Nodes too far away from position */
+					}
+
+					// Else If adjNode is accessible
+					else if (pAdjNode->isAccessible()) 
 					{
 						// If Node isn't diagonal to currentNode
 						if (

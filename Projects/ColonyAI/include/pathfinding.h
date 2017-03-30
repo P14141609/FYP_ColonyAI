@@ -152,11 +152,12 @@ public:
 	/// \brief Generates a perimeter of Nodes around a given position
 	///
 	/// \param kPosition Position to calculate perimeter around
+	/// \param kfRadius Radius around the position to cap the search
 	///
 	/// \return Perimeter Nodes
 	///
 	///////////////////////////////////////////////// 
-	std::vector<std::shared_ptr<Node>> perimeterNodes(const sf::Vector2f kPosition);
+	std::vector<std::shared_ptr<Node>> perimeterNodes(const sf::Vector2f kPosition, const float kfRadius);
 
 	/////////////////////////////////////////////////
 	///

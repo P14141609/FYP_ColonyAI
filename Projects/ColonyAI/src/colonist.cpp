@@ -304,7 +304,7 @@ void Colonist::tendToNeeds()
 			}
 
 			// Determines nearest Node to source
-			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestBush->getPosition());
+			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestBush->getPosition(), pNearestBush->getRadius());
 			std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
 			for (std::shared_ptr<Node> pNode : pPerimeterNodes)
 			{
@@ -374,7 +374,7 @@ void Colonist::tendToNeeds()
 			}
 
 			// Determines nearest Node to source
-			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestBush->getPosition());
+			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestBush->getPosition(), pNearestBush->getRadius());
 			std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
 			for (std::shared_ptr<Node> pNode : pPerimeterNodes)
 			{
@@ -453,7 +453,7 @@ void Colonist::tendToNeeds()
 			}
 
 			// Determines nearest Node to source
-			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestWater->getPosition());
+			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestWater->getPosition(), pNearestWater->getRadius());
 			std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
 			for (std::shared_ptr<Node> pNode : pPerimeterNodes)
 			{
@@ -523,7 +523,7 @@ void Colonist::tendToNeeds()
 			}
 
 			// Determines nearest Node to source
-			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestWater->getPosition());
+			std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestWater->getPosition(), pNearestWater->getRadius());
 			std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
 			for (std::shared_ptr<Node> pNode : pPerimeterNodes)
 			{
