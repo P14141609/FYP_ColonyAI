@@ -163,9 +163,9 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the Environment Object member
+	/// \brief Returns the Environment Object vector
 	///
-	/// \return Pointer to the Object vector
+	/// \return Object vector by reference
 	///
 	///////////////////////////////////////////////// 
 	std::vector<std::shared_ptr<Object>>* getObjectVec() { return &m_pObjects; }
@@ -208,9 +208,9 @@ public:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Returns the Environment Entity member
+	/// \brief Returns the Environment Entity vector
 	///
-	/// \return Pointer to the Entity vector
+	/// \return Entity vector by reference
 	///
 	///////////////////////////////////////////////// 
 	std::vector<std::shared_ptr<Entity>>* getEntityVec() { return &m_pEntities; }
