@@ -93,6 +93,8 @@ private:
 
 	float m_fBirthCooldown; //!< Reproduction cooldown in seconds
 
+	sf::Vector2f m_homePos; //!< Home position
+
 	std::shared_ptr<Entity> m_pHeldEntity; //!< Pointer to an Entity the Colonist is holding
 
 	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, REPRODUCE, DECEASED }; //!< Enum for AI behavioural types

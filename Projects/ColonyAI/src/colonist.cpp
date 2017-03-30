@@ -47,6 +47,26 @@ void Colonist::update(const float kfElapsedTime)
 		if (m_fBirthCooldown > 0.0f) m_fBirthCooldown -= kfElapsedTime;
 		else if (m_fBirthCooldown < 0.0f) m_fBirthCooldown = 0.0f;
 
+		// Calculate the Colonist's 'home' position
+		// TEMPORARY - Currently ignores Memory entirely
+		unsigned int uiCount = 0;
+		sf::Vector2f sum;
+		// For all Objects
+		for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects())
+		{
+			// If Object is FoodSource or WaterSource
+			if (pObject->getType() == BUSH || pObject->getType() == WATER)
+			{
+				// Adds position to sum and iterates counter
+				sum += pObject->getPosition();
+				uiCount++;
+			}
+		}
+		// Home position = 0,0 (No sources in Environment)
+		if (uiCount == 0) m_homePos = sf::Vector2f(0.0f, 0.0f);
+		// Home position = avg position of all sources
+		else m_homePos = sum / (float)uiCount;
+
 		// Calls method to update Colonist Memory
 		updateMemory((long)time(NULL));
 		
@@ -755,6 +775,17 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 		// Draws circle to target
 		target.draw(circle);
+
+		///////////////////// HOME POSITION /////////////////////
+		// Sets the colour to translucent black
+		colour = sf::Color(0, 0, 0, 75);
+		// Sets the first point of the line at the Colonist position
+		line[0] = sf::Vertex(m_position, colour);
+		// Sets the second point of the line at the Home position
+		line[1] = sf::Vertex(m_homePos, colour);
+
+		// Draws the line to target
+		target.draw(line, 2, sf::Lines);
 
 		///////////////////// MEMORY /////////////////////
 		// For all Memories

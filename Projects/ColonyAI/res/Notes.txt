@@ -1,16 +1,11 @@
 
 ToDo:
-	Need to determine a 'home' location based on distance from Food and Water
-
 	Resource Gathering:
 		Resources need to be picked up
 		Resources need to be placed at 'home'
 
 	Obstacle Clearing:
 		Objects between the 'home' and these resources will be purged
-
-	Reproduction:
-		Simple implementation needed
 
 	Colony Role Delegation?
 
