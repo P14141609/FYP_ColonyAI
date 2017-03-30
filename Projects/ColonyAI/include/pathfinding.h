@@ -149,6 +149,17 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Gets the Node at a given index with error checks
+	///
+	/// \param kuiIndex Index to get the Node with
+	///
+	/// \return Node at index
+	///
+	///////////////////////////////////////////////// 
+	std::shared_ptr<Node> nodeFromIndex(const unsigned int kuiIndex);
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Generates a perimeter of Nodes around a given position
 	///
 	/// \param kPosition Position to calculate perimeter around
