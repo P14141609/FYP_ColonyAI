@@ -97,7 +97,7 @@ private:
 
 	std::shared_ptr<Entity> m_pHeldEntity; //!< Pointer to an Entity the Colonist is holding
 
-	enum aiState { IDLE, EXPLORE, FORAGE, TENDTONEEDS, REPRODUCE, DECEASED }; //!< Enum for AI behavioural types
+	enum aiState { DECEASED, TENDTONEEDS, REPRODUCE, LABOUR }; //!< Enum for AI behavioural types
 	aiState m_state; //!< Current AI state of the Colonist
 
 	std::shared_ptr<Pathfinding> m_pPathfinding; //!< Pathfinding Object for calculating paths
@@ -149,30 +149,12 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Processes IDLE state functionality
+	/// \brief Processes DECEASED state functionality
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void idle();
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Processes EXPLORE state functionality
-	///
-	/// \return void
-	///
-	///////////////////////////////////////////////// 
-	void explore();
-
-	/////////////////////////////////////////////////
-	///
-	/// \brief Processes FORAGE state functionality
-	///
-	/// \return void
-	///
-	///////////////////////////////////////////////// 
-	void forage();
+	void deceased();
 
 	/////////////////////////////////////////////////
 	///
@@ -194,12 +176,12 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Processes DECEASED state functionality
+	/// \brief Processes LABOUR state functionality
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void deceased();
+	void labour();
 
 	/////////////////////////////////////////////////
 	///

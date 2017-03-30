@@ -24,7 +24,7 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	// Defines fatal levels of hunger and thirst
 	m_needs = Needs(300.0f, 120.0f); // 3 minutes // 2 minutes
 
-	m_state = IDLE; // Sets Colonist state to a default state: IDLE
+	m_state = LABOUR; // Sets Colonist state to a default state: LABOUR
 
 	// Nullptr check
 	if (m_pEnvironment != nullptr)
@@ -76,19 +76,15 @@ void Colonist::update(const float kfElapsedTime)
 
 	switch (m_state)
 	{
-		case IDLE: idle(); break; // State: Idle - run method
-
-		case EXPLORE: explore(); break; // State: Explore - run method
-
-		case FORAGE: forage(); break; // State: Forage - run method
+		case DECEASED: deceased(); break; // State: Deceased - run method
 
 		case TENDTONEEDS: tendToNeeds(); break; // State: TendToNeeds - run method
 
 		case REPRODUCE: reproduce(); break; // State: Reproduce - run method
 
-		case DECEASED: deceased(); break; // State: Deceased - run method
+		case LABOUR: labour(); break; // State: Labour - run method
 
-		default: m_state = IDLE; break; // No valid state found: set IDLE;
+		default: m_state = LABOUR; break; // No valid state found: set LABOUR;
 	}
 
 	// If path queue is not empty
@@ -247,72 +243,29 @@ void Colonist::updateState()
 		m_state = TENDTONEEDS;
 	}
 
-	// Tier 03 - Gotta reproduce
-	// If hunger and thirst satisfied greatly
+	// Tier 03 - Is the Colonist well satisfied
+	// If thirst or hunger is less than 25% of fatal level and able to birth
 	else if ((m_needs.getHungerPerc() <= 25.0f && m_needs.getThirstPerc() <= 25.0f) && (m_fBirthCooldown == 0.0f))
 	{
 		m_state = REPRODUCE;
 	}
 
-	// Tier 04 - Are there collectable resources
-	// If known food sources
-	else if (Memory::typeInMem(FOOD_SOURCE, m_pMemories))
-	{
-		m_state = FORAGE;
-	}
-
-	// Tier 05 - Nothing specifically to do
-	// Else - Explore
+	// Tier 04 - Nothing important to do
+	// Else - Labour
 	else
 	{
-		m_state = EXPLORE;
+		m_state = LABOUR;
 	}
 }
 
-// Void: Processes IDLE state functionality
-void Colonist::idle()
+// Void: Processes DECEASED state functionality
+void Colonist::deceased()
 {
-	// No action
-}
-
-// Void: Processes EXPLORE state functionality
-void Colonist::explore()
-{
-	// If path queue is empty
-	if (m_pPathfinding->getPath().empty())
+	// If path is not empty
+	if (!m_pPathfinding->getPath().empty())
 	{
-		// Declares a cone that the randPos will sit within infront of the Colonist
-		float fCone = 60.0f;
-
-		// Defines a random angle ((0 and fCone) - 30) so -30 to 30
-		float fRandomAngle = (rand() % (int)(fCone+1)) - (fCone*0.5f);
-
-		// Applies the delta heading
-		m_fHeading += fRandomAngle;
-
-		// Defines the delta position with a unit vector from the heading
-		sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
-		// Converts the delta position from a unit vector to a sizeable displacement with the Colonist speed
-		deltaPos *= m_fSpeed;
-
-		// Creates the randomly determined destination position 
-		sf::Vector2f targetPos = m_position + deltaPos;
-
-		// If destination is within the Environment
-		if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
-		{
-			// Creates path to the destination
-			m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
-		}
-		// Else 
-		//else m_fHeading += 180; // Reverses Colonist heading
+		m_pPathfinding->clearPath();
 	}
-}
-
-// Void: Processes FORAGE state functionality
-void Colonist::forage()
-{
-	explore(); // TEMPORARY
 }
 
 // Void: Processes TENDTONEEDS state functionality
@@ -465,8 +418,8 @@ void Colonist::tendToNeeds()
 		// Else - No knowledge of food or source
 		else
 		{
-			// Look for food
-			explore();
+			// Go to labour
+			labour();
 		}
 	}
 	// If thirst is more dire than hunger
@@ -615,8 +568,8 @@ void Colonist::tendToNeeds()
 		// Else - No knowledge of water
 		else
 		{
-			// Look for Water
-			explore();
+			// Go to labour
+			labour();
 		}
 	}
 }
@@ -636,13 +589,39 @@ void Colonist::reproduce()
 	sf::err() << "[COLONIST] New Colonist produced at x(" << m_position.x << ") y(" << m_position.y << ") h(" << m_fHeading << ")" << std::endl;
 }
 
-// Void: Processes DECEASED state functionality
-void Colonist::deceased()
+// Void: Processes LABOUR state functionality
+void Colonist::labour()
 {
-	// If path is not empty
-	if (!m_pPathfinding->getPath().empty())
+	// If X: Explore Environment 
+	if (true) // TEMPORARY
 	{
-		m_pPathfinding->clearPath();
+		// If path queue is empty
+		if (m_pPathfinding->getPath().empty())
+		{
+			// Declares a cone that the randPos will sit within infront of the Colonist
+			float fCone = 60.0f;
+
+			// Defines a random angle ((0 and fCone) - 30) so -30 to 30
+			float fRandomAngle = (rand() % (int)(fCone + 1)) - (fCone*0.5f);
+
+			// Applies the delta heading
+			m_fHeading += fRandomAngle;
+
+			// Defines the delta position with a unit vector from the heading
+			sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
+			// Converts the delta position from a unit vector to a sizeable displacement with the Colonist speed
+			deltaPos *= m_fSpeed;
+
+			// Creates the randomly determined destination position 
+			sf::Vector2f targetPos = m_position + deltaPos;
+
+			// If destination is within the Environment
+			if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
+			{
+				// Creates path to the destination
+				m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
+			}
+		}
 	}
 }
 
