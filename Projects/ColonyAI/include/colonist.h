@@ -185,6 +185,33 @@ private:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Paths the Colonist forward with a random heading
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void wander();
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Determines whether the route from home to the object is clear
+	///
+	/// \return Whether the route is clear
+	///
+	///////////////////////////////////////////////// 
+	bool routeClear(const std::shared_ptr<Object> pObject);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Makes the Colonist clear the path to an Object from home
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void clearRoute(const std::shared_ptr<Object> pObject);
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Consumes Food to replenish hunger
 	///
 	/// \param pFood A Food Entity to consume

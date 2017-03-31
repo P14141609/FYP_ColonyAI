@@ -592,37 +592,111 @@ void Colonist::reproduce()
 // Void: Processes LABOUR state functionality
 void Colonist::labour()
 {
-	// If X: Explore Environment 
-	if (true) // TEMPORARY
+	// If Food Entity in Memory - Collect Food and bring it back home
+	if (Memory::typeInMem(FOOD_ENTITY, m_pMemories))
+	{
+		// TODO - No implementation yet
+	}
+
+	// If Food/Water Source in Memory
+	else if ((Memory::typeInMem(FOOD_SOURCE, m_pMemories)) || (Memory::typeInMem(WATER_SOURCE, m_pMemories)))
+	{
+		// Vector of Memory objects that have no clear route from home
+		std::vector<std::shared_ptr<Object>> pUnclearRoutes;
+
+		// For all sources, determine whether path from home to source is not clear
+		for (std::shared_ptr<Memory> pMemory : m_pMemories)
+		{
+			if ((pMemory->getType() == FOOD_SOURCE) || (pMemory->getType() == WATER_SOURCE))
+			{
+				// If route to source Object not clear
+				if (routeClear(pMemory->getObject()))
+				{
+					// Add to not clear vector
+					pUnclearRoutes.push_back(pMemory->getObject());
+				}
+			}
+		}
+
+		// If any routes are not clear
+		if (!pUnclearRoutes.empty())
+		{
+			// Go clear first unclear route
+			clearRoute(pUnclearRoutes.front());
+		}
+
+		// Else If path queue is empty
+		else if (m_pPathfinding->getPath().empty())
+		{
+			wander();
+		}
+	}
+
+	// Else - Explore Environment 
+	else
 	{
 		// If path queue is empty
 		if (m_pPathfinding->getPath().empty())
 		{
-			// Declares a cone that the randPos will sit within infront of the Colonist
-			float fCone = 60.0f;
-
-			// Defines a random angle ((0 and fCone) - 30) so -30 to 30
-			float fRandomAngle = (rand() % (int)(fCone + 1)) - (fCone*0.5f);
-
-			// Applies the delta heading
-			m_fHeading += fRandomAngle;
-
-			// Defines the delta position with a unit vector from the heading
-			sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
-			// Converts the delta position from a unit vector to a sizeable displacement with the Colonist speed
-			deltaPos *= m_fSpeed;
-
-			// Creates the randomly determined destination position 
-			sf::Vector2f targetPos = m_position + deltaPos;
-
-			// If destination is within the Environment
-			if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
-			{
-				// Creates path to the destination
-				m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
-			}
+			wander();
 		}
 	}
+}
+
+// Void: Paths the Colonist forward with a random heading
+void Colonist::wander()
+{
+	// Declares a cone that the randPos will sit within infront of the Colonist
+	float fCone = 60.0f;
+
+	// Defines a random angle ((0 and fCone) - 30) so -30 to 30
+	float fRandomAngle = (rand() % (int)(fCone + 1)) - (fCone*0.5f);
+
+	// Applies the delta heading
+	m_fHeading += fRandomAngle;
+
+	// Defines the delta position with a unit vector from the heading
+	sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
+	// Converts the delta position from a unit vector to a sizeable displacement with the Colonist speed
+	deltaPos *= m_fSpeed;
+
+	// Creates the randomly determined destination position 
+	sf::Vector2f targetPos = m_position + deltaPos;
+
+	// If destination is within the Environment
+	if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
+	{
+		// Creates path to the destination
+		m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
+	}
+}
+
+// Bool: Determines whether the route from home to the object is clear
+bool Colonist::routeClear(const std::shared_ptr<Object> pObject)
+{
+	// TODO
+
+	// Generate route to source (closest perimeter node)
+
+	// If route crosses inaccessible nodes, get the Objects causing it
+
+	// If this Object is removeable
+		// Route not clear
+
+	return true;
+}
+
+// Void: Makes the Colonist clear the path to an Object from home
+void Colonist::clearRoute(const std::shared_ptr<Object> pObject)
+{
+	// TODO
+
+	// Generate route to source (closest perimeter node)
+
+	// If route crosses inaccessible nodes, get the Objects causing it
+
+	// If this Object is removeable
+		// Remove Object
 }
 
 // Void: Consumes Food to replenish hunger
