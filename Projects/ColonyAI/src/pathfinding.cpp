@@ -426,12 +426,7 @@ float Pathfinding::calcG(const std::shared_ptr<Node> kpCurrentNode, const std::s
 // Bool: Detemines whether a Node is within a vector of Nodes - Returns whether the Node is in the vector
 bool Pathfinding::nodeInVector(const std::shared_ptr<Node> kpNodeToFind, const std::vector<std::shared_ptr<Node>> kpVector)
 {
-	// If a Node in the vector is the nodeToFind: Return True
-	//for (std::shared_ptr<Node> pNode : kpVector)
-	//{
-	//	if (pNode == kpNodeToFind) return true;
-	//}
-
+	// If nodeToFind is in the vector: Return True
 	if (std::find(kpVector.begin(), kpVector.end(), kpNodeToFind) != kpVector.end()) return true;
 
 	// Return False: nodeToFind not found
