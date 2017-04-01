@@ -6,10 +6,9 @@
 #include "pathfinding.h"
 
 // Constructor
-Pathfinding::Pathfinding(const std::shared_ptr<Colonist> kpColonist, const std::shared_ptr<Environment> kpEnvironment)
+Pathfinding::Pathfinding(const std::shared_ptr<Environment> kpEnvironment)
 {
 	// Sets member values to corresponding input
-	m_pColonist = kpColonist;
 	m_pEnv = kpEnvironment;
 
 	sf::err() << "[PATHFINDING] Generating nodes for A* pathfinding..." << std::endl;
@@ -36,7 +35,7 @@ Pathfinding::Pathfinding(const std::shared_ptr<Colonist> kpColonist, const std::
 }
 
 // Void: Calculates which Nodes are accessible
-void Pathfinding::calcAccess(const sf::Vector2f kPosition, const float kfRadius)
+void Pathfinding::calcAccess(const float kfColonistRadius, const sf::Vector2f kPosition, const float kfRadius)
 {
 	sf::err() << "[PATHFINDING] Calculating node accessibility..." << std::endl;
 
@@ -52,7 +51,7 @@ void Pathfinding::calcAccess(const sf::Vector2f kPosition, const float kfRadius)
 			float fClearance = fDistToMem - kfRadius;
 
 			// If clearance is less than the radius of the Colonist
-			if (fClearance <= m_pColonist->getRadius()*1.25)
+			if (fClearance <= kfColonistRadius*1.25)
 			{
 				// Sets Node as inaccessible
 				pNode->setAccessible(false);
@@ -63,26 +62,26 @@ void Pathfinding::calcAccess(const sf::Vector2f kPosition, const float kfRadius)
 	sf::err() << "[PATHFINDING] Calculating node accessibility... Finished." << std::endl;
 }
 
-// Void: Creates a path to target Node
-void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
+// std::queue<sf::Vector2f>: Creates a path to target Node
+std::queue<sf::Vector2f> Pathfinding::createPathTo(const sf::Vector2f kCurrentPos, std::shared_ptr<Node> kpTargetNode)
 {
 	sf::err() << "[PATHFINDING] Generating path..." << std::endl;
 
-	// Clears current path
-	clearPath();
+	// Creates an empty path queue
+	std::queue<sf::Vector2f> nullPath;
 
 	// If targetNode doesn't exist
 	if (kpTargetNode == nullptr) 
 	{
 		sf::err() << "[PATHFINDING] Generating path... Error - Target node nullptr." << std::endl;
-		return;
+		return nullPath;
 	}
 
 	// If targetNode is inaccessible
 	if (!kpTargetNode->isAccessible())
 	{
 		sf::err() << "[PATHFINDING] Generating path... Error - Target node inaccessible." << std::endl;
-		return;
+		return nullPath;
 	}
 
 	// If Nodes initialised
@@ -95,10 +94,10 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 		std::vector<std::shared_ptr<Node>> pClosedNodes;
 
 		// If Node closest to your current location exists
-		if (nodeFromPos(m_pColonist->getPosition()) != nullptr)
+		if (nodeFromPos(kCurrentPos) != nullptr)
 		{
 			// Add Node at your current location to closed list
-			pClosedNodes.push_back(nodeFromPos(m_pColonist->getPosition()));
+			pClosedNodes.push_back(nodeFromPos(kCurrentPos));
 			// Resets the current Node
 			pClosedNodes.back()->reset();
 		}
@@ -106,7 +105,7 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 		else
 		{
 			sf::err() << "[PATHFINDING] Generating path... Error - No available node." << std::endl;
-			return;
+			return nullPath;
 		}
 
 		///////////////////// Calculating The Path /////////////////////
@@ -130,7 +129,7 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 			{
 				sf::err() << "[PATHFINDING] Generating path... CurrentNode equal to TargetNode." << std::endl;
 				bPathFound = true;
-				return;
+				return nullPath;
 			}
 
 			///////////////////// Calculating Open Adjacent Nodes /////////////////////
@@ -160,10 +159,10 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 					pAdjNode->setF(pAdjNode->getG() + pAdjNode->getH());
 
 					// Destination found, create path
-					queuePath(pAdjNode);
+					std::queue<sf::Vector2f> path(queuePath(pAdjNode));
 					sf::err() << "[PATHFINDING] Generating path... Finished." << std::endl;
 					bPathFound = true;
-					return;
+					return path;
 				}
 
 				// Else If adjNode is on the open list already
@@ -246,7 +245,7 @@ void Pathfinding::createPathTo(const std::shared_ptr<Node> kpTargetNode)
 			else
 			{
 				sf::err() << "[PATHFINDING] Generating path... Error - No path found." << std::endl;
-				return;
+				return nullPath;
 			}
 		}
 	}
@@ -730,8 +729,8 @@ std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_
 	return adjNodes;
 }
 
-// Void: Forms a queue of Nodes to the given Node
-void Pathfinding::queuePath(std::shared_ptr<Node> pTargetNode)
+// std::queue<sf::Vector2f>: Creates a queue of points from a given destination back to the current position
+std::queue<sf::Vector2f> Pathfinding::queuePath(std::shared_ptr<Node> pTargetNode)
 {
 	// Vector for stack of Nodes to be used in path
 	std::vector<std::shared_ptr<Node>> pNodes;
@@ -748,18 +747,24 @@ void Pathfinding::queuePath(std::shared_ptr<Node> pTargetNode)
 		pNodes.push_back(pTargetNode);
 	}
 
+	// Queue to store the output
+	std::queue<sf::Vector2f> path;
+
 	// pNodes is not empty
 	while (!pNodes.empty())
 	{
-		// Pushes the position of node onto path
-		m_path.push(pNodes.back()->getPosition());
+		// Pushes the position of Node onto path
+		path.push(pNodes.back()->getPosition());
 		// Pops Node off Vector
 		pNodes.pop_back();
 	}
+
+	// Returns queued path
+	return path;
 }
 
 // Void: Draws the path to a display
-void Pathfinding::draw(sf::RenderTarget& target)
+void Pathfinding::draw(const sf::Vector2f kColonistPos, sf::RenderTarget& target)
 {
 	// If Nodes initialised
 	if (m_bNodesInit)
@@ -781,7 +786,7 @@ void Pathfinding::draw(sf::RenderTarget& target)
 			line[0] = sf::Vertex(lastPoint, colour);
 
 			// Sets the second point of the line at the position of the robot
-			line[1] = sf::Vertex(m_pColonist->getPosition(), colour);
+			line[1] = sf::Vertex(kColonistPos, colour);
 
 			// Draws the line to target
 			target.draw(line, 2, sf::Lines);

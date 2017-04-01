@@ -29,7 +29,7 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	// Nullptr check
 	if (m_pEnvironment != nullptr)
 	{
-		m_pPathfinding = std::shared_ptr<Pathfinding>(new Pathfinding(std::shared_ptr<Colonist>(this), m_pEnvironment));
+		m_pPathfinding = std::shared_ptr<Pathfinding>(new Pathfinding(m_pEnvironment));
 	}
 }
 
@@ -152,7 +152,7 @@ void Colonist::updateMemory(const long klTime)
 				);
 
 				// Calculates Node accessibility with new Memory Object
-				m_pPathfinding->calcAccess(pObject->getPosition(), pObject->getRadius());
+				m_pPathfinding->calcAccess(m_fRadius, pObject->getPosition(), pObject->getRadius());
 			}
 		}
 	}
@@ -201,7 +201,7 @@ void Colonist::updateMemory(const long klTime)
 							m_pMemories.push_back(std::shared_ptr<Memory>(pTheirMemory.get()));
 
 							// Calculates Node accessibility with new Memory Object
-							m_pPathfinding->calcAccess(pTheirMemory->getObject()->getPosition(), pTheirMemory->getObject()->getRadius());
+							m_pPathfinding->calcAccess(m_fRadius, pTheirMemory->getObject()->getPosition(), pTheirMemory->getObject()->getRadius());
 						}
 					}
 				}
@@ -328,13 +328,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Food Source
-						m_pPathfinding->createPathTo(pNearestNode);
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 					}
 				}
 				else
 				{
 					// Generate path to Food Source
-					m_pPathfinding->createPathTo(pNearestNode);
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 				}
 			}
 
@@ -398,13 +398,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Food Source
-						m_pPathfinding->createPathTo(pNearestNode);
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 					}
 				}
 				else
 				{
 					// Generate path to Food Source
-					m_pPathfinding->createPathTo(pNearestNode);
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 				}
 			}
 
@@ -477,13 +477,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Water Source
-						m_pPathfinding->createPathTo(pNearestNode);
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 					}
 				}
 				else
 				{
 					// Generate path to Water Source
-					m_pPathfinding->createPathTo(pNearestNode);
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 				}
 			}
 
@@ -547,13 +547,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Water Source
-						m_pPathfinding->createPathTo(pNearestNode);
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 					}
 				}
 				else
 				{
 					// Generate path to Water Source
-					m_pPathfinding->createPathTo(pNearestNode);
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
 				}
 			}
 
@@ -610,7 +610,7 @@ void Colonist::labour()
 			if ((pMemory->getType() == FOOD_SOURCE) || (pMemory->getType() == WATER_SOURCE))
 			{
 				// If route to source Object not clear
-				if (routeClear(pMemory->getObject()))
+				if (!routeClear(pMemory->getObject()))
 				{
 					// Add to not clear vector
 					pUnclearRoutes.push_back(pMemory->getObject());
@@ -625,7 +625,7 @@ void Colonist::labour()
 			clearRoute(pUnclearRoutes.front());
 		}
 
-		// Else If path queue is empty
+		// Else If path queue is empty - Explore Environment 
 		else if (m_pPathfinding->getPath().empty())
 		{
 			wander();
@@ -667,7 +667,7 @@ void Colonist::wander()
 	if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
 	{
 		// Creates path to the destination
-		m_pPathfinding->createPathTo(m_pPathfinding->nodeFromPos(targetPos));
+		m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, m_pPathfinding->nodeFromPos(targetPos)));
 	}
 }
 
@@ -675,7 +675,6 @@ void Colonist::wander()
 bool Colonist::routeClear(const std::shared_ptr<Object> pObject)
 {
 	// TODO
-
 	// Generate route to source (closest perimeter node)
 
 	// If route crosses inaccessible nodes, get the Objects causing it
@@ -690,7 +689,6 @@ bool Colonist::routeClear(const std::shared_ptr<Object> pObject)
 void Colonist::clearRoute(const std::shared_ptr<Object> pObject)
 {
 	// TODO
-
 	// Generate route to source (closest perimeter node)
 
 	// If route crosses inaccessible nodes, get the Objects causing it
@@ -872,7 +870,7 @@ void Colonist::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 		///////////////////// PATHFINDING /////////////////////
 		// Draws pathfinding info
-		m_pPathfinding->draw(target);
+		m_pPathfinding->draw(m_position, target);
 
 		///////////////////// NEEDS /////////////////////
 		// Declares new RectShape to draw need bars

@@ -9,12 +9,9 @@
 #include <stdlib.h>
 #include <queue>
 #include <memory>
-#include "colonist.h"
 #include "environment.h"
 #include "node.h"
 #include "utils.h"
-
-class Colonist;
 
 /////////////////////////////////////////////////
 ///
@@ -27,7 +24,6 @@ private:
 
 	std::queue<sf::Vector2f> m_path; //!< Queue of positions forming a route
 
-	std::shared_ptr<Colonist> m_pColonist; //!< Pointer to the Colonist that is utilising the Pathfinding
 	std::shared_ptr<Environment> m_pEnv; //!< Pointer to the Environment the Pathfinding is operating in
 
 	std::vector<std::shared_ptr<Node>> m_pNodes; //!< Vector of Nodes
@@ -90,14 +86,14 @@ private:
 
 	/////////////////////////////////////////////////
 	///
-	/// \brief Forms a queue of Nodes to the given Node
+	/// \brief Creates a queue of points from a given destination back to the current position
 	///
 	/// \param pNode Node to queue a path back from
 	///
-	/// \return void
+	/// \return A queue of positions from destination back to current position
 	///
 	///////////////////////////////////////////////// 
-	void queuePath(std::shared_ptr<Node> pNode);
+	std::queue<sf::Vector2f> queuePath(std::shared_ptr<Node> pNode);
 
 protected:
 
@@ -107,34 +103,35 @@ public:
 	///
 	/// \brief Constructor
 	///
-	///	\param kpColonist The Colonist that is utilising the Pathfinding
 	///	\param kpEnvironment The Environment the Pathfinding is operating in
 	///
 	///////////////////////////////////////////////// 
-	Pathfinding(const std::shared_ptr<Colonist> kpColonist, const std::shared_ptr<Environment> kpEnvironment);
+	Pathfinding(const std::shared_ptr<Environment> kpEnvironment);
 
 	/////////////////////////////////////////////////
 	///
 	/// \brief Creates a path to target Node
 	///
+	/// \param kCurrentPos Start point to path from
 	/// \param kpTargetNode Node to route toward
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void createPathTo(const std::shared_ptr<Node> kpTargetNode);
+	std::queue<sf::Vector2f> createPathTo(const sf::Vector2f kCurrentPos, const std::shared_ptr<Node> kpTargetNode);
 
 	/////////////////////////////////////////////////
 	///
 	/// \brief Calculates which Nodes are accessible
 	///
+	///	\param kfColonistRadius The Colonist's radius for clearance calucating
 	///	\param kPosition A point in the Environment
 	///	\param kfRadius The radius arounf the point that will be inaccessible
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void calcAccess(const sf::Vector2f kPosition, const float kfRadius);
+	void calcAccess(const float kfColonistRadius, const sf::Vector2f kPosition, const float kfRadius);
 
 	/////////////////////////////////////////////////
 	///
@@ -181,6 +178,17 @@ public:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Sets the path queue
+	///
+	/// \param Queue of positions
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void setPath(std::queue<sf::Vector2f> kPath) { m_path = kPath; }
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Gets the path queue
 	///
 	/// \return Queue of positions
@@ -218,12 +226,13 @@ public:
 	///
 	/// \brief Draws the path to a display
 	///
+	/// \param kColonistPos The Colonist's current position
 	/// \param target The RenderTarget to draw on
 	///
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void draw(sf::RenderTarget& target);
+	void draw(const sf::Vector2f kColonistPos, sf::RenderTarget& target);
 };
 
 #endif
