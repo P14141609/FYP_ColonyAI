@@ -94,6 +94,7 @@ private:
 	float m_fBirthCooldown; //!< Reproduction cooldown in seconds
 
 	sf::Vector2f m_homePos; //!< Home position
+	std::vector<std::shared_ptr<Object>> m_pClearObjs; //!< Objects with clear routes to from home
 
 	std::shared_ptr<Entity> m_pHeldEntity; //!< Pointer to an Entity the Colonist is holding
 
@@ -126,6 +127,25 @@ private:
 	///
 	///////////////////////////////////////////////// 
 	void update(const float kfElapsedTime);
+
+	/////////////////////////////////////////////////
+	///
+	/// \brief Sets the Memories vector to a new value
+	///
+	/// \param kpMemories A new Memories value
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void setMemories(const std::vector<std::shared_ptr<Memory>> kpMemories) 
+	{
+		// For all Memories
+		for (std::shared_ptr<Memory> pMemory : kpMemories)
+		{
+			// Pushes new ptr onto member
+			m_pMemories.push_back(std::shared_ptr<Memory>(pMemory.get()));
+		}
+	}
 
 	/////////////////////////////////////////////////
 	///
@@ -194,12 +214,31 @@ private:
 
 	/////////////////////////////////////////////////
 	///
+	/// \brief Sets the clearObjs vector to a new value
+	///
+	/// \param kpClearObjs A new clearObjs value
+	///
+	/// \return void
+	///
+	///////////////////////////////////////////////// 
+	void setClearObjs(const std::vector<std::shared_ptr<Object>> kpClearObjs)
+	{
+		// For all clearObjs
+		for (std::shared_ptr<Object> pClearObj : kpClearObjs)
+		{
+			// Pushes new ptr onto member
+			m_pClearObjs.push_back(std::shared_ptr<Object>(pClearObj.get()));
+		}
+	}
+
+	/////////////////////////////////////////////////
+	///
 	/// \brief Determines whether the route from home to the object is clear
 	///
 	/// \return Whether the route is clear
 	///
 	///////////////////////////////////////////////// 
-	bool routeClear(const std::shared_ptr<Object> pObject);
+	bool routeClear(const std::shared_ptr<Object> kpObject);
 
 	/////////////////////////////////////////////////
 	///
@@ -208,7 +247,7 @@ private:
 	/// \return void
 	///
 	///////////////////////////////////////////////// 
-	void clearRoute(const std::shared_ptr<Object> pObject);
+	void clearRoute(const std::shared_ptr<Object> kpObject);
 
 	/////////////////////////////////////////////////
 	///

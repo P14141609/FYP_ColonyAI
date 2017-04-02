@@ -77,9 +77,9 @@ private:
 	/// \brief Generates a vector of adjacent Nodes that can be pathed to
 	///
 	/// \param kpNode Node to calculate surroundings with
-	/// \param kbStrictDiagonal Boolean for whether to allow diagonal adjacency if it crosses another Node 
+	/// \param kbStrictDiagonal Boolean for whether to allow diagonal adjacency if it crosses another Node
 	///
-	/// \return Accessible Nodes adjacent to the given Node
+	/// \return Nodes adjacent to the given Node
 	///
 	///////////////////////////////////////////////// 
 	std::vector<std::shared_ptr<Node>> adjacentNodes(const std::shared_ptr<Node> kpNode, const bool kbStrictDiagonal);
@@ -114,11 +114,12 @@ public:
 	///
 	/// \param kCurrentPos Start point to path from
 	/// \param kpTargetNode Node to route toward
+	/// \param kbIgnoreAccess Whether to ignore Node (in)accessibility
 	///
-	/// \return void
+	/// \return A queue of points that represent a route
 	///
 	///////////////////////////////////////////////// 
-	std::queue<sf::Vector2f> createPathTo(const sf::Vector2f kCurrentPos, const std::shared_ptr<Node> kpTargetNode);
+	std::queue<sf::Vector2f> createPathTo(const sf::Vector2f kCurrentPos, const std::shared_ptr<Node> kpTargetNode, const bool kbIgnoreAccess);
 
 	/////////////////////////////////////////////////
 	///
@@ -126,7 +127,7 @@ public:
 	///
 	///	\param kfColonistRadius The Colonist's radius for clearance calucating
 	///	\param kPosition A point in the Environment
-	///	\param kfRadius The radius arounf the point that will be inaccessible
+	///	\param kfRadius The radius around the point that will be inaccessible
 	///
 	/// \return void
 	///

@@ -56,6 +56,8 @@ void Editor::save()
 		}
 	}
 
+	sf::err() << "[EDITOR] Environment saved to file: " << m_sFilePath << std::endl;
+
 	// Closes open file
 	file.close();
 }
@@ -69,36 +71,48 @@ void Editor::placeSelected()
 		std::shared_ptr<Bush> item = std::shared_ptr<Bush>(new Bush(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
 		m_placeHistory.push_back(Hand::SELECTED_BUSH);
+
+		sf::err() << "[EDITOR] Bush placed: x(" << m_hand.m_position.x << ") y(" << m_hand.m_position.y << ") r(" << m_hand.m_fRadius << ")" << std::endl;
 	}
 	else if (m_hand.m_selected == Hand::SELECTED_ROCK)
 	{
 		std::shared_ptr<Rock> item = std::shared_ptr<Rock>(new Rock(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
 		m_placeHistory.push_back(Hand::SELECTED_ROCK);
+
+		sf::err() << "[EDITOR] Rock placed: x(" << m_hand.m_position.x << ") y(" << m_hand.m_position.y << ") r(" << m_hand.m_fRadius << ")" << std::endl;
 	}
 	else if (m_hand.m_selected == Hand::SELECTED_TREE)
 	{
 		std::shared_ptr<Tree> item = std::shared_ptr<Tree>(new Tree(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
 		m_placeHistory.push_back(Hand::SELECTED_TREE);
+
+		sf::err() << "[EDITOR] Tree placed: x(" << m_hand.m_position.x << ") y(" << m_hand.m_position.y << ") r(" << m_hand.m_fRadius << ")" << std::endl;
 	}
 	else if (m_hand.m_selected == Hand::SELECTED_WATER)
 	{
 		std::shared_ptr<Water> item = std::shared_ptr<Water>(new Water(nullptr, m_hand.m_position, m_hand.m_fRadius));
 		m_pObjects.push_back(std::dynamic_pointer_cast<Object>(item));
 		m_placeHistory.push_back(Hand::SELECTED_WATER);
+
+		sf::err() << "[EDITOR] Water placed: x(" << m_hand.m_position.x << ") y(" << m_hand.m_position.y << ") r(" << m_hand.m_fRadius << ")" << std::endl;
 	}
 	else if (m_hand.m_selected == Hand::SELECTED_COLONIST)
 	{
 		std::shared_ptr<Colonist> item = std::shared_ptr<Colonist>(new Colonist(nullptr, m_hand.m_position, m_hand.m_fHeading));
 		m_pEntities.push_back(std::dynamic_pointer_cast<Entity>(item));
 		m_placeHistory.push_back(Hand::SELECTED_COLONIST);
+
+		sf::err() << "[EDITOR] Colonist placed: x(" << m_hand.m_position.x << ") y(" << m_hand.m_position.y << ") h(" << m_hand.m_fHeading << ")" << std::endl;
 	}
 	else if (m_hand.m_selected == Hand::SELECTED_FOOD)
 	{
 		std::shared_ptr<Food> item = std::shared_ptr<Food>(new Food(nullptr, m_hand.m_position));
 		m_pEntities.push_back(std::dynamic_pointer_cast<Entity>(item));
 		m_placeHistory.push_back(Hand::SELECTED_FOOD);
+
+		sf::err() << "[EDITOR] Food placed: x(" << m_hand.m_position.x << ") y(" << m_hand.m_position.y << ")" << std::endl;
 	}
 }
 
@@ -116,7 +130,12 @@ void Editor::undoPlace()
 			m_pObjects.pop_back();
 		}
 
+		sf::err() << "[EDITOR] Undone last place: " << Utils::formatWord(m_hand.selectToStr(m_placeHistory.back())) << std::endl;
 		m_placeHistory.pop_back();
+	}
+	else
+	{
+		sf::err() << "[EDITOR] Nothing to undo" << std::endl;
 	}
 }
 
@@ -143,6 +162,8 @@ void Editor::cycleSelected(const int kiDirection)
 		else if (m_hand.m_selected == Hand::SELECTED_COLONIST) m_hand.m_selected = Hand::SELECTED_FOOD;
 		else if (m_hand.m_selected == Hand::SELECTED_FOOD) m_hand.m_selected = Hand::SELECTED_BUSH;
 	}
+
+	sf::err() << "[EDITOR] Selection set to: " << Utils::formatWord(m_hand.selectToStr(m_hand.m_selected)) << std::endl;
 }
 
 // Void: Draws the Editor to the RenderTarget

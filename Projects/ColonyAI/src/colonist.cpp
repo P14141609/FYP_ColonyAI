@@ -18,7 +18,7 @@ Colonist::Colonist(std::shared_ptr<Environment> pEnv, const sf::Vector2f kPositi
 	m_fRadius = 7.5f;
 	m_fVision = 125.0f;
 	m_fReach = m_fRadius*4;
-	m_fSpeed = 75.0f;
+	m_fSpeed = 75.0f; // Should never exceed vision
 	m_fBirthCooldown = 15.0f;
 
 	// Defines fatal levels of hunger and thirst
@@ -328,13 +328,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Food Source
-						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 					}
 				}
 				else
 				{
 					// Generate path to Food Source
-					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 				}
 			}
 
@@ -398,13 +398,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Food Source
-						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 					}
 				}
 				else
 				{
 					// Generate path to Food Source
-					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 				}
 			}
 
@@ -477,13 +477,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Water Source
-						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 					}
 				}
 				else
 				{
 					// Generate path to Water Source
-					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 				}
 			}
 
@@ -547,13 +547,13 @@ void Colonist::tendToNeeds()
 					else
 					{
 						// Generate path to Water Source
-						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+						m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 					}
 				}
 				else
 				{
 					// Generate path to Water Source
-					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode));
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
 				}
 			}
 
@@ -580,13 +580,19 @@ void Colonist::reproduce()
 	// Adds a cooldown to the Colonist before it can reproduce again
 	m_fBirthCooldown = 300.0f; // 5 Minute cooldown
 
+	// Creates a new Colonist Entity
+	std::shared_ptr<Colonist> pNewColonist(new Colonist(m_pEnvironment, m_position, m_fHeading));
+	// Sets Colonist's knowledge to that of the parent
+	pNewColonist->setMemories(m_pMemories);
+	pNewColonist->setClearObjs(m_pClearObjs);
+
 	// Adds a new Colonist Entity to the Environment
 	m_pEnvironment->getEntityVec()->push_back
 	(
-		std::shared_ptr<Entity>(new Colonist(m_pEnvironment, m_position, m_fHeading))
+		std::shared_ptr<Entity>(pNewColonist)
 	);
 
-	sf::err() << "[COLONIST] New Colonist produced at x(" << m_position.x << ") y(" << m_position.y << ") h(" << m_fHeading << ")" << std::endl;
+	sf::err() << "[COLONIST] New Colonist produced at x(" << pNewColonist->getPosition().x << ") y(" << pNewColonist->getPosition().y << ") h(" << pNewColonist->getHeading() << ")" << std::endl;
 }
 
 // Void: Processes LABOUR state functionality
@@ -646,50 +652,250 @@ void Colonist::labour()
 // Void: Paths the Colonist forward with a random heading
 void Colonist::wander()
 {
-	// Declares a cone that the randPos will sit within infront of the Colonist
-	float fCone = 60.0f;
+	// Defines vector to store Water in vision
+	std::vector<std::shared_ptr<Water>> pWaterInVision;
+	// Defines vector to store Food in vision
+	std::vector<std::shared_ptr<Bush>> pFoodInVision;
 
-	// Defines a random angle ((0 and fCone) - 30) so -30 to 30
-	float fRandomAngle = (rand() % (int)(fCone + 1)) - (fCone*0.5f);
-
-	// Applies the delta heading
-	m_fHeading += fRandomAngle;
-
-	// Defines the delta position with a unit vector from the heading
-	sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
-	// Converts the delta position from a unit vector to a sizeable displacement with the Colonist speed
-	deltaPos *= m_fSpeed;
-
-	// Creates the randomly determined destination position 
-	sf::Vector2f targetPos = m_position + deltaPos;
-
-	// If destination is within the Environment
-	if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
+	// For all Water Objects
+	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects(WATER))
 	{
-		// Creates path to the destination
-		m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, m_pPathfinding->nodeFromPos(targetPos)));
+		// If Object is in vision
+		if (inVision(pObject->getPosition(), pObject->getRadius()))
+		{
+			pWaterInVision.push_back(std::dynamic_pointer_cast<Water>(pObject));
+		}
+	}
+	// For all Bush Objects
+	for (std::shared_ptr<Object> pObject : m_pEnvironment->getObjects(BUSH))
+	{
+		// If Object is in vision
+		if (inVision(pObject->getPosition(), pObject->getRadius()))
+		{
+			pFoodInVision.push_back(std::dynamic_pointer_cast<Bush>(pObject));
+		}
+	}
+
+	// If Colonist's thirst is not greatly satisfied and there's Water in vision
+	if ((m_needs.getThirstPerc() >= 25) && (!pWaterInVision.empty()))
+	{
+		// Determines nearest source
+		std::shared_ptr<Water> pNearestWater = pWaterInVision.front();
+		for (std::shared_ptr<Water> pWater : pWaterInVision)
+		{
+			// If pWater is closer than pNearestWater
+			if (Utils::magnitude(pWater->getPosition() - m_position) - pWater->getRadius() <= Utils::magnitude(pNearestWater->getPosition() - m_position) - pNearestWater->getRadius())
+			{
+				pNearestWater.swap(pWater);
+			}
+		}
+
+		// Determines nearest Node to source
+		std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestWater->getPosition(), pNearestWater->getRadius());
+		std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
+		for (std::shared_ptr<Node> pNode : pPerimeterNodes)
+		{
+			// If pNode is closer than pNearestNode
+			if (Utils::magnitude(pNode->getPosition() - m_position) <= Utils::magnitude(pNearestNode->getPosition() - m_position))
+			{
+				pNearestNode.swap(pNode);
+			}
+		}
+
+		//	If destination Node doesn't exist
+		if (pNearestNode == nullptr) {}
+		// Destination Node exists and path isn't leading to Water source
+		else
+		{
+			// If path exists
+			if (!m_pPathfinding->getPath().empty())
+			{
+				// If path is leading to the Water source
+				if (m_pPathfinding->getPath().back() == pNearestNode->getPosition()) {}
+				else
+				{
+					// Generate path to Water Source
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
+				}
+			}
+			else
+			{
+				// Generate path to Water Source
+				m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
+			}
+		}
+
+		// If Water source is within reach
+		if (inReach(pNearestWater->getPosition(), pNearestWater->getRadius()))
+		{
+			// Replenishes thirst 
+			m_needs.setThirst(0.0f);
+		}
+	}
+	// If Colonist's hunger is not greatly satisfied and there's Food in vision
+	else if ((m_needs.getHungerPerc() >= 25) && (!pFoodInVision.empty()))
+	{
+		// Determines nearest source
+		std::shared_ptr<Bush> pNearestBush = pFoodInVision.front();
+		for (std::shared_ptr<Bush> pBush : pFoodInVision)
+		{
+			// If pWater is closer than pNearestWater
+			if (Utils::magnitude(pBush->getPosition() - m_position) - pBush->getRadius() <= Utils::magnitude(pNearestBush->getPosition() - m_position) - pNearestBush->getRadius())
+			{
+				pNearestBush.swap(pBush);
+			}
+		}
+
+		// Determines nearest Node to source
+		std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(pNearestBush->getPosition(), pNearestBush->getRadius());
+		std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
+		for (std::shared_ptr<Node> pNode : pPerimeterNodes)
+		{
+			// If pNode is closer than pNearestNode
+			if (Utils::magnitude(pNode->getPosition() - m_position) <= Utils::magnitude(pNearestNode->getPosition() - m_position))
+			{
+				pNearestNode.swap(pNode);
+			}
+		}
+
+		//	If destination Node doesn't exist
+		if (pNearestNode == nullptr) {}
+		// Destination Node exists and path isn't leading to Food source
+		else
+		{
+			// If path exists
+			if (!m_pPathfinding->getPath().empty())
+			{
+				// If path is leading to the Water source
+				if (m_pPathfinding->getPath().back() == pNearestNode->getPosition()) {}
+				else
+				{
+					// Generate path to Food Source
+					m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
+				}
+			}
+			else
+			{
+				// Generate path to Food Source
+				m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, pNearestNode, false));
+			}
+		}
+
+		// If Food source is within reach
+		if (inReach(pNearestBush->getPosition(), pNearestBush->getRadius()))
+		{
+			// Replenishes hunger 
+			m_needs.setHunger(0.0f);
+		}
+	}
+	// Else - explore
+	else
+	{
+		// Declares a cone that the randPos will sit within infront of the Colonist
+		float fCone = 60.0f;
+	
+		// Defines a random angle ((0 and fCone) - 30) so -30 to 30
+		float fRandomAngle = (rand() % (int)(fCone + 1)) - (fCone*0.5f);
+	
+		// Applies the delta heading
+		m_fHeading += fRandomAngle;
+	
+		// Defines the delta position with a unit vector from the heading
+		sf::Vector2f deltaPos = Utils::unitVecFromAngle(m_fHeading);
+		// Converts the delta position from a unit vector to a sizeable displacement with the Colonist speed
+		deltaPos *= m_fSpeed;
+	
+		// Creates the randomly determined destination position 
+		sf::Vector2f targetPos = m_position + deltaPos;
+	
+		// If destination is within the Environment
+		if (Utils::pointInArea(targetPos, sf::Vector2f(0, 0), m_pEnvironment->getSize()))
+		{
+			// Creates path to the destination
+			m_pPathfinding->setPath(m_pPathfinding->createPathTo(m_position, m_pPathfinding->nodeFromPos(targetPos), false));
+		}
 	}
 }
 
 // Bool: Determines whether the route from home to the object is clear
-bool Colonist::routeClear(const std::shared_ptr<Object> pObject)
+bool Colonist::routeClear(const std::shared_ptr<Object> kpObject)
 {
-	// TODO
+	// If Object in clearObjects vector
+	if (std::find(m_pClearObjs.begin(), m_pClearObjs.end(), kpObject) != m_pClearObjs.end()) return true;
+
 	// Generate route to source (closest perimeter node)
+	std::queue<sf::Vector2f> path;
+
+	// Determines nearest Node to Object
+	std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(kpObject->getPosition(), kpObject->getRadius());
+	std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
+	for (std::shared_ptr<Node> pNode : pPerimeterNodes)
+	{
+		// If pNode is closer than pNearestNode
+		if (Utils::magnitude(pNode->getPosition() - m_position) <= Utils::magnitude(pNearestNode->getPosition() - m_position))
+		{
+			pNearestNode.swap(pNode);
+		}
+	}
+
+	// If nearest Node doesn't exist
+	if (pNearestNode == nullptr) {}
+	// Node exists
+	else
+	{
+		// Generate path to Object
+		path = m_pPathfinding->createPathTo(m_homePos, pNearestNode, true);
+	}
 
 	// If route crosses inaccessible nodes, get the Objects causing it
+	std::queue<sf::Vector2f> pathDupe = path;
+	for (unsigned int i = 0; i < path.size(); i++)
+	{
+		// If Node is inaccessible
+		if (!m_pPathfinding->nodeFromPos(pathDupe.back())->isAccessible())
+		{
+			// TODO
+			// Get Object causing inacessibility
+			// If this Object is removeable
+				// Route not clear
+		}
 
-	// If this Object is removeable
-		// Route not clear
+		// Pops element off queue duplicate
+		pathDupe.pop();
+	}
 
+	// Pushes Object onto vector of Objects with clear routes
+	m_pClearObjs.push_back(kpObject);
+	// Returns True - route clear
 	return true;
 }
 
 // Void: Makes the Colonist clear the path to an Object from home
-void Colonist::clearRoute(const std::shared_ptr<Object> pObject)
+void Colonist::clearRoute(const std::shared_ptr<Object> kpObject)
 {
-	// TODO
 	// Generate route to source (closest perimeter node)
+	std::queue<sf::Vector2f> path;
+
+	// Determines nearest Node to Object
+	std::vector<std::shared_ptr<Node>> pPerimeterNodes = m_pPathfinding->perimeterNodes(kpObject->getPosition(), kpObject->getRadius());
+	std::shared_ptr<Node> pNearestNode = pPerimeterNodes.front();
+	for (std::shared_ptr<Node> pNode : pPerimeterNodes)
+	{
+		// If pNode is closer than pNearestNode
+		if (Utils::magnitude(pNode->getPosition() - m_position) <= Utils::magnitude(pNearestNode->getPosition() - m_position))
+		{
+			pNearestNode.swap(pNode);
+		}
+	}
+
+	// If nearest Node doesn't exist
+	if (pNearestNode == nullptr) {}
+	// Node exists
+	else
+	{
+		// Generate path to Object
+		path = m_pPathfinding->createPathTo(m_homePos, pNearestNode, true);
+	}
 
 	// If route crosses inaccessible nodes, get the Objects causing it
 

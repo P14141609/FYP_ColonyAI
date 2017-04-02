@@ -32,6 +32,17 @@ struct Hand
 
 	enum selectedItem { SELECTED_BUSH, SELECTED_ROCK, SELECTED_TREE, SELECTED_WATER, SELECTED_COLONIST, SELECTED_FOOD }; //!< Enum for possible selected items in Editor
 	selectedItem m_selected = SELECTED_BUSH; //!< The item that is selected
+
+	std::string selectToStr(const selectedItem kType)
+	{
+		if (kType == SELECTED_BUSH) return "BUSH";
+		if (kType == SELECTED_ROCK) return "ROCK";
+		if (kType == SELECTED_TREE) return "TREE";
+		if (kType == SELECTED_WATER) return "WATER";
+		if (kType == SELECTED_COLONIST) return "COLONIST";
+		if (kType == SELECTED_FOOD) return "FOOD";
+		return "ERROR";
+	}
 };
 
 /////////////////////////////////////////////////

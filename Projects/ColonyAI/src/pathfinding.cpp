@@ -63,7 +63,7 @@ void Pathfinding::calcAccess(const float kfColonistRadius, const sf::Vector2f kP
 }
 
 // std::queue<sf::Vector2f>: Creates a path to target Node
-std::queue<sf::Vector2f> Pathfinding::createPathTo(const sf::Vector2f kCurrentPos, std::shared_ptr<Node> kpTargetNode)
+std::queue<sf::Vector2f> Pathfinding::createPathTo(const sf::Vector2f kCurrentPos, std::shared_ptr<Node> kpTargetNode, const bool kbIgnoreAccess)
 {
 	sf::err() << "[PATHFINDING] Generating path..." << std::endl;
 
@@ -77,8 +77,8 @@ std::queue<sf::Vector2f> Pathfinding::createPathTo(const sf::Vector2f kCurrentPo
 		return nullPath;
 	}
 
-	// If targetNode is inaccessible
-	if (!kpTargetNode->isAccessible())
+	// If not ignoring accessibility and If targetNode is inaccessible
+	if ((!kbIgnoreAccess) && (!kpTargetNode->isAccessible()))
 	{
 		sf::err() << "[PATHFINDING] Generating path... Error - Target node inaccessible." << std::endl;
 		return nullPath;
@@ -135,13 +135,13 @@ std::queue<sf::Vector2f> Pathfinding::createPathTo(const sf::Vector2f kCurrentPo
 			///////////////////// Calculating Open Adjacent Nodes /////////////////////
 
 			// Get all adjacent nodes
-			std::vector<std::shared_ptr<Node>> pAdjNodes = adjacentNodes(pCurrentNode, true);
+			std::vector<std::shared_ptr<Node>> pAdjNodes = adjacentNodes(pCurrentNode, !kbIgnoreAccess);
 
 			// For all adjacent nodes
 			for (std::shared_ptr<Node> pAdjNode : pAdjNodes)
 			{
-				// If adjNode is inaccessible
-				if (!pAdjNode->isAccessible()) { /* Ignores inaccessible Nodes */ }
+				// If not ignoring accessibility and If adjNode is inaccessible
+				if ((!kbIgnoreAccess) && (!pAdjNode->isAccessible())) { /* Ignores inaccessible Nodes */ }
 
 				// Else If adjNode is the target destination
 				else if (pAdjNode == kpTargetNode)
@@ -448,7 +448,7 @@ float Pathfinding::distance(const std::shared_ptr<Node> kpStartNode, const std::
 	return fDistance;
 }
 
-// std::vector<std::shared_ptr<Node>>: Generates a vector of adjacent Nodes that can be pathed to - Returns accessible Nodes adjacent to the given Node
+// std::vector<std::shared_ptr<Node>>: Generates a vector of adjacent Nodes that can be pathed to - Returns Nodes adjacent to the given Node
 std::vector<std::shared_ptr<Node>> Pathfinding::adjacentNodes(const std::shared_ptr<Node> kpNode, const bool kbStrictDiagonal)
 {
 	// Defines vector of Nodes to store adjacent Nodes that are identified
